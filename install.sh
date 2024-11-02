@@ -190,8 +190,20 @@ if confirm "Do you want install required tools?"; then
 fi
 
 if ensure-all zsh fd eza zoxide fzf bat; then
-  lnif -s "$WHMCONFIG/myshell.sh" "$HOME/.myshell.sh"
-  lnif -s "$WHMCONFIG/zshrc" "$HOME/.zshrc" 
+  if confirm "Do you want add source of WHMShellConfig to your zshrc file?"; then
+    cat <<EOF >> "$HOME/.zshrc"
+# oh-my-zsh plugins settings
+plugins=(
+  git
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  zsh-vi-mode
+ )
+
+# Initialize WHMShellConfig
+[[ ! -d "\$HOME/.whm_shell" ]] || source "\$HOME/.whm_shell/shell/config.sh"
+EOF
+  fi
   if ! [[ -z "$HOME/.oh-my-zsh" ]];then
     if zsh_install_file="$(download https://install.ohmyz.sh/)"; then
       chmod u+x $zsh_install_file
