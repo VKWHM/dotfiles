@@ -20,3 +20,26 @@ alias ls='eza --icons=always --git --octal-permissions'
 
 # Make cd better
 alias cd='z'
+
+# package installition and removing aliases
+case "$OSTYPE" in
+  "darwin"*)
+    if command -v brew 2>&1 >/dev/null; then
+      yep_alias="brew install"
+      nope_alias="brew remove"
+    fi
+    ;;
+
+  "linux-gnu"*)
+    if command -v dnf 2>&1 >/dev/null; then
+      yep_alias="sudo dnf install"
+      nope_alias="sudo dnf remove"
+    elif command -v apt 2>&1 >/dev/null; then
+      yep_alias="sudo apt install"
+      nope_alias="sudo apt remove"
+    fi
+    ;;
+esac
+
+[[ -z "{yep_alias}" ]] || alias yep="$yep_alias"
+[[ -z "{nope_alias}" ]] || alias nope="$nope_alias"
