@@ -88,3 +88,5 @@ is_dark ()
     return 0
   fi
 }
+
+# TODO: Add dynamic archive extract function 

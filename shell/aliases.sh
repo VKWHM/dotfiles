@@ -81,7 +81,12 @@ alias psmem='ps aux | sort -nr -k 4 | less'
  
 # get top process eating cpu
 alias pscpu='ps aux | sort -nr -k 3 | less'
+
+# searchable process table
+alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
  
 # get GPU ram on device
 [[ ! -e /var/log/Xorg.0.log ]] || alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
 
+# Display sizes of files and directories inside cwd
+alias lsize='du -sh * | sort -rh'
