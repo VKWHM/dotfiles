@@ -114,7 +114,7 @@ ensure-all git curl || exit 1;
 
 
 if ! check_file_exist "$WHMCONFIG"; then
-  git clone "https://github.com/VKWHM/WHMShellConfig.git" "$WHMCONFIG"
+  git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
 fi
 
 # Link files
