@@ -34,7 +34,7 @@ return {
 
 		-- setup sourcekit lsp
 		lspconfig.sourcekit.setup({
-			root_dir = lspconfig.util.root_pattern(".git", "Package.swift"),
+			root_dir = lspconfig.util.root_pattern(".git", "Package.swift", "root.swift"), -- 'root.swift' for testing purposes
 
 			capabilities = {
 				workspace = {
