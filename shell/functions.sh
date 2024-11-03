@@ -89,4 +89,44 @@ is_dark ()
   fi
 }
 
-# TODO: Add dynamic archive extract function 
+# Extract archive dynamicly
+extract() {
+  if [ -z "$1" ]; then
+    echo "Usage: extract <file name>.<> ..."
+    return 1
+  fi
+
+  for n in $@
+  do
+    if [ -f "$n" ]; then
+      filepath="$(readlink -f "$n")"
+      case "$n" in
+        *.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
+          tar xvf "$filepath" ;;
+        *.lzma)
+          unlzma "$filepath" ;;
+        *.bz2)
+          bunzip2 "$filepath" ;;
+        *.rar)
+          unrar x -ad "$filepath" ;;
+        *.gz)
+          gunzip "$filepath" ;;
+        *.zip)
+          unzip "$filepath" ;;
+        *.z)
+          uncompress "$filepath" ;;
+        *.7z|*.arj|*.cab|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.rpm|*.udf|*.wim|*.xar)
+          7z x "$filepath" ;;
+        *.xz)
+          unxz "$filepath" ;;
+        *)
+          echo "[-] extract: '$n' - unknown archive method"
+          return 1
+          ;;
+      esac
+    else
+      echo "[-] '$n' - file does not exist"
+      return 1
+    fi
+  done
+}
