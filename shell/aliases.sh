@@ -60,20 +60,22 @@ else
   alias ports='netstat -tulnvp'
 fi
 
-# do not delete / or prompt if deleting more than 3 files at a time 
-alias rm='rm -I --preserve-root'
+# prompt if deleting more than 3 files at a time 
+alias rm='rm -I'
  
 # confirmation 
 alias mv='mv -i'
 alias cp='cp -i'
 alias ln='ln -i'
- 
-# Parenting changing perms on / 
-alias chown='chown --preserve-root'
-alias chmod='chmod --preserve-root'
-alias chgrp='chgrp --preserve-root'
 
-# pass options to free 
+if [[ "$OSYPE" == "linux-gnu"* ]]; then
+  # Parenting changing perms on / 
+  alias chown='chown --preserve-root'
+  alias chmod='chmod --preserve-root'
+  alias chgrp='chgrp --preserve-root'
+fi
+
+# pass options to free (only linux systems)
 [[ "$OSTYPE" == "darwin"* ]] || alias meminfo='free -ltmh'
  
 # get top process eating memory
@@ -90,3 +92,6 @@ alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
 
 # Display sizes of files and directories inside cwd
 alias lsize='du -sh * | sort -rh'
+
+# Show command usage statistics
+alias hs='history | awk "{CMD[\$2]++; count++;} END {for (a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -vE "^[%.0-9 ]+./" | column -c3 -s " " -t | sort -nr | nl | head -20'
