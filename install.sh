@@ -133,7 +133,12 @@ if confirm "Do you want install required tools?"; then
 
   # fzf
   echo "Installing fzf..."
-  install_package fzf
+  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install
+  else
+    install_package fzf
+  fi
 
   # zoxide
   echo "Installing zoxide...";
@@ -162,11 +167,21 @@ if confirm "Do you want install required tools?"; then
   # bat
   echo "Installing bat"
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-musl_0.24.0_amd64.deb
+    if bat_package="$(download https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-musl_0.24.0_amd64.deb)"; then
+      sudo dpkg -i $bat_package
+      rm $bat_package
+    else
+      echo "[-] Error when installing bat!"
+      false
+    fi
+  else
+    install_package bat
   fi
-  install_package bat
-  lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
-  lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
+
+  if $?; then
+    lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
+    lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
+  fi
   
   # ripgrep
   install_package ripgrep
@@ -179,6 +194,7 @@ if confirm "Do you want install required tools?"; then
       if neovim_archive="$(download https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz)";then
         sudo rm -rf /opt/nvim
         sudo tar -C /opt -xzf $neovim_archive
+        sudo ln -s /opt/${neovim_archive%.*}/bin/nvim /usr/bin/nvim
         rm $neovim_archive
       else
         echo "[-] Error when installing Neovim!"
@@ -205,7 +221,7 @@ plugins=(
 [[ ! -d "\$HOME/.whm_shell" ]] || source "\$HOME/.whm_shell/shell/config.sh"
 EOF
   fi
-  if ! [[ -z "$HOME/.oh-my-zsh" ]];then
+  if ! check_file_exist "$HOME/.oh-my-zsh"; then
     if zsh_install_file="$(download https://install.ohmyz.sh/)"; then
       chmod u+x $zsh_install_file
       $zsh_install_file --keep-zshrc --skip-chsh --unattended

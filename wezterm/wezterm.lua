@@ -15,6 +15,9 @@ require("events") -- configure events
 do
 	config.use_dead_keys = false
 	config.scrollback_lines = 10000
+	config.set_environment_variables = {
+		WHM_APPEARANCE = wezterm.gui.get_appearance(),
+	}
 end
 
 -- Font configuration

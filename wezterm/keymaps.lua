@@ -12,6 +12,14 @@ local function bind_leader(key, action)
 	}
 end
 
+local function bind_sleader(key, action)
+	return {
+		key = key,
+		mods = "LEADER|SHIFT",
+		action = action,
+	}
+end
+
 local function move_pane(key, direction)
 	return bind_leader(key, act.ActivatePaneDirection(direction))
 end
@@ -45,8 +53,8 @@ function M.apply_to_config(config)
 		},
 		bind_leader("c", act.ActivateCopyMode),
 		-- Start Panes
-		bind_leader('"', act.SplitVertical({ domain = "CurrentPaneDomain" })),
-		bind_leader("%", act.SplitHorizontal({ domain = "CurrentPaneDomain" })),
+		bind_sleader('"', act.SplitVertical({ domain = "CurrentPaneDomain" })),
+		bind_sleader("%", act.SplitHorizontal({ domain = "CurrentPaneDomain" })),
 		bind_leader(
 			"r",
 			act.ActivateKeyTable({
@@ -68,8 +76,8 @@ function M.apply_to_config(config)
 				mode = "SwapWithActive",
 			})
 		),
-		bind_leader("{", act.RotatePanes("Clockwise")),
-		bind_leader("}", act.RotatePanes("CounterClockwise")),
+		bind_sleader("{", act.RotatePanes("Clockwise")),
+		bind_sleader("}", act.RotatePanes("CounterClockwise")),
 		{
 			key = "g",
 			mods = "CTRL",
@@ -89,7 +97,7 @@ function M.apply_to_config(config)
 		-- Start Workspace
 		bind_leader("p", utils.choose_project()),
 		bind_leader("f", act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" })),
-		bind_leader(
+		bind_sleader(
 			"&",
 			act.PromptInputLine({
 				description = "Are you sure you want close this workspace? [Y/n] ",
@@ -102,7 +110,7 @@ function M.apply_to_config(config)
 				end),
 			})
 		),
-		bind_leader(
+		bind_sleader(
 			"$",
 			act.PromptInputLine({
 				description = "Rename current window",
@@ -115,6 +123,15 @@ function M.apply_to_config(config)
 		),
 		-- End Workspace
 	}
+	if wezterm.target_triple:find("%w-linux-gnu") then
+		for i = 1, 20 do
+			table.insert(config.keys, {
+				key = tostring(i),
+				mods = "ALT",
+				action = wezterm.action({ ActiveTab = i - 1 }),
+			})
+		end
+	end
 	config.key_tables = {
 		resize_panes = {
 			resize_pane("j", "Down"),

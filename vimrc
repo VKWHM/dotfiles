@@ -293,13 +293,15 @@ noremap <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo '
 nnoremap <F4> :MundoToggle<CR>
 inoremap jk <ESC>
 
-if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
-    let g:airline_theme = 'gruvbox'
-    colorscheme gruvbox
-else
-    set t_Co=256   " This is may or may not needed.
-    set background=light
-    colorscheme PaperColor
-    let g:airline_theme = 'lucius'
+let g:airline_theme = 'gruvbox'
+colorscheme gruvbox
+
+if system("echo $OSTYPE") =~ 'darwin*'
+  if !(system("defaults read -g AppleInterfaceStyle || echo $WHM_APPEARANCE") =~ '^Dark')
+      set t_Co=256   " This is may or may not needed.
+      set background=light
+      colorscheme PaperColor
+      let g:airline_theme = 'lucius'
+  endif
 endif
 
