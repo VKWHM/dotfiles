@@ -25,7 +25,8 @@ lnif ()
 }
 
 check_file_exist() {
-  return test -e "$1"
+  test -e "$1"
+  return $?
 }
 
 check_program_exist()
@@ -56,7 +57,7 @@ ensure-all ()
 
 download() {
   url="$1"
-  if [[ -z "$2" ]];
+  if [[ -z "$2" ]]; then
     dst=$(mktemp)
   else
     dst="$2"
