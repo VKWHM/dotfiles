@@ -2,8 +2,9 @@
 alias trkb="setxkbmap tr"
 alias uskb="setxkbmap us"
 
-# Edit WHM Shell Configuration
-alias shellconfig="cd ~/.whm_shell/ && nvim && cd -"
+# Edit Configurations
+alias whmconfig="cd ~/.whm_shell/ && nvim && cd -"
+alias zshconfig="nvim ~/.zshrc"
 
 # Hard Reload shell
 alias reload='exec "$SHELL"'
