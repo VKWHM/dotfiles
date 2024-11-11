@@ -53,4 +53,18 @@ function M.opt.toggle(option, values)
 	end
 end
 
+-- Merge table2 into table1
+function M.merge(t1, t2)
+	if type(t2) == "table" and type(t2) == "table" then
+		for key, value in pairs(t2) do
+			if type(value) == "table" then
+				t1[key] = t1[key] or {}
+				M.merge(t1[key], value)
+			else
+				t1[key] = value
+			end
+		end
+	end
+end
+
 return M
