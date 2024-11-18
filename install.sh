@@ -1,28 +1,12 @@
 #!/bin/bash
 
-# set -e  # Exit immediately if any command returns a non-zero status
+set -euo pipefail
 
+# Globals
 USER=${USER:-$(id -u -n)}
-# $HOME is defined at the time of login, but it could be unset. If it is unset,
-# a tilde by itself (~) will not be expanded to the current user's home directory.
-# POSIX: https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap08.html#tag_08_03
-HOME="${HOME:-$(getent passwd $USER 2>/dev/null | cut -d: -f6)}"
-# macOS does not have getent, but this works even if $HOME is unset
+HOME="${HOME:-$(getent passwd "$USER" 2>/dev/null | cut -d: -f6)}"
 HOME="${HOME:-$(eval echo ~$USER)}"
-
-
 WHMCONFIG="$HOME/.whm_shell"
-
-
-# functions
-
-lnif ()
-{
-  local dst="${@: -1}"
-  if ! [[ -e "$dst" ]]; then
-    ln $@
-  fi
-}
 
 # Function to check if a path exists in the current PATH
 is_path_in_env() {
@@ -85,25 +69,54 @@ ensure-all ()
   done
 }
 
-download() {
-  url="$1"
-  if [[ -z "$2" ]]; then
-    dst=$(mktemp)
-  else
-    dst="$2"
-  fi
-  echo "$dst"
-  curl -Lo "$dst" "$url"
-  return $?
+# Utility functions
+
+lnif() {
+    local target="${@: -1}"
+    if ! [[ -e "$target" ]]; then
+        ln "$@"
+    fi
 }
 
-confirm ()
-{
-  read -p "$1 (y/n): " choice
-  case "$choice" in
-    [Nn]*) echo "Operation cancelled."; return 1;;
-    *) return 0;;
-  esac
+link_config() {
+    local src="$1"
+    local dest="$2"
+    lnif -s "$src" "$dest" && echo "[+] Linked: $src -> $dest"
+}
+
+check_file_exist() {
+    [[ -e "$1" ]]
+}
+
+check_program_exist() {
+    local program
+    program=$(command -v "$1" 2>/dev/null)
+    [[ -x "$program" ]]
+}
+
+download() {
+    local url="$1"
+    local dest="${2:-$(mktemp -p "$TEMP_DIR")}"
+    curl -fsSL -o "$dest" "$url" || {
+        echo "[-] Failed to download $url" >&2
+        return 1
+    }
+    echo "$dest"
+}
+
+confirm() {
+    read -rp "$1 (y/n): " choice
+    case "$choice" in
+        [Nn]*) echo "Operation cancelled." >&2; return 1 ;;
+        *) return 0 ;;
+    esac
+}
+
+ensure() {
+    if ! check_program_exist "$1"; then
+        echo "[-] Error: $1 is not installed." >&2
+        return 1
+    fi
 }
 
 install_package ()
@@ -143,45 +156,44 @@ install_package ()
 
 ensure-all git curl || exit 1;
 
+# Installition utilities
+install_zsh() {
+  echo "[*] Installing zsh..."
+  install_package zsh || echo "[-] Failed to install zsh."
+}
 
-if ! check_file_exist "$WHMCONFIG"; then
-  git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
-fi
-
-
-if confirm "Do you want install required tools?"; then
-  # zsh
-  echo "Installing zsh..."
-  install_package zsh
-
-  # fzf
-  echo "Installing fzf..."
+install_fzf() {
+  echo "[*] Installing fzf..."
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
     yes n | ~/.fzf/install
     [[ "$SHELL" == *"zsh" ]] && source ~/.fzf.zsh || source ~/.fzf.bash
   else
-    install_package fzf
+    install_package fzf || echo "[-] Failed to install fzf."
   fi
+}
 
-  # zoxide
-  echo "Installing zoxide...";
+install_zoxide() {
+  echo "[*] Installing zoxide..."
   curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
   if ! is_path_in_env "$HOME/.local/bin"; then
     add_to_path "$HOME/.local/bin"
     persist_path "$HOME/.local/bin"
   fi
+}
 
-  # fd
-  echo "Installing fd"
-  install_package fd || (install_package fd-find && sudo ln -sf "$(which fdfind)" "$(dirname $(which fdfind))/fd")
+install_fd() {
+  echo "[*] Installing fd..."
+  install_package fd || {
+    install_package fd-find && sudo ln -sf "$(which fdfind)" "$(dirname "$(which fdfind)")/fd"
+  } || echo "[-] Failed to install fd."
+}
 
-  # eza
-  echo "Installing eza"
+install_eza() {
+  echo "[*] Installing eza..."
   if [[ "$OSTYPE" == "linux-gnu"* && $(check_program_exist apt) ]]; then
     sudo apt update
     sudo apt install -y gpg
-
     sudo mkdir -p /etc/apt/keyrings
     wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
     echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
@@ -189,72 +201,99 @@ if confirm "Do you want install required tools?"; then
     sudo apt update
     sudo apt install -y eza
   else
-    install_package eza
+    install_package eza || echo "[-] Failed to install eza."
   fi
+}
 
-  # bat
-  echo "Installing bat"
+install_bat() {
+  echo "[*] Installing bat..."
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    if bat_package="$(download https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-musl_0.24.0_amd64.deb)"; then
-      sudo dpkg -i $bat_package
-      rm $bat_package
+    if bat_package=$(download https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-musl_0.24.0_amd64.deb); then
+      sudo dpkg -i "$bat_package"
+      rm "$bat_package"
     else
       echo "[-] Error when installing bat!"
-      false
     fi
   else
-    install_package bat
+    install_package bat || echo "[-] Failed to install bat."
   fi
 
   lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
   lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
-  
-  # ripgrep
-  install_package ripgrep
-  
-  # Neovim
+}
+
+install_neovim() {
+  echo "[*] Installing Neovim..."
   if ! check_program_exist nvim; then
-    if [[ "$OSTYPE" == "darkwin"* ]]; then
-      install_package neovim
-    else
-      if neovim_archive="$(download https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz)";then
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      if neovim_archive=$(download https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz); then
         sudo rm -rf /opt/nvim-linux64
-        sudo tar -C /opt -xzf $neovim_archive
+        sudo tar -C /opt -xzf "$neovim_archive"
         sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/bin/nvim
-        rm $neovim_archive
+        rm "$neovim_archive"
       else
         echo "[-] Error when installing Neovim!"
       fi
+    else
+      install_package neovim || echo "[-] Failed to install Neovim."
     fi
   fi
+}
 
-  # Vim
-  install_package vim
-
-  # Tmux
-  install_package tmux
-
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    install_package wezterm
-  fi
-fi
-
-# Link files
-if ensure wezterm; then
-  lnif -s "$WHMCONFIG/wezterm" "$HOME/.config/wezterm"
-  lnif -s "$WHMCONFIG/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
-fi
-
-if ensure tmux; then
+install_common_tools() {
+  install_package vim || echo "[-] Failed to install vim."
+  install_package tmux || echo "[-] Failed to install tmux."
   if [[ ! -d ~/.tmux/plugins/tpm ]]; then
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
-  lnif -s "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
-fi
+  [[ "$OSTYPE" == "darwin"* ]] && install_package wezterm || echo "[-] Failed to install wezterm."
+}
 
-if ensure-all zsh fd eza zoxide fzf bat; then
-  if confirm "Do you want add source of WHMShellConfig to your zshrc file?"; then
-    cat <<EOF >> "$HOME/.zshrc"
+install_tools() {
+  install_zsh
+  install_fzf
+  install_zoxide
+  install_fd
+  install_eza
+  install_bat
+  install_package ripgrep || echo "[-] Failed to install ripgrep."
+  install_neovim
+  install_common_tools
+}
+
+install_configs() {
+    [[ -d "$WHMCONFIG" ]] || git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
+
+    # Linking configuration files
+    link_config "$WHMCONFIG/vimrc" "$HOME/.vimrc"
+    link_config "$WHMCONFIG/nvim" "$HOME/.config/nvim"
+    link_config "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
+    link_config "$WHMCONFIG/wezterm" "$HOME/.config/wezterm"
+    link_config "$WHMCONFIG/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+    link_config "$WHMCONFIG/p10k.zsh" "$HOME/.p10k.zsh"
+}
+
+setup_zsh_plugins() {
+    local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+    local theme_url="https://github.com/romkatv/powerlevel10k.git"
+
+    if ! [[ -d "$HOME/.oh-my-zsh" ]]; then
+        local ohmyzsh_installer
+        ohmyzsh_installer=$(download https://install.ohmyz.sh/)
+        chmod +x "$ohmyzsh_installer"
+        "$ohmyzsh_installer" --keep-zshrc --skip-chsh --unattended
+        rm -f "$ohmyzsh_installer"
+    fi
+
+    [[ -d "$zsh_custom/zsh-syntax-highlighting" ]] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zsh_custom/zsh-syntax-highlighting"
+    [[ -d "$zsh_custom/zsh-autosuggestions" ]] || git clone https://github.com/zsh-users/zsh-autosuggestions.git "$zsh_custom/zsh-autosuggestions"
+    [[ -d "$zsh_custom/zsh-vi-mode" ]] || git clone https://github.com/jeffreytse/zsh-vi-mode.git "$zsh_custom/zsh-vi-mode"
+    [[ -d "$zsh_custom/themes/powerlevel10k" ]] || git clone --depth=1 "$theme_url" "$zsh_custom/themes/powerlevel10k"
+}
+
+finalize_zsh_config() {
+    confirm "Do you want to add WHM configuration to .zshrc?" || return 0
+    cat <<'EOF' >> "$HOME/.zshrc"
 # oh-my-zsh plugins settings
 plugins=(
   git
@@ -262,51 +301,17 @@ plugins=(
   zsh-autosuggestions
   zsh-vi-mode
  )
-
-# Initialize WHMShellConfig
-[[ ! -d "\$HOME/.whm_shell" ]] || source "\$HOME/.whm_shell/shell/config.sh"
+# WHM Shell Config
+[[ -d "$HOME/.whm_shell" ]] && source "$HOME/.whm_shell/shell/config.sh"
 EOF
-  fi
-  if check_file_exist "$HOME/.oh-my-zsh"; then
-    mv "$HOME/.oh-my-zsh"{,.bck}
-  fi
-  if zsh_install_file="$(download https://install.ohmyz.sh/)"; then
-    chmod u+x $zsh_install_file
-    $zsh_install_file --keep-zshrc --skip-chsh --unattended
-    rm $zsh_install_file
-  else
-    echo "[-] Error when installing oh-my-zsh"
-  fi
-  
-  zshplugdir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+    echo "[+] WHM configuration added to .zshrc."
+}
 
-  # installing zsh-syntax-highlighting
-  ! check_file_exist "$zshplugdir/zsh-syntax-highlighting" && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zshplugdir/zsh-syntax-highlighting"
+main() {
+    confirm "[??] Do you want to install required tools?" && install_tools
+    install_configs
+    setup_zsh_plugins
+    finalize_zsh_config
+}
 
-  # installing zsh-autosuggestions
-  ! check_file_exist "$zshplugdir/zsh-autosuggestions"  && git clone https://github.com/zsh-users/zsh-autosuggestions "$zshplugdir/zsh-autosuggestions"
-
-  # installing zsh-vi-mode
-  ! check_file_exist "$zshplugdir/zsh-vi-mode" && git clone https://github.com/jeffreytse/zsh-vi-mode "$zshplugdir/zsh-vi-mode"
-else
-  echo "[-] zsh config is not linked."
-fi
-
-if ! check_file_exist "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"; then
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-fi
-lnif -s "$WHMCONFIG/p10k.zsh" "$HOME/.p10k.zsh"
-
-if ensure vim; then
-  lnif -s "$WHMCONFIG/vimrc" "$HOME/.vimrc"
-else
-  echo "[-] vim config is not linked."
-fi
-
-if ensure-all nvim rg; then
-  mkdir -p "$HOME/.config"
-  lnif -s "$WHMCONFIG/nvim" "$HOME/.config/nvim"
-else
-  echo "[-] nvim config is not linked."
-fi
-
+main "$@"
