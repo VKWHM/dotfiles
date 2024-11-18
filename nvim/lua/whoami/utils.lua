@@ -20,13 +20,18 @@ do
 end
 
 function M.appearance()
+	local result
 	if os.name() == "darwin" then
 		local handle = assert(io.popen("defaults read -globalDomain AppleInterfaceStyle 2>&1", "r"))
-		local result = assert(handle:read("*a"))
+		result = assert(handle:read("*a")):find("^Dark")
 		handle:close()
 		return result:find("^Dark") and "dark" or "light"
+	elseif os.getenv("WHM_APPEARANCE") then
+		result = os.getenv("WHM_APPEARANCE"):find("^Dark")
+	else
+		result = true
 	end
-	return "dark"
+	return result ~= nil and "dark" or "light"
 end
 
 function M.opt.has(option)

@@ -205,6 +205,7 @@ if confirm "Do you want install required tools?"; then
   else
     install_package bat
   fi
+
   lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
   lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
   
@@ -232,9 +233,18 @@ if confirm "Do you want install required tools?"; then
 
   # Tmux
   install_package tmux
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    install_package wezterm
+  fi
 fi
-#
+
 # Link files
+if ensure wezterm; then
+  lnif -s "$WHMCONFIG/wezterm" "$HOME/.config/wezterm"
+  lnif -s "$WHMCONFIG/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+fi
+
 if ensure tmux; then
   if [[ ! -d ~/.tmux/plugins/tpm ]]; then
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
