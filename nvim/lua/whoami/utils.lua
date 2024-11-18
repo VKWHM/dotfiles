@@ -25,7 +25,6 @@ function M.appearance()
 		local handle = assert(io.popen("defaults read -globalDomain AppleInterfaceStyle 2>&1", "r"))
 		result = assert(handle:read("*a")):find("^Dark")
 		handle:close()
-		return result:find("^Dark") and "dark" or "light"
 	elseif os.getenv("WHM_APPEARANCE") then
 		result = os.getenv("WHM_APPEARANCE"):find("^Dark")
 	else
