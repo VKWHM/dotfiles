@@ -158,8 +158,8 @@ if confirm "Do you want install required tools?"; then
   echo "Installing fzf..."
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install
-    [[ "$SHELL" == *"zsh" ]] && ~/.fzf.zsh || ~/.fzf.bash
+    yes n | ~/.fzf/install
+    [[ "$SHELL" == *"zsh" ]] && source ~/.fzf.zsh || source ~/.fzf.bash
   else
     install_package fzf
   fi
@@ -205,11 +205,8 @@ if confirm "Do you want install required tools?"; then
   else
     install_package bat
   fi
-
-  if [[ "$?" == "0" ]]; then
-    lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
-    lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
-  fi
+  lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
+  lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
   
   # ripgrep
   install_package ripgrep

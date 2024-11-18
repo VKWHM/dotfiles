@@ -34,7 +34,8 @@ eval "$(zoxide init zsh)"
 
 # Setup Fuzzy Finder Tool
 function fzf_init() {
-    eval "$(fzf --zsh)"
+  [[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
+  eval "$(fzf --zsh)"
 }
 
 zvm_after_init_commands+=(fzf_init)
