@@ -24,6 +24,36 @@ lnif ()
   fi
 }
 
+# Function to check if a path exists in the current PATH
+is_path_in_env() {
+    local path="$1"
+    if [[ ":$PATH:" == *":$path:"* ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to add a path to PATH if it isn't already present
+add_to_path() {
+    local path="$1"
+    if ! is_path_in_env "$path"; then
+        export PATH="$path:$PATH"
+        printf "Added '%s' to PATH\n" "$path"
+    else
+        printf "'%s' is already in PATH\n" "$path"
+    fi
+}
+
+# Function to persist PATH changes to .bashrc
+persist_path() {
+    local path="$1"
+    if ! grep -q "export PATH=.*$path" "$BASHRC_FILE"; then
+        printf "\n# Added by script\nexport PATH=%s:\$PATH\n" "$path" >> "$BASHRC_FILE"
+        printf "Persisted '%s' to %s\n" "$path" "$BASHRC_FILE"
+    fi
+}
+
 check_file_exist() {
   test -e "$1"
   return $?
@@ -143,6 +173,10 @@ if confirm "Do you want install required tools?"; then
   # zoxide
   echo "Installing zoxide...";
   curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+  if ! is_path_in_env "$HOME/.local/bin"; then
+    add_to_path "$HOME/.local/bin"
+    persist_path "$HOME/.local/bin"
+  fi
 
   # fd
   echo "Installing fd"
@@ -192,9 +226,9 @@ if confirm "Do you want install required tools?"; then
       install_package neovim
     else
       if neovim_archive="$(download https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz)";then
-        sudo rm -rf /opt/nvim
+        sudo rm -rf /opt/nvim-linux64
         sudo tar -C /opt -xzf $neovim_archive
-        sudo ln -s /opt/${neovim_archive%.*}/bin/nvim /usr/bin/nvim
+        sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
         rm $neovim_archive
       else
         echo "[-] Error when installing Neovim!"
@@ -221,17 +255,18 @@ plugins=(
 [[ ! -d "\$HOME/.whm_shell" ]] || source "\$HOME/.whm_shell/shell/config.sh"
 EOF
   fi
-  if ! check_file_exist "$HOME/.oh-my-zsh"; then
-    if zsh_install_file="$(download https://install.ohmyz.sh/)"; then
-      chmod u+x $zsh_install_file
-      $zsh_install_file --keep-zshrc --skip-chsh --unattended
-      rm $zsh_install_file
-    else
-      echo "[-] Error when installing oh-my-zsh"
-    fi
+  if check_file_exist "$HOME/.oh-my-zsh"; then
+    mv "$HOME/.oh-my-zsh"{,.bck}
+  fi
+  if zsh_install_file="$(download https://install.ohmyz.sh/)"; then
+    chmod u+x $zsh_install_file
+    $zsh_install_file --keep-zshrc --skip-chsh --unattended
+    rm $zsh_install_file
+  else
+    echo "[-] Error when installing oh-my-zsh"
   fi
   
-  zshplugdir="${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins"
+  zshplugdir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
 
   # installing zsh-syntax-highlighting
   ! check_file_exist "$zshplugdir/zsh-syntax-highlighting" && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zshplugdir/zsh-syntax-highlighting"
