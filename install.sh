@@ -48,9 +48,9 @@ add_to_path() {
 # Function to persist PATH changes to .bashrc
 persist_path() {
     local path="$1"
-    if ! grep -q "export PATH=.*$path" "$BASHRC_FILE"; then
-        printf "\n# Added by script\nexport PATH=%s:\$PATH\n" "$path" >> "$BASHRC_FILE"
-        printf "Persisted '%s' to %s\n" "$path" "$BASHRC_FILE"
+    if ! grep -q "export PATH=.*$path" "$HOME/.zshrc"; then
+        printf "\n# Added by script\nexport PATH=%s:\$PATH\n" "$path" >> "$HOME/.zshrc"
+        printf "Persisted '%s' to %s\n" "$path" "$HOME/.zshrc"
     fi
 }
 
@@ -173,7 +173,7 @@ if confirm "Do you want install required tools?"; then
 
   # fd
   echo "Installing fd"
-  install_package fd || (install_package fd-find && sudo ln -s "$(which fdfind)" "$(dirname $(which fdfind))/fd")
+  install_package fd || (install_package fd-find && sudo lnif -s "$(which fdfind)" "$(dirname $(which fdfind))/fd")
 
   # eza
   echo "Installing eza"
@@ -205,7 +205,7 @@ if confirm "Do you want install required tools?"; then
     install_package bat
   fi
 
-  if $?; then
+  if [[ "$?" == "0" ]]; then
     lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
     lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
   fi
@@ -221,7 +221,7 @@ if confirm "Do you want install required tools?"; then
       if neovim_archive="$(download https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz)";then
         sudo rm -rf /opt/nvim-linux64
         sudo tar -C /opt -xzf $neovim_archive
-        sudo ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
+        sudo lnif -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
         rm $neovim_archive
       else
         echo "[-] Error when installing Neovim!"
