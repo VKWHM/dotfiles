@@ -159,6 +159,7 @@ if confirm "Do you want install required tools?"; then
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
     ~/.fzf/install
+    [[ "$SHELL" == *"zsh" ]] && ~/.fzf.zsh || ~/.fzf.bash
   else
     install_package fzf
   fi
@@ -173,7 +174,7 @@ if confirm "Do you want install required tools?"; then
 
   # fd
   echo "Installing fd"
-  install_package fd || (install_package fd-find && sudo lnif -s "$(which fdfind)" "$(dirname $(which fdfind))/fd")
+  install_package fd || (install_package fd-find && sudo ln -sf "$(which fdfind)" "$(dirname $(which fdfind))/fd")
 
   # eza
   echo "Installing eza"
@@ -221,7 +222,7 @@ if confirm "Do you want install required tools?"; then
       if neovim_archive="$(download https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz)";then
         sudo rm -rf /opt/nvim-linux64
         sudo tar -C /opt -xzf $neovim_archive
-        sudo lnif -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
+        sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/bin/nvim
         rm $neovim_archive
       else
         echo "[-] Error when installing Neovim!"
