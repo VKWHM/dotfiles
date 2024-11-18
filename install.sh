@@ -101,8 +101,8 @@ confirm ()
 {
   read -p "$1 (y/n): " choice
   case "$choice" in
-    [Yy]* ) return 0;;
-    *) echo "Operation cancelled."; return 1;;
+    [Nn]*) echo "Operation cancelled."; return 1;;
+    *) return 0;;
   esac
 }
 
@@ -148,13 +148,6 @@ if ! check_file_exist "$WHMCONFIG"; then
   git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
 fi
 
-# Link files
-if ensure tmux; then
-  if [[ ! -d ~/.tmux/plugins/tpm ]]; then
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-  fi
-  lnif -s "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
-fi
 
 if confirm "Do you want install required tools?"; then
   # zsh
@@ -238,6 +231,17 @@ if confirm "Do you want install required tools?"; then
 
   # Vim
   install_package vim
+
+  # Tmux
+  install_package tmux
+fi
+#
+# Link files
+if ensure tmux; then
+  if [[ ! -d ~/.tmux/plugins/tpm ]]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  fi
+  lnif -s "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
 fi
 
 if ensure-all zsh fd eza zoxide fzf bat; then
