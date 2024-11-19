@@ -19,7 +19,6 @@ A collection of configuration files and scripts to streamline development and sy
 ├── shell/          # Shell scripts and configurations
 ├── wezterm/        # WezTerm settings
 ├── install.sh      # Installation script
-├── myshell.sh      # Custom shell script
 ├── p10k.zsh        # Powerlevel10k theme configuration
 ├── tmux.conf       # Tmux configuration
 └── vimrc           # Vim configuration
@@ -30,19 +29,18 @@ A collection of configuration files and scripts to streamline development and sy
 To set up these dotfiles on your system:
 
 1. Clone the repository:
-    
+
 ```bash
 git clone https://github.com/vkwhm/dotfiles.git cd dotfiles
 ```
-    
+
 2. Run the installation script:
-    
+
 ```bash
 ./install.sh
 ```
-    
+
 3. Follow on-screen prompts to customize settings as needed.
-    
 
 ## Requirements
 
@@ -64,21 +62,21 @@ Contributions are welcome! To contribute:
 
 1. Fork the repository.
 2. Create a new branch:
-    
-    bash
-    
-    Copy code
-    
-    `git checkout -b feature-branch`
-    
+
+   bash
+
+   Copy code
+
+   `git checkout -b feature-branch`
+
 3. Make changes and commit:
-    
-    bash
-    
-    Copy code
-    
-    `git commit -m "Add your message here"`
-    
+
+   bash
+
+   Copy code
+
+   `git commit -m "Add your message here"`
+
 4. Push and create a pull request.
 
 ## License
@@ -88,4 +86,3 @@ This project is licensed under the MIT License. See the `LICENSE` file for det
 ## Acknowledgements
 
 Special thanks to the open-source community for tools and inspirations that make these configurations possible.
-
