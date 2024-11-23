@@ -33,42 +33,48 @@ function skc() {
 }
 
 # find or create build directory and build cmake project
-# TODO: Fix build function
-build () {
-  variable = true;
-  for file in $(ls);
-  do 
+# Find or create build directory and build cmake project
+build() {
+  local variable=true
+
+  # Check if a 'build' directory exists
+  for file in $(ls); do 
     if [ "$file" = "build" ]; then
-      cd "$file";
-      break;
+      cd "$file" || return 1
+      break
     fi
   done
-  if [ $(basename "$(pwd)") = "build" ]; then
-    local file="$(ls)";
-    if [ "${#file[@]}" != "0" ]; then
-      for file in $(ls);
-      do 
-        rm -rf "$file";
+
+  # If in 'build' directory, clean and rebuild
+  if [ "$(basename "$(pwd)")" = "build" ]; then
+    local files=$(ls)
+    if [ -n "$files" ]; then
+      for file in $(ls); do 
+        rm -rf "$file"
       done
     fi
-    cmake ..;
-    make 
-    variable = false;
+    variable=false
   else
-    for file in $(ls);
-    do
-      if [ "$file" = "CMakeList.txt" ]; then
-        mkdir build;
-        build;
-        variable = false;
-        break;
+    # Check if the current directory has CMakeLists.txt
+    for file in $(ls); do
+      if [ "$file" = "CMakeLists.txt" ]; then
+        mkdir -p build
+        cd build || return 1
+        variable=false
+        break
       fi
     done
-    if [ "variable" = true ]; then
-      echo "[-] $(pwd) is not has CMakeLists.txt!";
+    # No CMakeLists.txt found
+    if $variable; then
+      echo "[-] $(pwd) does not contain CMakeLists.txt!"
+      return 1
+    else
+      cmake .. || { echo "[-] CMake configuration failed!"; return 1; }
+      make || { echo "[-] Make failed!"; return 1; }
     fi
   fi
 }
+
 # Get operation system type
 get_ostype ()
 {
