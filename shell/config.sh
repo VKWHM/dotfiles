@@ -32,13 +32,20 @@ eval "$(zoxide init zsh)"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Setup Fuzzy Finder Tool
-function fzf_init() {
+# Setup tool before zsh-vi-mode
+function Initialization() {
+  # Init fzf 
   [[ ! -f ~/.fzf.zsh ]] || source ~/.fzf.zsh
   eval "$(fzf --zsh)"
+
+  # Define custom key bindings
+  if command -v gh >/dev/null; then
+    zle -N _ask_copilot_explain
+    bindkey '^ ' _ask_copilot_explain
+  fi
 }
 
-zvm_after_init_commands+=(fzf_init)
+zvm_after_init_commands+=(Initialization)
 export FZF_DEFAULT_OPTS="--height 80% --layout reverse --border"
 # -- Use fd instead of fzf --
 

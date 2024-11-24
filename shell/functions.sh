@@ -139,3 +139,10 @@ extract() {
     fi
   done
 }
+
+_ask_copilot_explain ()
+{
+  local prompt="${BUFFER:0:$CURSOR}"
+  gh copilot explain "$prompt"
+  zle redisplay
+}
