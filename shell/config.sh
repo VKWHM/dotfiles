@@ -41,7 +41,7 @@ function Initialization() {
   # Define custom key bindings
   if command -v gh >/dev/null; then
     zle -N _ask_copilot_explain
-    bindkey '^ ' _ask_copilot_explain
+    bindkey '^X' _ask_copilot_explain
   fi
 }
 

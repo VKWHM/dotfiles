@@ -11,7 +11,7 @@ wezterm.on("toggle-pane-hsb", function(window, _)
 	local overrides = window:get_config_overrides() or {}
 	overrides.window_background_opacity = nil
 	local hsb = overrides.inactive_pane_hsb or {}
-	hsb.brightness = hsb.brightness == 0.8 and 1 or 0.8
+	hsb.brightness = hsb.brightness == 0.7 and 1 or 0.7
 	hsb.saturation = hsb.saturation == 0.8 and 1 or 0.8
 	overrides.inactive_pane_hsb = hsb
 	window:set_config_overrides(overrides)
