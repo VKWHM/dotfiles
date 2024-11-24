@@ -63,17 +63,9 @@ Contributions are welcome! To contribute:
 1. Fork the repository.
 2. Create a new branch:
 
-   bash
-
-   Copy code
-
    `git checkout -b feature-branch`
 
 3. Make changes and commit:
-
-   bash
-
-   Copy code
 
    `git commit -m "Add your message here"`
 
