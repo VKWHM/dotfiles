@@ -140,6 +140,35 @@ extract() {
   done
 }
 
+check_path() {
+  [[ ":$PATH:" == *":$1:"* ]];
+  return $?
+}
+
+export_path() {
+  if ! check_path "$1"; then
+    export PATH="$PATH:$1"
+  fi
+}
+
+appendpath() {
+  if [ -z "$1" ]; then
+    echo "Usage: appendpath <path>"
+    return 1
+  fi
+
+  if ! check_path "$1"; then
+    echo "[*] '$1' adding to PATH"
+    export PATH="$PATH:$1"
+    if grep -qE "^export PATH=.*$1" ~/.zshrc; then
+      echo "[*] '$1' already exists in .zshrc"
+    else
+      echo "export PATH=\$PATH:$1" >> ~/.zshrc
+      echo "[+] '$1' added to .zshrc"
+    fi
+  fi
+}
+
 _ask_copilot_explain ()
 {
   local prompt="${BUFFER:0:$CURSOR}"
