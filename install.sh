@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 # Globals
 USER=${USER:-$(id -u -n)}
 HOME="${HOME:-$(getent passwd "$USER" 2>/dev/null | cut -d: -f6)}"
@@ -274,7 +272,7 @@ install_configs() {
 }
 
 setup_zsh_plugins() {
-    local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+    local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
     local theme_url="https://github.com/romkatv/powerlevel10k.git"
 
     if ! [[ -d "$HOME/.oh-my-zsh" ]]; then
@@ -285,9 +283,9 @@ setup_zsh_plugins() {
         rm -f "$ohmyzsh_installer"
     fi
 
-    [[ -d "$zsh_custom/zsh-syntax-highlighting" ]] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zsh_custom/zsh-syntax-highlighting"
-    [[ -d "$zsh_custom/zsh-autosuggestions" ]] || git clone https://github.com/zsh-users/zsh-autosuggestions.git "$zsh_custom/zsh-autosuggestions"
-    [[ -d "$zsh_custom/zsh-vi-mode" ]] || git clone https://github.com/jeffreytse/zsh-vi-mode.git "$zsh_custom/zsh-vi-mode"
+    [[ -d "$zsh_custom/plugins/zsh-syntax-highlighting" ]] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zsh_custom/plugins/zsh-syntax-highlighting"
+    [[ -d "$zsh_custom/plugins/zsh-autosuggestions" ]] || git clone https://github.com/zsh-users/zsh-autosuggestions.git "$zsh_custom/plugins/zsh-autosuggestions"
+    [[ -d "$zsh_custom/plugins/zsh-vi-mode" ]] || git clone https://github.com/jeffreytse/zsh-vi-mode.git "$zsh_custom/plugins/zsh-vi-mode"
     [[ -d "$zsh_custom/themes/powerlevel10k" ]] || git clone --depth=1 "$theme_url" "$zsh_custom/themes/powerlevel10k"
 }
 
