@@ -101,3 +101,6 @@ alias hs='history | awk "{CMD[\$2]++; count++;} END {for (a in CMD) print CMD[a]
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   alias lastlog="lastlog | grep -v 'Never logged in'"
 fi
+
+# Updating WHM Shell
+alias whmupdate="cd ~/.whm_shell/ && git pull && cd -"
