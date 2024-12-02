@@ -59,5 +59,7 @@ return {
 				},
 			},
 		})
+		local map = vim.keymap.set
+		map("n", "<leader>n", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss noice" })
 	end,
 }
