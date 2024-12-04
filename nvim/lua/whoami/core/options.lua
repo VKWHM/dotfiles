@@ -43,3 +43,6 @@ opt.fillchars = {
 	diff = "╱",
 	eob = " ",
 }
+
+-- Option for session restore plugin
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"

@@ -4,10 +4,10 @@ local keymap = vim.keymap -- for conciseness
 vim.g.mapleader = " "
 
 -- Never use arrow keys :p
-keymap.set({ "n", "i", "v" }, "<up>", "<nop>")
-keymap.set({ "n", "i", "v" }, "<down>", "<nop>")
-keymap.set({ "n", "i", "v" }, "<left>", "<nop>")
-keymap.set({ "n", "i", "v" }, "<right>", "<nop>")
+keymap.set({ "n", "i", "v", "x" }, "<up>", "<nop>")
+keymap.set({ "n", "i", "v", "x" }, "<down>", "<nop>")
+keymap.set({ "n", "i", "v", "x" }, "<left>", "<nop>")
+keymap.set({ "n", "i", "v", "x" }, "<right>", "<nop>")
 
 -- better up/down
 keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
@@ -20,8 +20,8 @@ keymap.set("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
 keymap.set("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
 keymap.set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 keymap.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
-keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
+keymap.set("v", "<A-j>", "<cmd>m '>+1<cr>gv=gv", { desc = "Move Down" })
+keymap.set("v", "<A-k>", "<cmd>m '<-2<cr>gv=gv", { desc = "Move Up" })
 
 -- Add undo break-points
 keymap.set("i", ",", ",<c-g>u")
@@ -49,6 +49,7 @@ keymap.set("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
 -- Leave insert mode
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
+keymap.set("v", "jf", "<ESC>", { desc = "Exit insert mode with jk" })
 
 -- Clear search with <esc>
 keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
