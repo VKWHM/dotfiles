@@ -42,7 +42,7 @@ git clone https://github.com/vkwhm/dotfiles.git cd dotfiles
 
 3. Follow on-screen prompts to customize settings as needed.
 
-4. Download and install your favorite [Nerd Font]: https://www.nerdfonts.com/
+4. Download and install your favorite [Nerd Font](https://www.nerdfonts.com/)
 
 ## Requirements
 
