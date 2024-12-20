@@ -76,8 +76,8 @@ function M.apply_to_config(config)
 				mode = "SwapWithActive",
 			})
 		),
-		bind_sleader("{", act.RotatePanes("Clockwise")),
-		bind_sleader("}", act.RotatePanes("CounterClockwise")),
+		bind_sleader("}", act.RotatePanes("Clockwise")),
+		bind_sleader("{", act.RotatePanes("CounterClockwise")),
 		{
 			key = "g",
 			mods = "CTRL",
