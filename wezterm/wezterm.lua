@@ -22,9 +22,9 @@ end
 
 -- Font configuration
 do
-	config.font = wezterm.font("JetBrainsMonoNL Nerd Font", {
+	config.font = wezterm.font("JetBrainsMono Nerd Font", {
 		weight = "DemiBold",
-		italic = false,
+		italic = true,
 		-- stretch = 'Expanded',
 	})
 	config.font_size = 12

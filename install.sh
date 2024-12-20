@@ -260,8 +260,10 @@ install_tools() {
 }
 
 install_configs() {
-    [[ -d "$WHMCONFIG" ]] || git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
-
+    if [["$OSTYPE" == "darwin"* ]]; then
+      echo "[*] Installing JetBrains Mono Nerd Font..."
+      brew install font-jetbrains-mono-nerd-font
+    fi
     # Linking configuration files
     link_config "$WHMCONFIG/vimrc" "$HOME/.vimrc"
     link_config "$WHMCONFIG/nvim" "$HOME/.config/nvim"
@@ -306,6 +308,7 @@ EOF
 }
 
 main() {
+    [[ -d "$WHMCONFIG" ]] || git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
     confirm "[??] Do you want to install required tools?" && install_tools
     install_configs
     setup_zsh_plugins
