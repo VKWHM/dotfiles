@@ -123,12 +123,12 @@ function M.apply_to_config(config)
 		),
 		-- End Workspace
 	}
-	if wezterm.target_triple:find("%w-linux-gnu") then
-		for i = 1, 20 do
+	if wezterm.target_triple:find("linux") then
+		for i = 1, 9 do
 			table.insert(config.keys, {
 				key = tostring(i),
 				mods = "ALT",
-				action = wezterm.action({ ActiveTab = i - 1 }),
+				action = wezterm.action({ ActivateTab = i - 1 }),
 			})
 		end
 	end
