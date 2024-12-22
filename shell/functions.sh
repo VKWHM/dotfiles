@@ -64,14 +64,14 @@ build() {
         break
       fi
     done
-    # No CMakeLists.txt found
-    if $variable; then
-      echo "[-] $(pwd) does not contain CMakeLists.txt!"
-      return 1
-    else
-      cmake .. || { echo "[-] CMake configuration failed!"; return 1; }
-      make || { echo "[-] Make failed!"; return 1; }
-    fi
+  fi
+  # No CMakeLists.txt found
+  if $variable; then
+    echo "[-] $(pwd) does not contain CMakeLists.txt!"
+    return 1
+  else
+    cmake .. || { echo "[-] CMake configuration failed!"; return 1; }
+    make || { echo "[-] Make failed!"; return 1; }
   fi
 }
 
