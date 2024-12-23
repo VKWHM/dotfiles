@@ -1,4 +1,4 @@
-local utils = require("whoami.utils")
+local utils = require("utils")
 return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },

@@ -1,4 +1,4 @@
-local utils = require('whoami.utils')
+local utils = require('utils')
 return {
     "catppuccin/nvim",
     name = "catppuccin",

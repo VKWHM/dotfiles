@@ -1,4 +1,4 @@
-local utils = require("whoami.utils")
+local utils = require("utils")
 local keymap = vim.keymap -- for conciseness
 
 vim.g.mapleader = " "

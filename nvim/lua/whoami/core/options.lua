@@ -1,4 +1,4 @@
-local utils = require("whoami.utils")
+local utils = require("utils")
 vim.cmd("let g:netrw_liststyle = 3") -- built-in neovim file explorer
 
 local opt = vim.opt
