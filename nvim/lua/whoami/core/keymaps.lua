@@ -68,7 +68,7 @@ end
 -- Quit
 do
 	keymap.set("n", "<leader>qq", "<cmd>qall!<CR>", { desc = "Quit from Neovim" })
-	keymap.set("n", "<leader>qw", "<cmd>:wqall!<CR>", { desc = "Save files and quit" })
+	keymap.set("n", "<leader>qw", "<cmd>wqall!<CR>", { desc = "Save files and quit" })
 end
 
 keymap.set("n", "<leader>p", "<cmd>Lazy<CR>", { desc = "Plugin Manager" })
