@@ -12,8 +12,8 @@ return {
 		end, { desc = "Toggle Copilot" })
 		-- Disable tab mapping
 		vim.g.copilot_no_tab_map = true
-		-- Map <C-y> to accept completion
-		map("i", "<M-j>", '"\\<C-g>u" .. copilot#Accept("\\<CR>")', {
+		-- Map <M-y> to accept completion
+		map("i", "<M-y>", '"\\<C-g>u" .. copilot#Accept("\\<CR>")', {
 			expr = true,
 			silent = true,
 			noremap = true,

@@ -15,8 +15,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{ import = "whoami.plugins" },
-	{ import = "whoami.plugins.lsp" },
-	{ import = "whoami.plugins.debug" },
+	-- { import = "whoami.plugins.lsp" },
+	-- { import = "whoami.plugins.debug" },
 }, {
 	checker = {
 		enabled = true,
