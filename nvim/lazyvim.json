@@ -1,6 +1,7 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.ai.copilot-chat",
+		"lazyvim.plugins.extras.editor.aerial" 
   ],
   "news": {
     "NEWS.md": "10960"
