@@ -9,7 +9,7 @@ alias zshconfig="nvim ~/.zshrc"
 # Hard Reload shell
 alias reload='exec "$SHELL"'
 #
-# Configure bat 
+# Configure bat
 alias bat='bat --theme="$(is_dark && echo Catppuccin Mocha || echo Catppuccin Latte)"'
 
 # Make help menu more readable
@@ -24,22 +24,22 @@ alias cd='z'
 
 # package installition and removing aliases
 case "$OSTYPE" in
-  "darwin"*)
-    if command -v brew 2>&1 >/dev/null; then
-      yep_alias="brew install"
-      nope_alias="brew remove"
-    fi
-    ;;
+"darwin"*)
+  if command -v brew 2>&1 >/dev/null; then
+    yep_alias="brew install"
+    nope_alias="brew remove"
+  fi
+  ;;
 
-  "linux-gnu"*)
-    if command -v dnf 2>&1 >/dev/null; then
-      yep_alias="sudo dnf install"
-      nope_alias="sudo dnf remove"
-    elif command -v apt 2>&1 >/dev/null; then
-      yep_alias="sudo apt install"
-      nope_alias="sudo apt remove"
-    fi
-    ;;
+"linux-gnu"*)
+  if command -v dnf 2>&1 >/dev/null; then
+    yep_alias="sudo dnf install"
+    nope_alias="sudo dnf remove"
+  elif command -v apt 2>&1 >/dev/null; then
+    yep_alias="sudo apt install"
+    nope_alias="sudo apt remove"
+  fi
+  ;;
 esac
 
 [[ -z "{yep_alias}" ]] || alias yep="$yep_alias"
@@ -61,16 +61,16 @@ else
   alias ports='netstat -tulnvp'
 fi
 
-# prompt if deleting more than 3 files at a time 
+# prompt if deleting more than 3 files at a time
 alias rm='rm -I'
- 
-# confirmation 
+
+# confirmation
 alias mv='mv -i'
 alias cp='cp -i'
 alias ln='ln -i'
 
 if [[ "$OSYPE" == "linux-gnu"* ]]; then
-  # Parenting changing perms on / 
+  # Parenting changing perms on /
   alias chown='chown --preserve-root'
   alias chmod='chmod --preserve-root'
   alias chgrp='chgrp --preserve-root'
@@ -78,16 +78,16 @@ fi
 
 # pass options to free (only linux systems)
 [[ "$OSTYPE" == "darwin"* ]] || alias meminfo='free -ltmh'
- 
+
 # get top process eating memory
 alias psmem='ps aux | sort -nr -k 4 | less'
- 
+
 # get top process eating cpu
 alias pscpu='ps aux | sort -nr -k 3 | less'
 
 # searchable process table
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
- 
+
 # get GPU ram on device
 [[ ! -e /var/log/Xorg.0.log ]] || alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
 
@@ -104,3 +104,9 @@ fi
 
 # Updating WHM Shell
 alias whmupdate="cd ~/.whm_shell/ && git pull && cd -"
+
+# Vim aliases
+if command -v nvim 2>&1 >/dev/null; then
+  command -v vim 2>&1 >/dev/null && alias vi="$(command -v vim)"
+  alias vim="nvim -u $WHMCONFIG/nvim/whoami-init.lua"
+fi
