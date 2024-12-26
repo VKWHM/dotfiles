@@ -129,8 +129,8 @@ do
 	keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
 	keymap.set("n", "<leader>to", "<cmd>tabonly<CR>", { desc = "Close other tabs" })
 	keymap.set("n", "<leader>tl", "<cmd>tablast<CR>", { desc = "Goto last tab" })
-	keymap.set("n", "<TAB>", "<cmd>tabn<CR>", { desc = "Goto next tab" })
-	keymap.set("n", "<S-TAB>", "<cmd>tabp<CR>", { desc = "Goto previous tab" })
+	keymap.set("n", "<leader><TAB>", "<cmd>tabn<CR>", { desc = "Goto next tab" })
+	keymap.set("n", "<leader><S-TAB>", "<cmd>tabp<CR>", { desc = "Goto previous tab" })
 end
 
 -- diagnostic
