@@ -5,10 +5,10 @@ local map = vim.keymap.set
 local unmap = vim.keymap.del
 
 -- Never use arrow keys :p
-map({ "n", "i", "v", "x" }, "<up>", "<nop>")
-map({ "n", "i", "v", "x" }, "<down>", "<nop>")
-map({ "n", "i", "v", "x" }, "<left>", "<nop>")
-map({ "n", "i", "v", "x" }, "<right>", "<nop>")
+-- map({ "n", "i", "v", "x" }, "<up>", "<nop>")
+-- map({ "n", "i", "v", "x" }, "<down>", "<nop>")
+-- map({ "n", "i", "v", "x" }, "<left>", "<nop>")
+-- map({ "n", "i", "v", "x" }, "<right>", "<nop>")
 
 -- Delete word
 map("n", "dw", "bde")
