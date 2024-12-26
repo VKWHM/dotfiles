@@ -1,7 +1,6 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
-local utils = require("utils")
 local opt = vim.opt
 
 opt.number = true
@@ -18,5 +17,3 @@ opt.wrap = false
 -- search settings
 opt.ignorecase = true -- ignore case when searching
 opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
-
-opt.background = utils.appearance() -- automaticlly detect appearance
