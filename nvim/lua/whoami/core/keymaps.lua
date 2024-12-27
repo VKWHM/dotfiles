@@ -49,7 +49,7 @@ keymap.set("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
 -- Leave insert mode
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
-keymap.set("v", "jf", "<ESC>", { desc = "Exit insert mode with jk" })
+-- keymap.set("v", "jf", "<ESC>", { desc = "Exit insert mode with jk" })
 
 -- Clear search with <esc>
 keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
