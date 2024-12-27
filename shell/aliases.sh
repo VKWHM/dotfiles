@@ -107,6 +107,9 @@ alias whmupdate="cd ~/.whm_shell/ && git pull && cd -"
 
 # Vim aliases
 if command -v nvim 2>&1 >/dev/null; then
-  command -v vim 2>&1 >/dev/null && alias vi="$(command -v vim)"
+  if VIMRUNTIME=$(command -v vim); then
+    alias vi="$VIMRUNTIME"
+    export EDITOR="$VIMRUNTIME"
+  fi
   alias vim="nvim -u $WHMCONFIG/nvim/whoami-init.lua"
 fi

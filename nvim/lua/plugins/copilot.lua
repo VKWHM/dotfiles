@@ -3,7 +3,7 @@ return {
 	config = function()
 		local map = vim.keymap.set
 		map("n", "<leader>at", function()
-			if vim.g.copilot_enabled == 1 then
+			if vim.g.copilot_enabled ~= 0 then
 				vim.cmd([[Copilot disable]])
 			else
 				vim.cmd([[Copilot enable]])
