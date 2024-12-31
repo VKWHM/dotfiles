@@ -335,6 +335,7 @@ main() {
     case $opt in
     a)
       install_all=true
+      break
       ;;
     t)
       install_tools=true
@@ -382,12 +383,7 @@ main() {
     esac
   done
 
-  if $install_all; then
-    install_tools
-    install_configs
-    setup_zsh_plugins
-    finalize_zsh_config
-  else
+  if ! $install_all; then
     if $install_tools; then
       install_tools
     fi
@@ -422,6 +418,11 @@ main() {
     if $install_neovim; then
       install_neovim
     fi
+  else
+    install_tools
+    install_configs
+    setup_zsh_plugins
+    finalize_zsh_config
   fi
 }
 
