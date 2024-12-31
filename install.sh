@@ -8,32 +8,32 @@ WHMCONFIG="$HOME/.whm_shell"
 
 # Function to check if a path exists in the current PATH
 is_path_in_env() {
-    local path="$1"
-    if [[ ":$PATH:" == *":$path:"* ]]; then
-        return 0
-    else
-        return 1
-    fi
+  local path="$1"
+  if [[ ":$PATH:" == *":$path:"* ]]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 # Function to add a path to PATH if it isn't already present
 add_to_path() {
-    local path="$1"
-    if ! is_path_in_env "$path"; then
-        export PATH="$path:$PATH"
-        printf "Added '%s' to PATH\n" "$path"
-    else
-        printf "'%s' is already in PATH\n" "$path"
-    fi
+  local path="$1"
+  if ! is_path_in_env "$path"; then
+    export PATH="$path:$PATH"
+    printf "Added '%s' to PATH\n" "$path"
+  else
+    printf "'%s' is already in PATH\n" "$path"
+  fi
 }
 
 # Function to persist PATH changes to .bashrc
 persist_path() {
-    local path="$1"
-    if ! grep -q "export PATH=.*$path" "$HOME/.zshrc"; then
-        printf "\n# Added by script\nexport PATH=%s:\$PATH\n" "$path" >> "$HOME/.zshrc"
-        printf "Persisted '%s' to %s\n" "$path" "$HOME/.zshrc"
-    fi
+  local path="$1"
+  if ! grep -q "export PATH=.*$path" "$HOME/.zshrc"; then
+    printf "\n# Added by script\nexport PATH=%s:\$PATH\n" "$path" >>"$HOME/.zshrc"
+    printf "Persisted '%s' to %s\n" "$path" "$HOME/.zshrc"
+  fi
 }
 
 check_file_exist() {
@@ -41,15 +41,13 @@ check_file_exist() {
   return $?
 }
 
-check_program_exist()
-{
+check_program_exist() {
   local program="$(command -v $1)"
   test -x "$program"
   return $?
 }
 
-ensure ()
-{
+ensure() {
   if ! check_program_exist "$1"; then
     echo "[-] Error: $1 is not installed." >&2
     return 1
@@ -57,10 +55,8 @@ ensure ()
   return 0
 }
 
-ensure-all ()
-{
-  for program in "$@"
-  do
+ensure-all() {
+  for program in "$@"; do
     if ! ensure $program; then
       return 1
     fi
@@ -70,91 +66,82 @@ ensure-all ()
 # Utility functions
 
 lnif() {
-    local target="${@: -1}"
-    if ! [[ -e "$target" ]]; then
-        ln "$@"
-    fi
+  local target="${@: -1}"
+  if ! [[ -e "$target" ]]; then
+    ln "$@"
+  fi
 }
 
 link_config() {
-    local src="$1"
-    local dest="$2"
-    lnif -s "$src" "$dest" && echo "[+] Linked: $src -> $dest"
+  local src="$1"
+  local dest="$2"
+  lnif -s "$src" "$dest" && echo "[+] Linked: $src -> $dest"
 }
 
 check_file_exist() {
-    [[ -e "$1" ]]
+  [[ -e "$1" ]]
 }
 
 check_program_exist() {
-    local program
-    program=$(command -v "$1" 2>/dev/null)
-    [[ -x "$program" ]]
+  local program
+  program=$(command -v "$1" 2>/dev/null)
+  [[ -x "$program" ]]
 }
 
 download() {
-    local url="$1"
-    local dest="${2:-$(mktemp -p "$TEMP_DIR")}"
-    curl -fsSL -o "$dest" "$url" || {
-        echo "[-] Failed to download $url" >&2
-        return 1
-    }
-    echo "$dest"
+  local url="$1"
+  local dest="${2:-$(mktemp -p "$TEMP_DIR")}"
+  curl -fsSL -o "$dest" "$url" || {
+    echo "[-] Failed to download $url" >&2
+    return 1
+  }
+  echo "$dest"
 }
 
 confirm() {
-    read -rp "$1 (y/n): " choice
-    case "$choice" in
-        [Nn]*) echo "Operation cancelled." >&2; return 1 ;;
-        *) return 0 ;;
-    esac
+  read -rp "$1 (y/n): " choice
+  case "$choice" in
+  [Nn]*)
+    echo "Operation cancelled." >&2
+    return 1
+    ;;
+  *) return 0 ;;
+  esac
 }
 
-ensure() {
-    if ! check_program_exist "$1"; then
-        echo "[-] Error: $1 is not installed." >&2
-        return 1
-    fi
-}
-
-install_package ()
-{
+install_package() {
   local package="$1"
 
   case "$OSTYPE" in
-    "linux-gnu"*)
-      if check_program_exist apt; then
-        sudo apt update && sudo apt install -y "$package"
-      elif check_program_exist yum; then
-        sudo yum install -y "$package"
-      elif check_program_exist dnf; then
-        sudo dnf install -y "$package"
-      elif check_program_exist pacman; then
-        sudo pacman -Syu --noconfirm "$package"
-      else
-        echo "No supported package maanger found. Unable to install $package."
-      fi
-      ;;
-    "darwin"*)
-      if check_program_exist brew; then
-        brew install "$package"
-      else
-        echo "Homebrew is not installed. Please install Homebrew to use this function on macOS"
-        return 1
-      fi
-      ;;
-    *)
-      echo "Unsupported OS: $OSTYPE"
+  "linux-gnu"*)
+    if check_program_exist apt; then
+      sudo apt update && sudo apt install -y "$package"
+    elif check_program_exist yum; then
+      sudo yum install -y "$package"
+    elif check_program_exist dnf; then
+      sudo dnf install -y "$package"
+    elif check_program_exist pacman; then
+      sudo pacman -Syu --noconfirm "$package"
+    else
+      echo "No supported package manager found. Unable to install $package."
+    fi
+    ;;
+  "darwin"*)
+    if check_program_exist brew; then
+      brew install "$package"
+    else
+      echo "Homebrew is not installed. Please install Homebrew to use this function on macOS"
       return 1
-      ;;
+    fi
+    ;;
+  *)
+    echo "Unsupported OS: $OSTYPE"
+    return 1
+    ;;
   esac
-  return $?;
+  return $?
 }
 
-
-ensure-all git curl || exit 1;
-
-# Installition utilities
 install_zsh() {
   echo "[*] Installing zsh..."
   install_package zsh || echo "[-] Failed to install zsh."
@@ -201,6 +188,11 @@ install_eza() {
   else
     install_package eza || echo "[-] Failed to install eza."
   fi
+}
+
+install_superfile() {
+  echo "[*] Installing superfile..."
+  bash -c "$(curl -sLo- https://superfile.netlify.app/install.sh)"
 }
 
 install_bat() {
@@ -260,40 +252,40 @@ install_tools() {
 }
 
 install_configs() {
-    if [["$OSTYPE" == "darwin"* ]]; then
-      echo "[*] Installing JetBrains Mono Nerd Font..."
-      brew install font-jetbrains-mono-nerd-font
-    fi
-    # Linking configuration files
-    link_config "$WHMCONFIG/vimrc" "$HOME/.vimrc"
-    link_config "$WHMCONFIG/nvim" "$HOME/.config/nvim"
-    link_config "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
-    link_config "$WHMCONFIG/wezterm" "$HOME/.config/wezterm"
-    link_config "$WHMCONFIG/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
-    link_config "$WHMCONFIG/p10k.zsh" "$HOME/.p10k.zsh"
+  if [["$OSTYPE" == "darwin"* ]]; then
+    echo "[*] Installing JetBrains Mono Nerd Font..."
+    brew install font-jetbrains-mono-nerd-font
+  fi
+  # Linking configuration files
+  link_config "$WHMCONFIG/vimrc" "$HOME/.vimrc"
+  link_config "$WHMCONFIG/nvim" "$HOME/.config/nvim"
+  link_config "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
+  link_config "$WHMCONFIG/wezterm" "$HOME/.config/wezterm"
+  link_config "$WHMCONFIG/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+  link_config "$WHMCONFIG/p10k.zsh" "$HOME/.p10k.zsh"
 }
 
 setup_zsh_plugins() {
-    local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-    local theme_url="https://github.com/romkatv/powerlevel10k.git"
+  local zsh_custom="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+  local theme_url="https://github.com/romkatv/powerlevel10k.git"
 
-    if ! [[ -d "$HOME/.oh-my-zsh" ]]; then
-        local ohmyzsh_installer
-        ohmyzsh_installer=$(download https://install.ohmyz.sh/)
-        chmod +x "$ohmyzsh_installer"
-        "$ohmyzsh_installer" --keep-zshrc --skip-chsh --unattended
-        rm -f "$ohmyzsh_installer"
-    fi
+  if ! [[ -d "$HOME/.oh-my-zsh" ]]; then
+    local ohmyzsh_installer
+    ohmyzsh_installer=$(download https://install.ohmyz.sh/)
+    chmod +x "$ohmyzsh_installer"
+    "$ohmyzsh_installer" --keep-zshrc --skip-chsh --unattended
+    rm -f "$ohmyzsh_installer"
+  fi
 
-    [[ -d "$zsh_custom/plugins/zsh-syntax-highlighting" ]] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zsh_custom/plugins/zsh-syntax-highlighting"
-    [[ -d "$zsh_custom/plugins/zsh-autosuggestions" ]] || git clone https://github.com/zsh-users/zsh-autosuggestions.git "$zsh_custom/plugins/zsh-autosuggestions"
-    [[ -d "$zsh_custom/plugins/zsh-vi-mode" ]] || git clone https://github.com/jeffreytse/zsh-vi-mode.git "$zsh_custom/plugins/zsh-vi-mode"
-    [[ -d "$zsh_custom/themes/powerlevel10k" ]] || git clone --depth=1 "$theme_url" "$zsh_custom/themes/powerlevel10k"
+  [[ -d "$zsh_custom/plugins/zsh-syntax-highlighting" ]] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$zsh_custom/plugins/zsh-syntax-highlighting"
+  [[ -d "$zsh_custom/plugins/zsh-autosuggestions" ]] || git clone https://github.com/zsh-users/zsh-autosuggestions.git "$zsh_custom/plugins/zsh-autosuggestions"
+  [[ -d "$zsh_custom/plugins/zsh-vi-mode" ]] || git clone https://github.com/jeffreytse/zsh-vi-mode.git "$zsh_custom/plugins/zsh-vi-mode"
+  [[ -d "$zsh_custom/themes/powerlevel10k" ]] || git clone --depth=1 "$theme_url" "$zsh_custom/themes/powerlevel10k"
 }
 
 finalize_zsh_config() {
-    confirm "Do you want to add WHM configuration to .zshrc?" || return 0
-    cat <<'EOF' >> "$HOME/.zshrc"
+  confirm "Do you want to add WHM configuration to .zshrc?" || return 0
+  cat <<'EOF' >>"$HOME/.zshrc"
 # oh-my-zsh plugins settings
 plugins=(
   git
@@ -304,15 +296,133 @@ plugins=(
 # WHM Shell Config
 [[ -d "$HOME/.whm_shell" ]] && source "$HOME/.whm_shell/shell/config.sh"
 EOF
-    echo "[+] WHM configuration added to .zshrc."
+  echo "[+] WHM configuration added to .zshrc."
+}
+
+usage() {
+  echo "Usage: $0 [-a] [-t] [-c] [-p] [--zsh] [--fzf] [--zoxide] [--fd] [--eza] [--superfile] [--bat] [--neovim]"
+  echo "  -a            Install all tools and configurations"
+  echo "  -t            Install tools"
+  echo "  -c            Install configurations"
+  echo "  -p            Setup zsh plugins"
+  echo "  --zsh         Install zsh"
+  echo "  --fzf         Install fzf"
+  echo "  --zoxide      Install zoxide"
+  echo "  --fd          Install fd"
+  echo "  --eza         Install eza"
+  echo "  --superfile   Install superfile"
+  echo "  --bat         Install bat"
+  echo "  --neovim      Install Neovim"
+  exit 1
 }
 
 main() {
-    [[ -d "$WHMCONFIG" ]] || git clone "https://github.com/VKWHM/dotfiles.git" "$WHMCONFIG"
-    confirm "[??] Do you want to install required tools?" && install_tools
+  local OPTIND
+  local install_all=false
+  local install_tools=false
+  local install_configs=false
+  local setup_plugins=false
+  local install_zsh=false
+  local install_fzf=false
+  local install_zoxide=false
+  local install_fd=false
+  local install_eza=false
+  local install_superfile=false
+  local install_bat=false
+  local install_neovim=false
+
+  while getopts "hatcp-:" opt; do
+    case $opt in
+    a)
+      install_all=true
+      ;;
+    t)
+      install_tools=true
+      ;;
+    c)
+      install_configs=true
+      ;;
+    p)
+      setup_plugins=true
+      ;;
+    -)
+      case "${OPTARG}" in
+      zsh)
+        install_zsh=true
+        ;;
+      fzf)
+        install_fzf=true
+        ;;
+      zoxide)
+        install_zoxide=true
+        ;;
+      fd)
+        install_fd=true
+        ;;
+      eza)
+        install_eza=true
+        ;;
+      superfile)
+        install_superfile=true
+        ;;
+      bat)
+        install_bat=true
+        ;;
+      neovim)
+        install_neovim=true
+        ;;
+      *)
+        usage
+        ;;
+      esac
+      ;;
+    *)
+      usage
+      ;;
+    esac
+  done
+
+  if $install_all; then
+    install_tools
     install_configs
     setup_zsh_plugins
     finalize_zsh_config
+  else
+    if $install_tools; then
+      install_tools
+    fi
+    if $install_configs; then
+      install_configs
+    fi
+    if $setup_plugins; then
+      setup_zsh_plugins
+      finalize_zsh_config
+    fi
+    if $install_zsh; then
+      install_zsh
+    fi
+    if $install_fzf; then
+      install_fzf
+    fi
+    if $install_zoxide; then
+      install_zoxide
+    fi
+    if $install_fd; then
+      install_fd
+    fi
+    if $install_eza; then
+      install_eza
+    fi
+    if $install_superfile; then
+      install_superfile
+    fi
+    if $install_bat; then
+      install_bat
+    fi
+    if $install_neovim; then
+      install_neovim
+    fi
+  fi
 }
 
 main "$@"
