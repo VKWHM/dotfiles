@@ -10,9 +10,6 @@ local unmap = vim.keymap.del
 -- map({ "n", "i", "v", "x" }, "<left>", "<nop>")
 -- map({ "n", "i", "v", "x" }, "<right>", "<nop>")
 
--- Delete word
-map("n", "dw", "bde")
-
 -- Increment/Decrement
 map("n", "+", "<C-a>")
 map("n", "-", "<C-x>")
