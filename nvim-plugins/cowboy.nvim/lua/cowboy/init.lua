@@ -1,10 +1,43 @@
 local M = {}
+M.count = 15
 M.keys = { "h", "j", "k", "l", "<Up>", "<Down>", "<Left>", "<Right>" }
 M._stack = {}
 
--- TODO: Implement configure_key
 local function configure_key(key)
-	return function() end
+	local count = M.count
+	---@type table?
+	local id
+	local timer = assert(vim.uv.new_timer())
+	return function()
+		if vim.v.count == 0 then
+			if count >= 10 then
+				if not timer:is_active() then
+					timer:start(1000, 1000, function()
+						count = 0
+						timer:stop()
+					end)
+					id = vim.notify(
+						string.format("Hold it Cowboy %s! (%s)", vim.uv.os_getenv("USER"), key),
+						vim.log.levels.WARN,
+						{
+							icon = "🤠",
+							id = id,
+							keep = function()
+								return count >= 10
+							end,
+						}
+					)
+				else
+					timer:again()
+				end
+			else
+				count = count + 1
+				return key
+			end
+		else
+			return key
+		end
+	end
 end
 
 function M.push(maps, lhs)
@@ -24,7 +57,7 @@ function M.map_keys()
 
 	local map = vim.keymap.set
 	for _, key in ipairs(M.keys) do
-		map("n", key, configure_key(key), { silent = true })
+		map("n", key, configure_key(key), { silent = true, noremap = true, expr = true })
 	end
 end
 
@@ -41,9 +74,10 @@ end
 function M.unmap_keys()
 	local map = vim.keymap.set
 	for _, key in ipairs(M.keys) do
-		backup = M.pop(key)
+		local backup = M.pop(key)
 		if backup then
 			map("n", backup.lhs, backup.rhs or backup.callback, {
+				expr = backup.expr == 1 and true or nil,
 				remap = backup.remap,
 				callback = backup.callback,
 				desc = backup.desc,
@@ -58,14 +92,24 @@ end
 
 function M.setup()
 	local active = true
+	local autocmd_id
 	local map_callback = {
-		[false] = map_keys,
-		[true] = unmap_keys,
+		[false] = M.map_keys,
+		[true] = M.unmap_keys,
 	}
 	vim.keymap.set("n", "<leader>uu", function()
 		map_callback[active]()
 		active = not active
-	end, { desc = "Toggle cowboy" })
+		vim.notify("Cowboy is " .. (active and "active" or "inactive"))
+	end, { desc = "Toggle Cowboy" })
+
+	autocmd_id = vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+		pattern = "*.*",
+		callback = function()
+			M.map_keys()
+			vim.api.nvim_del_autocmd(autocmd_id)
+		end,
+	})
 end
 
 return M
