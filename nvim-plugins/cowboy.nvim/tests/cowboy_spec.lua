@@ -1,6 +1,6 @@
 local stub = require("luassert.stub")
 local spy = require("luassert.spy")
-local cowboy = nil
+local cowboy
 
 local function find_mapping(maps, lhs)
 	for _, value in ipairs(maps) do
@@ -99,5 +99,32 @@ describe("cowboy", function()
 		cowboy.map_keys()
 		cowboy.unmap_keys()
 		assert.are.equals(0, #cowboy._stack)
+	end)
+
+	it("allow movement keys to be run", function()
+		for _, key in ipairs(cowboy.keys) do
+			local func = cowboy.configure_key(key)
+			assert.are.same(key, func())
+		end
+	end)
+
+	it("prevent movement after N times", function()
+		local key = cowboy.keys[1]
+		local func = cowboy.configure_key(key)
+		for _ = 0, cowboy.count do
+			assert.are.same(key, func(key))
+		end
+		assert.are_nil(func(key))
+	end)
+
+	it("notify user ONCE after N times", function()
+		stub(vim, "notify")
+		local key = cowboy.keys[1]
+		local func = cowboy.configure_key(key)
+		for _ = 0, cowboy.count + 3 do
+			func(key)
+		end
+		assert.stub(vim.notify).was.called(1)
+		vim.notify:revert()
 	end)
 end)

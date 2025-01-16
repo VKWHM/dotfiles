@@ -3,40 +3,30 @@ M.count = 15
 M.keys = { "h", "j", "k", "l", "<Up>", "<Down>", "<Left>", "<Right>" }
 M._stack = {}
 
-local function configure_key(key)
-	local count = M.count
+function M.configure_key(key)
+	local count = 0
 	---@type table?
 	local id
 	local timer = assert(vim.uv.new_timer())
 	return function()
-		if vim.v.count == 0 then
-			if count >= 10 then
-				if not timer:is_active() then
-					timer:start(1000, 1000, function()
-						count = 0
-						timer:stop()
-					end)
-					id = vim.notify(
-						string.format("Hold it Cowboy %s! (%s)", vim.uv.os_getenv("USER"), key),
-						vim.log.levels.WARN,
-						{
-							icon = "🤠",
-							id = id,
-							keep = function()
-								return count >= 10
-							end,
-						}
-					)
-				else
-					timer:again()
-				end
+		if count > M.count then
+			if not timer:is_active() then
+				timer:start(1000, 500, function()
+					timer:close()
+					count = 0
+				end)
+				vim.notify(("Hold it Cowboy! (%s)"):format(key), vim.log.levels.WARN, {
+					keep = function()
+						return count > M.count
+					end,
+				})
 			else
-				count = count + 1
-				return key
+				timer:again()
 			end
-		else
-			return key
+			return nil
 		end
+		count = count + 1
+		return key
 	end
 end
 
@@ -57,7 +47,7 @@ function M.map_keys()
 
 	local map = vim.keymap.set
 	for _, key in ipairs(M.keys) do
-		map("n", key, configure_key(key), { silent = true, noremap = true, expr = true })
+		map("n", key, M.configure_key(key), { silent = true, noremap = true, expr = true })
 	end
 end
 
