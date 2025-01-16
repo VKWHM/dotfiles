@@ -2,20 +2,27 @@ local M = {}
 M.count = 15
 M.keys = { "h", "j", "k", "l", "<Up>", "<Down>", "<Left>", "<Right>" }
 M._stack = {}
+M._username = os.getenv("USER") or "Cowboy"
 
 function M.configure_key(key)
+	local username = M._username
 	local count = 0
-	---@type table?
-	local id
+	---@type number
+	local last_time = 0
 	local timer = assert(vim.uv.new_timer())
+	local notified = false
 	return function()
 		if count > M.count then
-			if not timer:is_active() then
+			if not notified then
 				timer:start(1000, 500, function()
-					timer:close()
+					timer:stop()
 					count = 0
+					notified = false
 				end)
-				vim.notify(("Hold it Cowboy! (%s)"):format(key), vim.log.levels.WARN, {
+				notified = true
+				vim.notify(("Hold it %s! (%s)"):format(username, key), vim.log.levels.WARN, {
+					title = "Cowboy",
+					icon = "🤠",
 					keep = function()
 						return count > M.count
 					end,
@@ -25,7 +32,11 @@ function M.configure_key(key)
 			end
 			return nil
 		end
+		if os.time() - last_time >= 1 then
+			count = 0
+		end
 		count = count + 1
+		last_time = os.time()
 		return key
 	end
 end
