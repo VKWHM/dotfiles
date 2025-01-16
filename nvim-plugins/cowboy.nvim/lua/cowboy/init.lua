@@ -1,6 +1,14 @@
 local M = {}
-M.count = 15
-M.keys = { "h", "j", "k", "l", "<Up>", "<Down>", "<Left>", "<Right>" }
+
+---@type table
+M.opts = {}
+---@type number
+M.opts.count = 15
+---@type table<string>
+M.opts.keys = { "h", "j", "k", "l", "<Up>", "<Down>", "<Left>", "<Right>" }
+---@type number
+M.opts.timeout = 2
+
 M._stack = {}
 M._username = os.getenv("USER") or "Cowboy"
 
@@ -12,7 +20,7 @@ function M.configure_key(key)
 	local timer = assert(vim.uv.new_timer())
 	local notified = false
 	return function()
-		if count > M.count then
+		if vim.v.count == 0 and count > M.opts.count then
 			if not notified then
 				timer:start(1000, 500, function()
 					timer:stop()
@@ -24,7 +32,7 @@ function M.configure_key(key)
 					title = "Cowboy",
 					icon = "🤠",
 					keep = function()
-						return count > M.count
+						return count > M.opts.count
 					end,
 				})
 			else
@@ -32,7 +40,7 @@ function M.configure_key(key)
 			end
 			return nil
 		end
-		if os.time() - last_time >= 1 then
+		if os.time() - last_time >= M.opts.timeout then
 			count = 0
 		end
 		count = count + 1
@@ -52,12 +60,12 @@ end
 
 function M.map_keys()
 	local maps = vim.api.nvim_get_keymap("n")
-	for _, key in ipairs(M.keys) do
+	for _, key in ipairs(M.opts.keys) do
 		M.push(maps, key)
 	end
 
 	local map = vim.keymap.set
-	for _, key in ipairs(M.keys) do
+	for _, key in ipairs(M.opts.keys) do
 		map("n", key, M.configure_key(key), { silent = true, noremap = true, expr = true })
 	end
 end
@@ -74,7 +82,7 @@ end
 
 function M.unmap_keys()
 	local map = vim.keymap.set
-	for _, key in ipairs(M.keys) do
+	for _, key in ipairs(M.opts.keys) do
 		local backup = M.pop(key)
 		if backup then
 			map("n", backup.lhs, backup.rhs or backup.callback, {
@@ -91,7 +99,8 @@ function M.unmap_keys()
 	end
 end
 
-function M.setup()
+function M.setup(opts)
+	M.opts = vim.tbl_deep_extend("force", M.opts, opts)
 	local active = true
 	local autocmd_id
 	local map_callback = {
