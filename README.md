@@ -14,14 +14,23 @@ A collection of configuration files and scripts to streamline development and sy
 ## File Structure
 
 ```plaintext
-.
-├── nvim/           # Neovim configuration
-├── shell/          # Shell scripts and configurations
-├── wezterm/        # WezTerm settings
-├── install.sh      # Installation script
-├── p10k.zsh        # Powerlevel10k theme configuration
-├── tmux.conf       # Tmux configuration
-└── vimrc           # Vim configuration
+├──  editor            # Neovim configuration
+│   ├──  nvim
+│   ├──  nvim-plugins
+│   └──  vimrc
+├──  install.shell     # Installation script
+├──  LICENSE
+├──  README.md
+├──  shell            # Zsh Shell configuration
+│   ├──  aliases.sh
+│   ├──  bat-cache
+│   ├──  bat-config
+│   ├──  config.sh
+│   ├──  functions.sh
+│   └──  p10k.zsh
+└──  terminal
+    ├──  tmux.conf   # Tmux configuration
+    └──  wezterm     # WezTerm configuration
 ```
 
 ## Installation
