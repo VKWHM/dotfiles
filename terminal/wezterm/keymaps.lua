@@ -12,6 +12,14 @@ local function bind_leader(key, action)
 	}
 end
 
+local function make_mouse_binding(dir, streak, button, mods, action)
+	return {
+		event = { [dir] = { streak = streak, button = button } },
+		mods = mods,
+		action = action,
+	}
+end
+
 local function bind_sleader(key, action)
 	return {
 		key = key,
@@ -140,6 +148,34 @@ function M.apply_to_config(config)
 			resize_pane("l", "Right"),
 		},
 	}
+	-- Start Mouse Bindings ## https://google.com
+	config.mouse_bindings = {
+		make_mouse_binding(
+			"Up",
+			1,
+			"Left",
+			"NONE",
+			wezterm.action.CompleteSelectionOrOpenLinkAtMouseCursor("ClipboardAndPrimarySelection")
+		),
+		make_mouse_binding(
+			"Up",
+			1,
+			"Left",
+			"SHIFT",
+			wezterm.action.CompleteSelectionOrOpenLinkAtMouseCursor("ClipboardAndPrimarySelection")
+		),
+		make_mouse_binding("Up", 1, "Left", "ALT", wezterm.action.CompleteSelection("ClipboardAndPrimarySelection")),
+		make_mouse_binding(
+			"Up",
+			1,
+			"Left",
+			"SHIFT|ALT",
+			wezterm.action.CompleteSelectionOrOpenLinkAtMouseCursor("ClipboardAndPrimarySelection")
+		),
+		make_mouse_binding("Up", 2, "Left", "NONE", wezterm.action.CompleteSelection("ClipboardAndPrimarySelection")),
+		make_mouse_binding("Up", 3, "Left", "NONE", wezterm.action.CompleteSelection("ClipboardAndPrimarySelection")),
+	}
+	-- End Mouse Bindings
 end
 
 return M
