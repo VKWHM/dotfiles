@@ -65,17 +65,10 @@ ensure-all() {
 
 # Utility functions
 
-lnif() {
-  local target="${@: -1}"
-  if ! [[ -e "$target" ]]; then
-    ln "$@"
-  fi
-}
-
 link_config() {
   local src="$1"
   local dest="$2"
-  lnif -s "$src" "$dest" && echo "[+] Linked: $src -> $dest"
+  ln -is "$src" "$dest" && echo "[+] Linked: $src -> $dest"
 }
 
 check_file_exist() {
@@ -208,8 +201,8 @@ install_bat() {
     install_package bat || echo "[-] Failed to install bat."
   fi
 
-  lnif -s "$WHMCONFIG/bat-cache" "$HOME/.cache/bat"
-  lnif -s "$WHMCONFIG/bat-config" "$HOME/.config/bat"
+  link_config "$WHMCONFIG/shell/bat-cache" "$HOME/.cache/bat"
+  link_config "$WHMCONFIG/shell/bat-config" "$HOME/.config/bat"
 }
 
 install_neovim() {
@@ -257,12 +250,12 @@ install_configs() {
     brew install font-jetbrains-mono-nerd-font
   fi
   # Linking configuration files
-  link_config "$WHMCONFIG/vimrc" "$HOME/.vimrc"
-  link_config "$WHMCONFIG/nvim" "$HOME/.config/nvim"
-  link_config "$WHMCONFIG/tmux.conf" "$HOME/.tmux.conf"
-  link_config "$WHMCONFIG/wezterm" "$HOME/.config/wezterm"
-  link_config "$WHMCONFIG/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
-  link_config "$WHMCONFIG/p10k.zsh" "$HOME/.p10k.zsh"
+  link_config "$WHMCONFIG/editor/vimrc" "$HOME/.vimrc"
+  link_config "$WHMCONFIG/editor/nvim" "$HOME/.config/nvim"
+  link_config "$WHMCONFIG/terminal/tmux.conf" "$HOME/.tmux.conf"
+  link_config "$WHMCONFIG/terminal/wezterm" "$HOME/.config/wezterm"
+  link_config "$WHMCONFIG/terminal/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+  link_config "$WHMCONFIG/shell/p10k.zsh" "$HOME/.p10k.zsh"
 }
 
 setup_zsh_plugins() {

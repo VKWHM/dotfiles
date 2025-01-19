@@ -106,10 +106,12 @@ fi
 alias whmupdate="cd ~/.whm_shell/ && git pull && cd -"
 
 # Vim aliases
-if command -v nvim 2>&1 >/dev/null; then
+if NVIMRUNTIME="$(command -v nvim 2>/dev/null)"; then
   if VIMRUNTIME=$(command -v vim); then
     alias vi="$VIMRUNTIME"
-    export EDITOR="$VIMRUNTIME"
+    # export EDITOR="$VIMRUNTIME"
   fi
-  alias vim="nvim -u $WHMCONFIG/nvim/whoami-init.lua"
+  alias vim="nvim -u $WHMCONFIG/editor/nvim/whoami-init.lua"
+  export EDITOR="$NVIMRUNTIME -u $WHMCONFIG/editor/nvim/whoami-init.lua"
+  export ZVM_VI_EDITOR="$NVIMRUNTIME -u $WHMCONFIG/editor/nvim/whoami-init.lua" # for zsh-vi-mode
 fi
