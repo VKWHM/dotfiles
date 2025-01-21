@@ -249,6 +249,7 @@ install_configs() {
     echo "[*] Installing JetBrains Mono Nerd Font..."
     brew install font-jetbrains-mono-nerd-font
   fi
+  mkdir -p "$HOME/.config"
   # Linking configuration files
   link_config "$WHMCONFIG/editor/vimrc" "$HOME/.vimrc"
   link_config "$WHMCONFIG/editor/nvim" "$HOME/.config/nvim"
@@ -412,6 +413,7 @@ main() {
       install_neovim
     fi
   else
+    [[ -d "$WHMCONFIG" ]] || git clone https://github.com/vkwhm/dotfiles.git "$WHMCONFIG"
     install_tools
     install_configs
     setup_zsh_plugins
