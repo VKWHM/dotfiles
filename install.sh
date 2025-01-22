@@ -201,8 +201,11 @@ install_bat() {
     install_package bat || echo "[-] Failed to install bat."
   fi
 
-  link_config "$WHMCONFIG/shell/bat-cache" "$HOME/.cache/bat"
-  link_config "$WHMCONFIG/shell/bat-config" "$HOME/.config/bat"
+  mkdir -p "$(bat --config-dir)/themes"
+  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
+  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+
+  bat cache --build
 }
 
 install_neovim() {
