@@ -191,21 +191,20 @@ install_superfile() {
 install_bat() {
   echo "[*] Installing bat..."
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    if bat_package=$(download https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-musl_0.24.0_amd64.deb); then
+    version=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep -oP '"tag_name": "v\K([\d.]+)(?=")')
+    if bat_package=$(download https://github.com/sharkdp/bat/releases/download/v${version}/bat-musl_${version}_musl-linux-amd64.deb); then
       sudo dpkg -i "$bat_package"
       rm "$bat_package"
+      mkdir -p "$(bat --config-dir)/themes"
+      wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
+      wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+      bat cache --build
     else
       echo "[-] Error when installing bat!"
     fi
   else
     install_package bat || echo "[-] Failed to install bat."
   fi
-
-  mkdir -p "$(bat --config-dir)/themes"
-  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Latte.tmTheme
-  wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
-
-  bat cache --build
 }
 
 install_neovim() {
