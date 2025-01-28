@@ -19,4 +19,4 @@ opt.ignorecase = true -- ignore case when searching
 opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
 
 -- clipboard
-opt.clipboard = "unnamed"
+opt.clipboard = ""
