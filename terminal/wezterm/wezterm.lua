@@ -51,11 +51,7 @@ do
 	-- Window elements and background
 	config.enable_tab_bar = true
 	config.window_decorations = "RESIZE"
-	if wezterm.gui.get_appearance():find("^Dark") then
-		config.window_background_opacity = 0.95
-	else
-		config.window_background_opacity = 0.85
-	end
+	config.window_background_opacity = 0.95
 
 	config.macos_window_background_blur = 10
 

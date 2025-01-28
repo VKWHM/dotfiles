@@ -92,7 +92,7 @@ get_ostype() {
 # System appearance type
 is_dark() {
   if [[ "$(get_ostype)" == "darwin" ]]; then
-    defaults read -globalDomain AppleInterfaceStyle | grep -qE '^Dark'
+    defaults read -globalDomain AppleInterfaceStyle 2>/dev/null | grep -qE '^Dark'
     return $? # 1 => light, 0 => dark
   elif [[ ! -z "$WHM_APPEARANCE" ]]; then
     [[ "$WHM_APPEARANCE" == "Dark"* ]]
