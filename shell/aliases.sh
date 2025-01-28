@@ -8,19 +8,28 @@ alias zshconfig="nvim ~/.zshrc"
 
 # Hard Reload shell
 alias reload='exec "$SHELL"'
-#
-# Configure bat
-alias bat='bat --theme="$(is_dark && echo Catppuccin Mocha || echo Catppuccin Latte)"'
 
-# Make help menu more readable
-alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
-alias -g -- -help='-h 2>&1 | bat --language=help --style=plain'
+## Configure bat
+if command -v bat 2>&1 >/dev/null; then
+  alias bat='bat --theme="$(is_dark && echo Catppuccin Mocha || echo Catppuccin Latte)"'
 
-# Make ls better
-alias ls='eza --icons=always --git --octal-permissions'
+  # Colorize MAN Pages
+  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman --theme=\"\$([[ \"\$WHM_APPEARANCE\" == \"Dark\"* ]] && echo Catppuccin Mocha || echo Catppuccin Latte)\"'"
 
-# Make cd better
-alias cd='z'
+  # Make help menu more readable
+  alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+  alias -g -- -help='-h 2>&1 | bat --language=help --style=plain'
+fi
+
+## Make ls better
+if command -v eza 2>&1 >/dev/null; then
+  alias ls='eza --icons=always --git --octal-permissions'
+fi
+
+## Make cd better
+if command -v z 2>&1 >/dev/null; then
+  alias cd='z'
+fi
 
 # package installition and removing aliases
 case "$OSTYPE" in
