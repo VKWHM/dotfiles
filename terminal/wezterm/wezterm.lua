@@ -96,14 +96,6 @@ do
 			regex = [[\b\w+://(?:[\d]{1,3}\.){3}[\d]{1,3}\S*\b]],
 			format = "$0",
 		},
-
-		-- Make username/project paths clickable. This implies paths like the following are for GitHub.
-		-- As long as a full URL hyperlink regex exists above this it should not match a full URL to
-		-- GitHub or GitLab / BitBucket (i.e. https://gitlab.com/user/project.git is still a whole clickable URL)
-		{
-			regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
-			format = "https://www.github.com/$1/$3",
-		},
 	}
 end
 

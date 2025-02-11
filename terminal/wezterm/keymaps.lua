@@ -4,12 +4,16 @@ local M = {}
 
 local act = wezterm.action
 
-local function bind_leader(key, action)
+local function bind(key, mods, action)
 	return {
 		key = key,
-		mods = "LEADER",
+		mods = mods,
 		action = action,
 	}
+end
+
+local function bind_leader(key, action)
+	return bind(key, "LEADER", action)
 end
 
 local function make_mouse_binding(dir, streak, button, mods, action)
@@ -21,15 +25,11 @@ local function make_mouse_binding(dir, streak, button, mods, action)
 end
 
 local function bind_sleader(key, action)
-	return {
-		key = key,
-		mods = "LEADER|SHIFT",
-		action = action,
-	}
+	return bind(key, "SHIFT|LEADER", action)
 end
 
 local function move_pane(key, direction)
-	return bind_leader(key, act.ActivatePaneDirection(direction))
+	return bind(key, "LEADER", act.ActivatePaneDirection(direction))
 end
 
 local function resize_pane(key, direction)
