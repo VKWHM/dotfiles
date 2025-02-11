@@ -14,7 +14,7 @@ if command -v bat 2>&1 >/dev/null; then
   alias bat='bat --theme="$(is_dark && echo Catppuccin Mocha || echo Catppuccin Latte)"'
 
   # Colorize MAN Pages
-  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman --theme=\"\$([[ \"\$WHM_APPEARANCE\" == \"Dark\"* ]] && echo Catppuccin Mocha || echo Catppuccin Latte)\"'"
+  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman --theme=\"\$([ \"\$WHM_APPEARANCE\" = \"Dark\" ] && echo Catppuccin Mocha || echo Catppuccin Latte)\"'"
 
   # Make help menu more readable
   alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
