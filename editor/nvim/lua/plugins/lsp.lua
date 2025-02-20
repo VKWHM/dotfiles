@@ -42,13 +42,6 @@ return {
 					return true
 				end
 
-				-- Otherwise, merge the existing vtsls config into denols, so we don't
-				-- have to duplicate everything. Then override with actual deno settings.
-				-- local all_servers = require("lazyvim.util").opts("nvim-lspconfig").servers
-				-- if all_servers and all_servers.vtsls then
-				-- 	deno_opts = vim.tbl_deep_extend("force", deno_opts, all_servers.vtsls)
-				-- end
-
 				-- Force certain deno settings or filetypes
 				deno_opts.settings = {
 					deno = {

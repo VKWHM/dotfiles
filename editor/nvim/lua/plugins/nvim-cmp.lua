@@ -1,7 +1,26 @@
 return {
 	"hrsh7th/nvim-cmp",
+	optional = true,
+	dependencies = {
+		{ "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
+	},
 	config = function()
 		local ls = require("luasnip")
+		local cmp = require("cmp")
+		local types = require("cmp.types")
+
+		local function deprioritize_snippet(entry1, entry2)
+			if entry1:get_kind() == types.lsp.CompletionItemKind.Snippet then
+				return false
+			end
+			if entry2:get_kind() == types.lsp.CompletionItemKind.Snippet then
+				return true
+			end
+		end
+
+		cmp.setup({
+			-- your config
+		})
 
 		vim.keymap.set({ "i" }, "<C-K>", function()
 			ls.expand()
@@ -88,7 +107,7 @@ return {
 						end
 					end
 
-					return item
+					return require("tailwindcss-colorizer-cmp").formatter(entry, item)
 				end,
 			},
 			-- sources for autocompletion
@@ -105,7 +124,12 @@ return {
 					hl_group = "CmpGhostText",
 				} or false,
 			},
-			sorting = defaults.sorting,
+			sorting = vim.tbl_deep_extend("force", defaults.sorting, {
+				priority_weight = 2,
+				comparators = {
+					deprioritize_snippet,
+				},
+			}),
 		})
 	end,
 }
