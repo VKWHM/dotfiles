@@ -7,13 +7,10 @@ with user; {
   ## Programs
   # ZSH
   programs.zsh = let 
-    makeFeature = names: builtins.foldl' (acc: name: acc // {${name} = true;}) {} names;
-    zsh_feature_list = [
-      "autocd"
-    ];
     aliasColor = "#7287fd";
     in {
     enable = true;
+    autocd = true;
     initContent = lib.mkMerge [ # Hack for wrap plugins inside zvm_after_init function :p
 # Wrap plugins 
       (lib.mkOrder 899 ''
@@ -27,12 +24,20 @@ with user; {
         EOF
       '')
       (lib.mkOrder 2000 ''
+        zstyle ':fzf-tab:*' fzf-flags $(echo $FZF_DEFAULT_OPTS) --height 40%
         function zvm_after_init() {
-          eval $__PLUGINS
+          zvm_bindkey viins "^R" fzf-history-widget
           eval $__PLUGIN_HSS
+          eval $__PLUGINS
         }
       '')
       (lib.mkOrder 2001 ''
+        if [ -e /home/vkwhm/.nix-profile/etc/profile.d/nix.sh ]; then . /home/vkwhm/.nix-profile/etc/profile.d/nix.sh; fi
+        if [ -e $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+          unset __HM_SESS_VARS_SOURCED
+          source $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh;
+        fi
+
         if [[ -f ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ]]; then
           source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
         fi
@@ -103,19 +108,51 @@ with user; {
           sha256 = "sha256-q26XVS/LcyZPRqDNwKKA9exgBByE0muyuNb0Bbar2lY=";
         };
       }
+      {
+        name = "forgit";
+        file = "forgit.plugin.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "wfxr";
+          repo = "forgit";
+          rev = "25.02.0";
+          sha256 = "sha256-vVsJe/MycQrwHLJOlBFLCuKuVDwQfQSMp56Y7beEUyg=";
+        };
+      }
     ];
     localVariables = {
 # Alias Finder
       ZSH_ALIAS_FINDER_SUFFIX = "%F{${aliasColor}}";
-      ZSH_ALIAS_FINDER_IGNORED = "man";
-# vi-mode 
+      ZSH_ALIAS_FINDER_IGNORED = "run-help";
+# vi-mode
       ZVM_LAZY_KEYBINDINGS = "false";
     };
-  } // makeFeature zsh_feature_list;
-  programs.fzf.enable = true;
+  } ;
+  programs.fzf = let
+    fileOrDir = "if [ -d {} ]; then eza --tree --color=always {} | head -300; else bat --theme=\\\"\\$([[ \\\"\\$WHM_APPEARANCE\\\" == \\\"Dark\\\"* ]] && echo Catppuccin Mocha || echo Catppuccin Latte)\\\" -n --color=always --line-range :500 {}; fi";
+    defaultCmd = "fd --hidden --strip-cwd-prefix --exclude .git";
+     in {
+    enable = true;
+    enableZshIntegration = true;
+    defaultOptions = [
+      "--height=80%"
+      "--layout=reverse"
+      "--border"
+      "--color bg:#24273A,bg+:#1E2030,fg:#D9E0EE,fg+:#A5ADCB,hl:#89B4FA,hl+:#89B4FA,info:#F9E2AF,marker:#D9E0EE,pointer:#D9E0EE,prompt:#F9E2AF,spinner:#F9E2AF"
+    ];
+    defaultCommand = defaultCmd;
+    changeDirWidgetCommand = "fd --type=d --hidden --strip-cwd-prefix --exclude .git";
+    changeDirWidgetOptions = [ "--preview='eza --tree --color=always {} | head -500'" ];
+    fileWidgetCommand = defaultCmd;
+    fileWidgetOptions = ["--preview='${fileOrDir}'"];
+    tmux.enableShellIntegration = true;
+  };
   programs.fd.enable = true;
+  programs.bat.enable = true;
+  programs.git.enable = true;
+  programs.ripgrep.enable = true;
+  programs.eza.enable = true;
   programs.home-manager.enable = true;
-  home.packages = with pkgs; [
-    cowsay
-  ];
+  # home.packages = with pkgs; [
+  #   fzf
+  # ];
 }
