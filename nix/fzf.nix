@@ -18,5 +18,10 @@ in {
   changeDirWidgetOptions = [ "--preview='eza --tree --color=always {} | head -500'" ];
   fileWidgetCommand = defaultCmd;
   fileWidgetOptions = ["--preview='${fileOrDir}'"];
-  tmux.enableShellIntegration = true;
+  tmux = {
+    enableShellIntegration = true;
+    shellIntegrationOptions = [
+      "-p 70%,60%"
+    ];
+  };
 }

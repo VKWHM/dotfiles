@@ -36,6 +36,10 @@ in
         source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
       fi
     '')
+    (lib.mkOrder 2002 ''
+      source ${../shell/functions.sh}
+      source ${../shell/aliases.sh}
+    '')
   ];
   history = {
     size = 100000;

@@ -13,6 +13,7 @@ with user; {
   programs.git.enable = true;
   programs.ripgrep.enable = true;
   programs.eza.enable = true;
+  programs.zoxide.enable = true;
   programs.home-manager.enable = true;
   # home.packages = with pkgs; [
   #   fzf
