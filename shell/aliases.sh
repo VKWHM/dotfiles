@@ -9,12 +9,15 @@ alias zshconfig="nvim ~/.zshrc"
 # Hard Reload shell
 alias reload='exec "$SHELL"'
 
+# VIM Editing alias
+alias v="fd . --hidden --exclude .git | fzf --reverse ${FZF_CTRL_T_OPTS} | xargs -r nvim"
+
 ## Configure bat
 if command -v bat 2>&1 >/dev/null; then
   alias bat='bat --theme="$(is_dark && echo Catppuccin Mocha || echo Catppuccin Latte)"'
 
   # Colorize MAN Pages
-  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman --theme=\"\$([ \"\$WHM_APPEARANCE\" = \"Dark\" ] && echo Catppuccin Mocha || echo Catppuccin Latte)\"'"
+  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman --theme=\"\$([ \"\$WHM_APPEARANCE\" = \"Light\" ] && echo Catppuccin Latte || echo Catppuccin Mocha)\"'"
 
   # Make help menu more readable
   alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
@@ -104,7 +107,7 @@ alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
 alias lsize='du -sh * | sort -rh'
 
 # Show command usage statistics
-alias hs='history | awk "{CMD[\$2]++; count++;} END {for (a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -vE "^[%.0-9 ]+./" | column -c3 -s " " -t | sort -nr | nl | head -20'
+alias hs='cat $HISTFILE | awk "{CMD[\$2]++; count++;} END {for (a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -vE "^[%.0-9 ]+./" | column -c3 -s " " -t | sort -nr | nl | head -20'
 
 # Show last logins
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then

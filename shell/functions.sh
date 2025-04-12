@@ -186,3 +186,39 @@ _ask_copilot_explain() {
   gh copilot explain "$prompt"
   zle redisplay
 }
+
+t() { # tmux directory session creation
+  local dir_path=""
+  local dir_name="$1"
+  shift
+  if [ -z $dir_name ]; then
+    echo "Usage: t <prject directory>"
+    return 1
+  fi
+  if [[ -d $dir_name ]]; then
+    dir_path="$(realpath "$dir_name")"
+    dir_name="$(basename "$dir_path")"
+  elif dir_path=$(zoxide query "$dir_name" 2>/dev/null); then
+    dir_name="$(basename "$dir_path")"
+  else
+    echo "[-] Directory '$dir_name' not found in zoxide"
+    return 1
+  fi
+  local session_name="$dir_name"
+  if [ -n "$TMUX" ]; then
+    # Already inside tmux
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      tmux switch-client -t "$session_name"
+    else
+      tmux new-session -ds "$session_name"
+      tmux switch-client -t "$session_name"
+    fi
+  else
+    # Not inside tmux
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      tmux attach -t "$session_name"
+    else
+      tmux new-session -s "$session_name"
+    fi
+  fi
+}
