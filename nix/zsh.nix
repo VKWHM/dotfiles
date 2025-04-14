@@ -1,5 +1,13 @@
 { lib, pkgs, ...}:
 let 
+  sourceFiles = [
+    ../shell/functions.sh
+    (builtins.fetchurl {
+      url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/b05d8c3be65091153b4d37cbde9d2ee46f9cba2e/plugins/common-aliases/common-aliases.plugin.zsh";
+      sha256 = "c62006db9c1026461c33dfae9c33646f12f034fef1e46e1998d20ea988e232bb";
+    })
+    ../shell/aliases.sh
+  ];
   aliasColor = "#7287fd";
 in
 {
@@ -36,10 +44,17 @@ in
         source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
       fi
     '')
-    (lib.mkOrder 2002 ''
-      source ${../shell/functions.sh}
-      source ${../shell/aliases.sh}
-    '')
+    (lib.mkOrder 2002 # Sourcing custom functions and aliases
+      (lib.concatStrings
+        (builtins.map
+          (file: ''
+            if [[ -f ${file} ]]; then
+              source ${file}
+            fi
+          '') sourceFiles
+        )
+      )
+    )
   ];
   history = {
     size = 100000;
