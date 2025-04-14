@@ -1,0 +1,197 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+command_timeout = 100
+
+format = """
+[](surface0)\
+$os\
+$nix_shell\
+$username\
+[](bg:mauve fg:surface0)\
+$directory\
+[](fg:mauve bg:blue)\
+$git_branch\
+$git_status\
+[](fg:blue bg:lavender)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:lavender bg:pink)\
+$docker_context\
+$jobs\
+$cmake\
+[](fg:pink bg:yellow)\
+$time\
+[](fg:yellow)\
+$line_break$character"""
+
+palette = 'catppuccin_mocha'
+
+[palettes.catppuccin_mocha]
+# Base Colors
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"  # Primary accent
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"  # Secondary accent
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"  # Primary blue
+lavender  = "#b4befe"  # Final accent
+
+# Surface Colors
+text      = "#cdd6f4"
+surface2  = "#585b70"
+surface1  = "#45475a"
+surface0  = "#313244"
+base      = "#1e1e2e"
+mantle    = "#181825"
+crust     = "#11111b"
+
+
+[os]
+disabled = false
+style = "bg:surface0 fg:text"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = ""
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+
+[username]
+show_always = true
+style_user = "bg:surface0 fg:text"
+style_root = "bg:surface0 fg:text"
+format = '[  $user]($style)'
+
+[nix_shell]
+style = "bg:surface0"
+symbol = ""
+format = '[| [$symbol](bold fg:sky bg:surface0)]($style)'
+
+[directory]
+style = "fg:surface0 bg:mauve"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:blue"
+format = '[[ $symbol $branch ](fg:base bg:blue)]($style)'
+
+[git_status]
+style = "bg:blue"
+format = '[[($all_status$ahead_behind )](fg:surface0 bg:blue)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[c]
+symbol = " "
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[php]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[java]
+symbol = " "
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[python]
+symbol = ""
+style = "bg:lavender"
+format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:pink"
+format = '[[ $symbol( $context) ](fg:base bg:pink)]($style)'
+
+[jobs]
+symbol = ""
+style = "bg:pink"
+format = '[[ $symbol( $jobs) ](fg:base bg:pink)]($style)'
+
+[cmake]
+symbol = "△"
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:yellow"
+format = '[[  $time ](fg:base bg:yellow)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[](bold fg:green)'
+error_symbol = '[](bold fg:red)'
+vimcmd_symbol = '[](bold fg:sky)'
+vimcmd_replace_one_symbol = '[](bold fg:mauve)'
+vimcmd_replace_symbol = '[](bold fg:mauve)'
+vimcmd_visual_symbol = '[](bold fg:lavender)'
