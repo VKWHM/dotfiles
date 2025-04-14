@@ -143,8 +143,8 @@ in
   sessionVariables = let
       nvimConf = "${pkgs.neovim}/bin/nvim -u ${../editor/nvim/whoami-init.lua}";
     in {
-    WHMCONFIG = ./.;
-    WHMSHELLCONFIG = ./shell;
+    WHMCONFIG = ../.;
+    WHMSHELLCONFIG = ../shell;
     EDITOR = nvimConf;
     ZVM_VI_EDITOR = nvimConf;
   };
