@@ -140,4 +140,12 @@ in
     ZVM_LAZY_KEYBINDINGS = "false";
     ZVM_VI_INSERT_ESCAPE_BINDKEY= "jk";
   };
+  sessionVariables = let
+      nvimConf = "${pkgs.neovim}/bin/nvim -u ${../editor/nvim/whoami-init.lua}";
+    in {
+    WHMCONFIG = ./.;
+    WHMSHELLCONFIG = ./shell;
+    EDITOR = nvimConf;
+    ZVM_VI_EDITOR = nvimConf;
+  };
 }

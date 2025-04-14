@@ -1,5 +1,9 @@
 {config, lib, pkgs, user, ...}:
-with user; {
+let
+  ln = path: {
+    source = path;
+  };
+in with user; {
   home.username = username;
   home.homeDirectory = home;
   home.stateVersion = "24.11";
@@ -20,12 +24,25 @@ with user; {
     enable = true;
     settings = builtins.fromTOML (builtins.unsafeDiscardStringContext (builtins.readFile ../shell/starship.toml));
   };
+  programs.neovim = {
+    enable = true;
+    vimdiffAlias = true;
+    withPython3 = true;
+    withNodeJs = true;
+    withRuby = true;
+  };
+  home.file.".config/nvim" = ln ../editor/nvim;
+  home.file.".config/wezterm" = ln ../terminal/wezterm;
+  home.file.".vimrc" = ln ../editor/vimrc;
+  home.file.".wezterm.lua" = ln ../terminal/wezterm/wezterm.lua;
+  home.file.".tmux.lua" = ln ../terminal/tmux.conf;
   programs.fd.enable = true;
   programs.git.enable = true;
   programs.eza.enable = true;
   programs.zoxide.enable = true;
   programs.home-manager.enable = true;
-  # home.packages = with pkgs; [
-  #   fzf
-  # ];
+  home.packages = with pkgs; [
+    tmux 
+    go cargo # for neovim
+  ];
 }
