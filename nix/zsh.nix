@@ -13,6 +13,7 @@ in
 {
   enable = true;
   autocd = true;
+  dotDir = ".config/zsh.hm";
   initContent = lib.mkMerge [ # Hack for wrap plugins inside zvm_after_init function :p
 # Wrap plugins 
     (lib.mkOrder 899 ''
@@ -35,10 +36,6 @@ in
     '')
     (lib.mkOrder 2001 ''
       if [ -e /home/vkwhm/.nix-profile/etc/profile.d/nix.sh ]; then . /home/vkwhm/.nix-profile/etc/profile.d/nix.sh; fi
-      if [ -e $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
-        unset __HM_SESS_VARS_SOURCED
-        source $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh;
-      fi
 
       if [[ -f ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ]]; then
         source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
