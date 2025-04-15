@@ -67,6 +67,15 @@ git clone https://github.com/vkwhm/dotfiles.git cd dotfiles
 - **WezTerm**: Leverage pre-configured terminal settings.
 - **Tmux**: Use `tmux` for multitasking in the terminal.
 
+## TODOs
+
+- [ ] Fix 't' alias conflication with 't' function.
+- [ ] Update README.md for nix configuration usage.
+- [ ] Write nix configuration for tmux.
+- [ ] Write nix configuration for ghostty.
+- [ ] Make nix configurations modular.
+- [ ] Extend nix configuration to desktop environment.
+
 ## Contributing
 
 Contributions are welcome! To contribute:
