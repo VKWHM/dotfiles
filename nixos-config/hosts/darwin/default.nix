@@ -102,13 +102,14 @@ let user = "whoami"; in
       };
     };
     keyboard = {
+      enableKeyMapping = true;
       remapCapsLockToControl = true;
     };
     tools = {
       darwin-rebuild.enable = true;
       darwin-version.enable = true;
       darwin-uninstaller.enable = true;
-      darwin-options.enable = true;
+      darwin-option.enable = true;
     };
   };
 }
