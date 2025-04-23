@@ -47,23 +47,22 @@ in
   # Enable home-manager
   home-manager = {
     useGlobalPkgs = true;
-    # users.${user} = { pkgs, config, lib, ... }:{
-    #   home = {
-    #     enableNixpkgsReleaseCheck = false;
-    #     packages = pkgs.callPackage ./packages.nix {};
-    #     file = lib.mkMerge [
-    #       sharedFiles
-    #       additionalFiles
-    #       { "emacs-launcher.command".source = myEmacsLauncher; }
-    #     ];
-    #     stateVersion = "23.11";
-    #   };
-    #   programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
-    #
-    #   # Marked broken Oct 20, 2022 check later to remove this
-    #   # https://github.com/nix-community/home-manager/issues/3344
-    #   manual.manpages.enable = false;
-    # };
+    extraSpecialArgs = {
+        user = {
+          name = user;
+          home = "/Users/${user}";
+        };
+      };
+    backupFileExtension = "hmbck";
+    users.${user} = { pkgs, config, lib, ... }:{
+      imports = [ ../../../nix/shell.nix ];
+      home.stateVersion = "24.11";
+      # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
+
+      # # Marked broken Oct 20, 2022 check later to remove this
+      # # https://github.com/nix-community/home-manager/issues/3344
+      # manual.manpages.enable = false;
+    };
   };
 
   # Fully declarative dock using the latest from Nix Store

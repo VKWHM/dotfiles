@@ -4,7 +4,7 @@ let user = "whoami"; in
 
 {
   imports = [
-    # ../../modules/darwin/home-manager.nix
+    ../../modules/darwin/home-manager.nix
     # ../../modules/shared
   ];
 
