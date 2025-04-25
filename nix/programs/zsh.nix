@@ -52,6 +52,15 @@ in
         )
       )
     )
+    (lib.mkOrder 2100 ''
+      # source user configuration
+      if [[ -f ~/.zshrc ]]; then
+        if grep -q "Home Manager generated lines" ~/.zshrc; then
+          sed -i'.home-manager-backup' "/Home Manager generated lines/,+8d" ~/.zshrc
+        fi
+        source ~/.zshrc
+      fi
+    '')
   ];
   history = {
     size = 100000;

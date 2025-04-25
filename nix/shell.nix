@@ -41,20 +41,4 @@ in rec {
     tmux 
     go cargo # for neovim
   ];
-  home.activation = let 
-  zshDir = "${user.home}/${if programs.zsh.dotDir != null then programs.zsh.dotDir else ""}";
-  sourceFile = [".zshenv" ".zshrc" ".zprofile" ".zlogin" ".zlogout" ".zsh_aliases" ".zsh_functions"];
-  in {
-    zsh = ''
-      if [ -f "${user.home}/.zshrc" ]; then
-        if grep -q "Home Manager generated lines" ${user.home}/.zshrc; then
-          sed -i'.home-manager-backup' "/Home Manager generated lines/,+${builtins.toString (1 + (builtins.length sourceFile))}d" ${user.home}/.zshrc
-        fi
-        cat <<MYEOF>> ${user.home}/.zshrc
-      # Home Manager generated lines
-      ${lib.concatStringsSep "\n" (builtins.map (file: "[[ -f \"${zshDir}/${file}\" ]] && source \"${zshDir}/${file}\"") sourceFile)}
-      MYEOF
-      fi
-    '';
-  };
 }

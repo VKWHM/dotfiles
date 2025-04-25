@@ -24,6 +24,8 @@
     };
     disko = {
       url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -100,21 +102,28 @@
           ];
         }
       );
-    homeConfigurations = nixpkgs.lib.genAttrs linuxSystems (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in { 
-        default = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./nix/shell.nix ];
-        extraSpecialArgs = { inherit user; };
+      homeConfigurations = let
+          user = "vkwhm";
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+        in { 
+          default = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            (args: {
+              home.stateVersion = "24.11";
+              home.username = user;
+              home.homeDirectory = "/home/${user}";
+            })
+            ./nix/shell.nix 
+          ];
+          extraSpecialArgs = { inherit user; };
+        };
+        desktop = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./nix/shell.nix ./nix/desktop.nix ];
+          extraSpecialArgs = { inherit user;  };
+        };
       };
-      desktop = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./nix/shell.nix ./nix/desktop.nix ];
-        extraSpecialArgs = { inherit user;  };
-      };
-    });
 
      #  nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system: nixpkgs.lib.nixosSystem {
      #    inherit system;
