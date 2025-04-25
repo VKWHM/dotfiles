@@ -6,9 +6,9 @@ let
 in rec {
   ## Programs
   # ZSH
-  programs.zsh = import ./zsh.nix pkgs;
-  programs.fzf = import ./fzf.nix  pkgs;
-  programs.bat = import ./bat.nix pkgs;
+  programs.zsh = import programs/zsh.nix pkgs;
+  programs.fzf = import programs/fzf.nix  pkgs;
+  programs.bat = import programs/bat.nix pkgs;
   programs.ripgrep = {
     enable = true;
     arguments = [

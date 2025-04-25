@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,10 +24,11 @@
     };
     disko = {
       url = "github:nix-community/disko";
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
   outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko } @inputs:
     let
       user = "whoami";
@@ -100,6 +100,21 @@
           ];
         }
       );
+    homeConfigurations = nixpkgs.lib.genAttrs linuxSystems (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in { 
+        default = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./nix/shell.nix ];
+        extraSpecialArgs = { inherit user; };
+      };
+      desktop = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./nix/shell.nix ./nix/desktop.nix ];
+        extraSpecialArgs = { inherit user;  };
+      };
+    });
 
      #  nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system: nixpkgs.lib.nixosSystem {
      #    inherit system;

@@ -1,12 +1,12 @@
 { lib, pkgs, ...}:
 let 
   sourceFiles = [
-    ../shell/functions.sh
+    ../../shell/functions.sh
     (builtins.fetchurl {
       url = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/b05d8c3be65091153b4d37cbde9d2ee46f9cba2e/plugins/common-aliases/common-aliases.plugin.zsh";
       sha256 = "c62006db9c1026461c33dfae9c33646f12f034fef1e46e1998d20ea988e232bb";
     })
-    ../shell/aliases.sh
+    ../../shell/aliases.sh
   ];
   aliasColor = "#7287fd";
 in
@@ -138,10 +138,10 @@ in
     ZVM_VI_INSERT_ESCAPE_BINDKEY= "jk";
   };
   sessionVariables = let
-      nvimConf = "${pkgs.neovim}/bin/nvim -u ${../editor/nvim/whoami-init.lua}";
+      nvimConf = "${pkgs.neovim}/bin/nvim -u ${../../editor/nvim/whoami-init.lua}";
     in {
-    WHMCONFIG = ../.;
-    WHMSHELLCONFIG = ../shell;
+    WHMCONFIG = ../../.;
+    WHMSHELLCONFIG = ../../shell;
     EDITOR = nvimConf;
     ZVM_VI_EDITOR = nvimConf;
   };

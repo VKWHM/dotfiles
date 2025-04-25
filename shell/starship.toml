@@ -94,7 +94,7 @@ format = '[  $user ]($style)'
 [nix_shell]
 style = "bg:surface0"
 symbol = ""
-format = '[| [$symbol](bold fg:sky bg:surface0)]($style)'
+format = '[ | [$symbol](bold fg:sky bg:surface0)]($style)'
 
 [directory]
 style = "fg:surface0 bg:mauve"
