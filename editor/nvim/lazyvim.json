@@ -9,6 +9,7 @@
     "lazyvim.plugins.extras.editor.dial",
     "lazyvim.plugins.extras.formatting.black",
     "lazyvim.plugins.extras.lang.clangd",
+    "lazyvim.plugins.extras.lang.nix",
     "lazyvim.plugins.extras.lang.cmake",
     "lazyvim.plugins.extras.lang.json",
     "lazyvim.plugins.extras.lang.markdown",
