@@ -34,12 +34,12 @@ do
 	unmap("n", "<leader><tab>d", { desc = "Close Tab" })
 	unmap("n", "<leader><tab>[", { desc = "Previous Tab" })
 
-	map("n", "<leader>tn", "<cmd>tabnew<CR>", { desc = "New Tab" })
-	map("n", "<leader>tt", "<cmd>tabnew %<CR>", { desc = "Current Buffer In New Tab" })
-	map("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Current Tab" })
-	map("n", "<leader>to", "<cmd>tabonly<CR>", { desc = "Other Tabs" })
-	map("n", "<leader>tl", "<cmd>tablast<cr>", { desc = "Last Tab" })
-	map("n", "<leader>tf", "<cmd>tabfirst<cr>", { desc = "First Tab" })
+	map("n", "<tab>n", "<cmd>tabnew<CR>", { desc = "New Tab" })
+	map("n", "<tab>t", "<cmd>tabnew %<CR>", { desc = "Current Buffer In New Tab" })
+	map("n", "<tab>x", "<cmd>tabclose<CR>", { desc = "Current Tab" })
+	map("n", "<tab>o", "<cmd>tabonly<CR>", { desc = "Other Tabs" })
+	map("n", "<tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
+	map("n", "<tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
 	map("n", "<leader><tab>", "<cmd>tabn<cr>", { desc = "Next Tab" })
 	map("n", "<leader><s-tab>", "<cmd>tabp<cr>", { desc = "Previous Tab" })
 end
