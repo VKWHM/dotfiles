@@ -123,6 +123,21 @@
           modules = [ ./nix/shell.nix ./nix/desktop.nix ];
           extraSpecialArgs = { inherit user;  };
         };
+        uninstall = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ (args: { uninstall = true;}) (args: {
+            home.username = user;
+            home.homeDirectory = "/home/${user}";
+            # TODO: Create module for this
+            home.activation = {
+              whmUninstall = ''
+                echo "Uninstalling WHM shell...";
+                unlink "${args.config.home.homeDirectory}/.whm_shell";
+              '';
+            };
+          }) ];
+          extraSpecialArgs = { inherit user;  };
+        };
       };
 
      #  nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system: nixpkgs.lib.nixosSystem {

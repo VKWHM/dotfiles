@@ -3,7 +3,8 @@ let
   ln = path: {
     source = path;
   };
-in rec {
+  homeCfg = config.home;
+in {
   ## Programs
   # ZSH
   programs.zsh = import programs/zsh.nix pkgs;
@@ -27,7 +28,7 @@ in rec {
     withNodeJs = true;
     withRuby = true;
   };
-  home.file.".config/nvim" = ln ../editor/nvim;
+  # home.file.".config/nvim" = ln ../editor/nvim;
   home.file.".config/wezterm" = ln ../terminal/wezterm;
   home.file.".vimrc" = ln ../editor/vimrc;
   home.file.".wezterm.lua" = ln ../terminal/wezterm/wezterm.lua;
@@ -41,4 +42,31 @@ in rec {
     tmux 
     go cargo # for neovim
   ];
+  home.activation = let 
+    whmDir = "${homeCfg.homeDirectory}/.whm_shell";
+  in {
+    uninstall = ''
+      echo "Uninstalling WHM shell...";
+    '';
+    whmShell = ''
+      installed=$(test -d "${whmDir}" && echo "true" || echo "false")
+      if [[ $installed == "false" ]]; then
+        if command -v git 2>&1 > /dev/null; then
+          git clone https://github.com/vkwhm/dotfiles.git ${whmDir}
+          installed=true;
+        elif command wget 2>&1 > /dev/null; then
+          zip_file="$(mktemp)";
+          wget https://github.com/vkwhm/dotfiles/archive/refs/heads/main.zip -O "$zip_file";
+          unzip "$zip_file" -d "${whmDir}";
+          installed=true;
+        fi
+      fi
+      if [[ $installed == "true" ]]; then
+        echo "Linking WHM Configurations...";
+        ln -s "${whmDir}/editor/nvim" "${homeCfg.homeDirectory}/.config/nvim";
+      else
+        echo "Failed to install WHM shell. Please install it manually.";
+      fi;
+    '';
+  };
 }
