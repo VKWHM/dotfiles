@@ -115,6 +115,10 @@
               home.homeDirectory = "/home/${user}";
               home.whmConfig = {
                 enable = true;
+                link.nvim = true;
+                link.vim = true;
+                link.tmux = true;
+                link.wezterm = true;
               };
             })
             ./nixos-config/modules/shared/whmconfig.nix

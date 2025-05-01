@@ -28,11 +28,6 @@ in {
     withNodeJs = true;
     withRuby = true;
   };
-  # home.file.".config/nvim" = ln ../editor/nvim;
-  home.file.".config/wezterm" = ln "terminal/wezterm";
-  home.file.".vimrc" = ln "editor/vimrc";
-  home.file.".wezterm.lua" = ln "terminal/wezterm/wezterm.lua";
-  home.file.".tmux.conf" = ln "terminal/tmux.conf";
   programs.fd.enable = true;
   programs.git.enable = true;
   programs.eza.enable = true;
