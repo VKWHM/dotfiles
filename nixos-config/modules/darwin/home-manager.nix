@@ -55,7 +55,7 @@ in
       };
     backupFileExtension = "hmbck";
     users.${user} = { pkgs, config, lib, ... }:{
-      imports = [ ../../../nix/shell.nix ];
+      imports = [ ../shared/shell.nix ];
       home.stateVersion = "24.11";
       # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
 

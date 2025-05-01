@@ -114,13 +114,13 @@
               home.username = user;
               home.homeDirectory = "/home/${user}";
             })
-            ./nix/shell.nix 
+            ./nixos-config/modules/shared/shell.nix 
           ];
           extraSpecialArgs = { inherit user; };
         };
         desktop = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          modules = [ ./nix/shell.nix ./nix/desktop.nix ];
+          modules = [ ./nixos-config/modules/shared/shell.nix ./nix/desktop.nix ];
           extraSpecialArgs = { inherit user;  };
         };
         uninstall = home-manager.lib.homeManagerConfiguration {
