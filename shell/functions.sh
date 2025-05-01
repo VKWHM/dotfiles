@@ -187,7 +187,7 @@ _ask_copilot_explain() {
   zle redisplay
 }
 
-t() { # tmux directory session creation
+tp() { # tmux directory session creation
   local dir_path=""
   local dir_name="$1"
   shift
@@ -205,6 +205,7 @@ t() { # tmux directory session creation
     return 1
   fi
   local session_name="$dir_name"
+  cd "$dir_path" || return 1
   if [ -n "$TMUX" ]; then
     # Already inside tmux
     if tmux has-session -t "$session_name" 2>/dev/null; then
@@ -221,4 +222,5 @@ t() { # tmux directory session creation
       tmux new-session -s "$session_name"
     fi
   fi
+  cd -
 }

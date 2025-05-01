@@ -12,7 +12,7 @@ in {
     "--height=80%"
     "--layout=reverse"
     "--border"
-    "--tmux"
+    "--tmux=center,80%,90%"
     "--color ${ctMocha}"
   ];
   defaultCommand = defaultCmd;
@@ -23,7 +23,7 @@ in {
   tmux = {
     enableShellIntegration = true;
     shellIntegrationOptions = [
-      "-p 70%,60%"
+      "-p 80%,70%"
     ];
   };
 }

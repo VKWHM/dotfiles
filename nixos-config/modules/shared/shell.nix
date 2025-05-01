@@ -19,7 +19,7 @@ in {
   };
   programs.starship = {
     enable = true;
-    settings = builtins.fromTOML (builtins.unsafeDiscardStringContext (builtins.readFile ../../../shell/starship.toml));
+    settings = builtins.fromTOML (builtins.unsafeDiscardStringContext (builtins.readFile "${rootDir}/shell/starship.toml"));
   };
   programs.neovim = {
     enable = true;
