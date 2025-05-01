@@ -113,15 +113,14 @@
               home.stateVersion = "24.11";
               home.username = user;
               home.homeDirectory = "/home/${user}";
+              home.whmConfig = {
+                enable = true;
+              };
             })
+            ./nixos-config/modules/shared/whmconfig.nix
             ./nixos-config/modules/shared/shell.nix 
           ];
           extraSpecialArgs = { inherit user; };
-        };
-        desktop = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [ ./nixos-config/modules/shared/shell.nix ./nix/desktop.nix ];
-          extraSpecialArgs = { inherit user;  };
         };
         uninstall = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
