@@ -72,34 +72,50 @@ in {
       '';
 
       whm2Link = let 
+        getLink = opts: let enabled = cfg.link."${opts.name}"; in [
+          ( { inherit enabled; } // opts )
+        ];
         linkList = ([] ++
-          (if cfg.link.nvim then [{
+          (getLink {
             name = "nvim";
-            src = "${whmDotDir}/editor/nvim";
-            dst = "${homeDir}/.config/nvim";
-          }] else []) ++
-          (if cfg.link.vim then [{
+            files = [
+              {
+                src = "${whmDotDir}/editor/nvim";
+                dst = "${homeDir}/.config/nvim";
+              }
+            ];
+          }) ++
+          (getLink {
             name = "vim";
-            src = "${whmDotDir}/editor/vimrc";
-            dst = "${homeDir}/.vimrc";
-          }] else []) ++
-          (if cfg.link.tmux then [{
+            files = [
+              {
+                src = "${whmDotDir}/editor/vimrc";
+                dst = "${homeDir}/.vimrc";
+              }
+            ];
+          }) ++
+          (getLink {
             name = "tmux";
-            src = "${whmDotDir}/terminal/tmux.conf";
-            dst = "${homeDir}/.tmux.conf";
-          }] else []) ++
-          (if cfg.link.wezterm then [
-            {
-              name = "wezterm";
-              src = "${whmDotDir}/terminal/wezterm";
-              dst = "${homeDir}/.config/wezterm";
-            }
-            {
-              name = "wezterm.lua";
-              src = "${whmDotDir}/terminal/wezterm/wezterm.lua";
-              dst = "${homeDir}/.wezterm.lua";
-            }
-          ] else [])
+            files = [
+              {
+                src = "${whmDotDir}/terminal/tmux.conf";
+                dst = "${homeDir}/.tmux.conf";
+              }
+            ];
+          }) ++
+          (getLink {
+            name = "wezterm";
+            files = [
+              {
+                src = "${whmDotDir}/terminal/wezterm";
+                dst = "${homeDir}/.config/wezterm";
+              }
+              {
+                src = "${whmDotDir}/terminal/wezterm/wezterm.lua";
+                dst = "${homeDir}/.wezterm.lua";
+              }
+            ];
+          })
         );
     
         in
@@ -108,10 +124,14 @@ in {
           if [[ $_WHMCONFIG_INSTALLED == "true" ]]; then
             true;
         '' 
-        (builtins.concatStringsSep "\n" (builtins.map (link: ''
+        (builtins.concatStringsSep "\n" (builtins.map (prog: (builtins.concatStringsSep "\n"
+          (builtins.map (link:
+            let 
+              name = builtins.baseNameOf link.dst;
+            in if prog.enabled then ''
             if [[ -e "${link.dst}" ]]; then
               if [[ ! -L "${link.dst}" ]]; then
-                echo "[!!] ${link.name} configuration already exists. Create Backup..." >&2;
+                echo "[!!] ${name} configuration already exists. Create Backup..." >&2;
                 extension=".backup-$(date +%Y-%m-%d_%H-%M-%S)";
                 mv "${link.dst}" "${link.dst}.$\{extension}";
                 echo "[!!] Backup created: ${link.dst}.$\{extension}" >&2;
@@ -123,9 +143,15 @@ in {
             if [[ ! -e "${link.dst}" ]]; then
               echo "[*] Link ${link.src} -> ${link.dst}" >&2;
               ln -s "${link.src}" "${link.dst}";
-              echo "[+] ${link.name} configuration linked." >&2;
+              echo "[+] ${name} configuration linked." >&2;
             fi
-        '') linkList))
+          '' else ''
+            if [[ -L "${link.dst}" && $(readlink "${link.dst}") == "${link.src}" ]]; then
+              echo "[*] Remove link $(stat -c '%N' '${link.dst}')" >&2;
+              unlink "${link.dst}";
+            fi;
+          '') prog.files))
+        ) linkList))
         ''
           else
             echo "[-] Failed to install WHM Configurations. Please install it manually." >&2;
