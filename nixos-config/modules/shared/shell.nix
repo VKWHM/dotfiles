@@ -6,6 +6,9 @@ let
   };
 in {
   ## Programs
+  imports = [
+    programs/tmux.nix
+  ];
   # ZSH
   programs.zsh = import programs/zsh.nix pkgs;
   programs.fzf = import programs/fzf.nix  pkgs;
@@ -34,7 +37,7 @@ in {
   programs.zoxide.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
-    tmux btop
+    btop
     go cargo # for neovim
   ];
 }
