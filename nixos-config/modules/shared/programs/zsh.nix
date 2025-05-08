@@ -147,12 +147,12 @@ in
 # vi-mode
     ZVM_LAZY_KEYBINDINGS = "false";
     ZVM_VI_INSERT_ESCAPE_BINDKEY= "jk";
-# forgit
-  FORGIT_FZF_DEFAULT_OPTS = "--tmux=center,80%,70%";
   };
   sessionVariables = let
       nvimConf = "${pkgs.neovim}/bin/nvim -u ${absPath "editor/nvim/whoami-init.lua"}";
     in {
+# forgit
+    FORGIT_FZF_DEFAULT_OPTS = "--tmux=center,80%,70%";
     WHMCONFIG = absPath "." ;
     WHMSHELLCONFIG = absPath "shell/.";
     EDITOR = nvimConf;

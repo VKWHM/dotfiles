@@ -127,3 +127,7 @@ if NVIMRUNTIME="$(command -v nvim 2>/dev/null)"; then
   export EDITOR="$NVIMRUNTIME -u $WHMCONFIG/editor/nvim/whoami-init.lua"
   export ZVM_VI_EDITOR="$NVIMRUNTIME -u $WHMCONFIG/editor/nvim/whoami-init.lua" # for zsh-vi-mode
 fi
+
+# Git aliases
+alias gs="git status"
+alias gst="git status -sb"
