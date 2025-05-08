@@ -55,8 +55,18 @@ in
       };
     backupFileExtension = "hmbck";
     users.${user} = { pkgs, config, lib, ... }:{
-      imports = [ ../shared/shell.nix ];
+      imports = [
+      ../shared/whmconfig.nix
+      ../shared/shell.nix 
+      ];
       home.stateVersion = "24.11";
+      home.whmConfig = {
+        enable = true;
+        link.nvim = true;
+        link.vim = true;
+        link.tmux = true;
+        link.wezterm = true;
+      };
       # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
 
       # # Marked broken Oct 20, 2022 check later to remove this
