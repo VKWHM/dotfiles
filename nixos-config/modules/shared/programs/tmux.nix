@@ -86,7 +86,7 @@ in
           };
         }))
         tmuxPlugins.pain-control
-        tmuxPlugins.sensible
+        (lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin == false ) tmuxPlugins.sensible)
         # TODO: config tmux yank plugin
         # tmuxPlugins.yank
         {
