@@ -42,11 +42,11 @@ in
       keyMode = "vi";
       mouse = true;
       prefix = "C-s";
-      escapeTime = 1500;
       terminal = "xterm-256color";
       baseIndex = 1;
       focusEvents = true;
       aggressiveResize = true;
+      shell = "${pkgs.zsh}/bin/zsh";
       # TODO: Enable tmuxinator
       # tmuxinator = true;
       plugins = with pkgs; [
