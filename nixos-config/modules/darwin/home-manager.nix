@@ -25,23 +25,26 @@ in
 
   homebrew = {
     enable = true;
-  #   casks = pkgs.callPackage ./casks.nix {};
-  #   # onActivation.cleanup = "uninstall";
+    casks = pkgs.callPackage ./casks.nix {};
+    onActivation = {
+     # cleanup = "uninstall";
+      autoUpdate = true;
+    };
+
+  # These app IDs are from using the mas CLI app
+  # mas = mac app store
+  # https://github.com/mas-cli/mas
   #
-  #   # These app IDs are from using the mas CLI app
-  #   # mas = mac app store
-  #   # https://github.com/mas-cli/mas
-  #   #
-  #   # $ nix shell nixpkgs#mas
-  #   # $ mas search <app name>
-  #   #
-  #   # If you have previously added these apps to your Mac App Store profile (but not installed them on this system),
-  #   # you may receive an error message "Redownload Unavailable with This Apple ID".
-  #   # This message is safe to ignore. (https://github.com/dustinlyons/nixos-config/issues/83)
-  #   masApps = {
-  #     "1password" = 1333542190;
-  #     "wireguard" = 1451685025;
-  #   };
+  # $ nix shell nixpkgs#mas
+  # $ mas search <app name>
+  #
+  # If you have previously added these apps to your Mac App Store profile (but not installed them on this system),
+  # you may receive an error message "Redownload Unavailable with This Apple ID".
+  # This message is safe to ignore. (https://github.com/dustinlyons/nixos-config/issues/83)
+  # masApps = {
+  #   "1password" = 1333542190;
+  #   "wireguard" = 1451685025;
+  # };
   };
 
   # Enable home-manager
@@ -56,8 +59,10 @@ in
     backupFileExtension = "hmbck";
     users.${user} = { pkgs, config, lib, ... }:{
       imports = [
-      ../shared/whmconfig.nix
-      ../shared/shell.nix 
+        ./apps.nix
+        # Shared
+        ../shared/whmconfig.nix
+        ../shared/shell.nix 
       ];
       home.stateVersion = "24.11";
       home.whmConfig = {
