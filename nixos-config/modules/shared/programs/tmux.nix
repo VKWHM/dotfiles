@@ -39,6 +39,7 @@ in
     programs.tmux = {
       enable = true;
       historyLimit = 50000;
+      escapeTime = 0;
       keyMode = "vi";
       mouse = true;
       prefix = "C-s";

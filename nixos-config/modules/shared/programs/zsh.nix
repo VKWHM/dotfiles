@@ -37,8 +37,11 @@ in
       }
     '')
     (lib.mkOrder 2001 ''
-      if [ -e /home/vkwhm/.nix-profile/etc/profile.d/nix.sh ]; then . /home/vkwhm/.nix-profile/etc/profile.d/nix.sh; fi
-
+      if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+        . ~/.nix-profile/etc/profile.d/nix.sh;
+      elif [ -e /etc/profile.d/nix.sh ]; then
+        . /etc/profile.d/nix.sh;
+      fi
       if [[ -f ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh ]]; then
         source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
       fi
