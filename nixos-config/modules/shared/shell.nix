@@ -37,7 +37,7 @@ in {
   programs.zoxide.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
-    btop
+    btop lazygit
     go cargo # for neovim
   ];
   # Tmux search keybindings
