@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,7 +32,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, flake-utils} @inputs:
     let
       user = "whoami";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -71,11 +72,40 @@
         "check-keys" = mkApp "check-keys" system;
         "rollback" = mkApp "rollback" system;
       };
+        # Helper to make a Home-Manager config for any system
+      makeHomeCfg = system:
+        let
+          user = "vkwhm";
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            (args: {
+              home.username      = user;
+              home.homeDirectory = "/home/${user}";
+              home.stateVersion  = "24.11";
+              home.whmConfig     = {
+                enable           = true;
+                link.nvim        = true;
+                link.vim         = true;
+                link.tmux        = true;
+                link.wezterm     = true;
+              };
+            })
+            ./nixos-config/modules/shared/whmconfig.nix
+            ./nixos-config/modules/shared/shell.nix
+          ];
+
+          extraSpecialArgs = { inherit user; };
+        };
     in
     {
       # devShells = forAllSystems devShell;
       apps = nixpkgs.lib.genAttrs linuxSystems mkLinuxApps // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
-
+      homeConfigurations = nixpkgs.lib.genAttrs linuxSystems (system:
+        makeHomeCfg system
+      );
       darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system: let
         user = "whoami";
       in
@@ -102,46 +132,6 @@
           ];
         }
       );
-      homeConfigurations = let
-          user = "vkwhm";
-          pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        in { 
-          default = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            (args: {
-              home.stateVersion = "24.11";
-              home.username = user;
-              home.homeDirectory = "/home/${user}";
-              home.whmConfig = {
-                enable = true;
-                link.nvim = true;
-                link.vim = true;
-                link.tmux = true;
-                link.wezterm = true;
-              };
-            })
-            ./nixos-config/modules/shared/whmconfig.nix
-            ./nixos-config/modules/shared/shell.nix 
-          ];
-          extraSpecialArgs = { inherit user; };
-        };
-        uninstall = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [ (args: { uninstall = true;}) (args: {
-            home.username = user;
-            home.homeDirectory = "/home/${user}";
-            # TODO: Create module for this
-            home.activation = {
-              whmUninstall = ''
-                echo "Uninstalling WHM shell...";
-                unlink "${args.config.home.homeDirectory}/.whm_shell";
-              '';
-            };
-          }) ];
-          extraSpecialArgs = { inherit user;  };
-        };
-      };
 
      #  nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system: nixpkgs.lib.nixosSystem {
      #    inherit system;
@@ -158,5 +148,5 @@
      #      ./hosts/nixos
      #    ];
      # });
-  };
+  }; 
 }
