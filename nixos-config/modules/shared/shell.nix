@@ -32,13 +32,14 @@ in {
     withRuby = true;
   };
   programs.fd.enable = true;
-  programs.git.enable = true;
+  # programs.git.enable = true;
   programs.eza.enable = true;
   programs.zoxide.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
     btop lazygit
     go cargo # for neovim
+    gh git
   ];
   # Tmux search keybindings
   programs.tmux.searchKeys = [
