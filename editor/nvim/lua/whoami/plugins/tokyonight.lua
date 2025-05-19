@@ -37,8 +37,8 @@ return {
 			end,
 		})
 		-- load the colorscheme here
-		if is_dark then
-			vim.cmd("colorscheme tokyonight-night")
-		end
+		-- if is_dark then
+		-- 	vim.cmd("colorscheme tokyonight-night")
+		-- end
 	end,
 }
