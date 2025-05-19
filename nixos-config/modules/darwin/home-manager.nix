@@ -41,10 +41,16 @@ in
   # If you have previously added these apps to your Mac App Store profile (but not installed them on this system),
   # you may receive an error message "Redownload Unavailable with This Apple ID".
   # This message is safe to ignore. (https://github.com/dustinlyons/nixos-config/issues/83)
-  # masApps = {
-  #   "1password" = 1333542190;
-  #   "wireguard" = 1451685025;
-  # };
+  masApps = {
+    # "1password" = 1333542190;
+    # "wireguard" = 1451685025;
+    # "micorosoft-word" = 462054704;
+    # "xcode" = 497799835;
+      "bitwarden" = 1352778147;
+      "nextdns" = 1464122853;
+      "whatsapp" = 310633997;
+      "telegram" = 747648890;
+  };
   };
 
   # Enable home-manager
