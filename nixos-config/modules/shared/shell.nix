@@ -31,6 +31,11 @@ in {
     withNodeJs = true;
     withRuby = true;
   };
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
   programs.fd.enable = true;
   # programs.git.enable = true;
   programs.eza.enable = true;
