@@ -73,9 +73,12 @@
         "rollback" = mkApp "rollback" system;
       };
         # Helper to make a Home-Manager config for any system
-      makeHomeCfg = system:
+      makeHomeCfg = build:
         let
           user = "vkwhm";
+          matchSystem = builtins.match "^([^-]+)-linux(-desktop)?$" build;
+          isDesktop = (builtins.elemAt matchSystem 1) == "-desktop";
+          system = "${builtins.elemAt matchSystem 0}-linux";
           pkgs = nixpkgs.legacyPackages.${system};
         in
         home-manager.lib.homeManagerConfiguration {
@@ -90,12 +93,13 @@
                 link.nvim        = true;
                 link.vim         = true;
                 link.tmux        = true;
-                link.wezterm     = true;
               };
             })
             ./nixos-config/modules/shared/whmconfig.nix
             ./nixos-config/modules/shared/shell.nix
-          ];
+          ] ++ (if isDesktop then [
+            ./nixos-config/modules/linux/desktop.nix
+          ] else []);
 
           extraSpecialArgs = { inherit user; };
         };
@@ -103,7 +107,7 @@
     {
       # devShells = forAllSystems devShell;
       apps = nixpkgs.lib.genAttrs linuxSystems mkLinuxApps // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
-      homeConfigurations = nixpkgs.lib.genAttrs linuxSystems (system:
+      homeConfigurations = nixpkgs.lib.genAttrs (linuxSystems ++ ["x86_64-linux-desktop" "aarch64-linux-desktop"]) (system:
         makeHomeCfg system
       );
       darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system: let
