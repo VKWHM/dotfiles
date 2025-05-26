@@ -32,7 +32,7 @@ let user = "whoami"; in
     stateVersion = 6;
   
     defaults = {
-      ".GlobalPreferences"."com.apple.sound.beep.sound" = "/System/Library/Sounds/Submarine.aiff";
+      ".GlobalPreferences"."com.apple.sound.beep.sound" = "/System/Library/Sounds/Glass.aiff";
       ActivityMonitor.IconType = 2;
       CustomUserPreferences = {
         NSGlobalDomain = {

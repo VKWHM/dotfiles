@@ -4,7 +4,7 @@ _:
   # "homebrew/cask/docker"
   "orbstack" # containerization app
   "ghostty" # terminal emulator
-  "dash" # API documentation browser
+  "raycast" # productivity app
   # "visual-studio-code"
   #
   # # Cyber Security Tools
@@ -13,6 +13,7 @@ _:
   "stratoshark" # syscall analyzer
   "tor-browser" # anonymous web browser
   "caido" # network analysis tool
+  "burp-suite" # network analysis tool
   
   # # Communication Tools
   "obsidian" # note-taking app

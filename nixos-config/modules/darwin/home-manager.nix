@@ -9,10 +9,11 @@ let
   # '';
   # sharedFiles = import ../shared/files.nix { inherit config pkgs; };
   # additionalFiles = import ./files.nix { inherit user config pkgs; };
+  fontsFiles = import ../shared/fonts.nix pkgs;
 in
 {
   imports = [
-   # ./dock
+   ./dock
   ];
 
   # It me
@@ -22,13 +23,13 @@ in
     isHidden = false;
     shell = pkgs.zsh;
   };
-
+  fonts.packages = fontsFiles;
   homebrew = {
     enable = true;
     casks = pkgs.callPackage ./casks.nix {};
     onActivation = {
      # cleanup = "uninstall";
-      autoUpdate = true;
+     autoUpdate = true;
     };
 
   # These app IDs are from using the mas CLI app
@@ -76,7 +77,7 @@ in
         link.nvim = true;
         link.vim = true;
         link.tmux = true;
-        link.wezterm = true;
+        link.wezterm = false;
       };
       # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
 
@@ -87,32 +88,36 @@ in
   };
 
   # Fully declarative dock using the latest from Nix Store
-  # local.dock.enable = true;
-  # local.dock.entries = [
-  #   { path = "/Applications/Slack.app/"; }
-  #   { path = "/System/Applications/Messages.app/"; }
-  #   { path = "/System/Applications/Facetime.app/"; }
-  #   { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
-  #   { path = "/System/Applications/Music.app/"; }
-  #   { path = "/System/Applications/News.app/"; }
-  #   { path = "/System/Applications/Photos.app/"; }
-  #   { path = "/System/Applications/Photo Booth.app/"; }
-  #   { path = "/System/Applications/TV.app/"; }
-  #   { path = "/System/Applications/Home.app/"; }
-  #   {
-  #     path = toString myEmacsLauncher;
-  #     section = "others";
-  #   }
-  #   {
-  #     path = "${config.users.users.${user}.home}/.local/share/";
-  #     section = "others";
-  #     options = "--sort name --view grid --display folder";
-  #   }
-  #   {
-  #     path = "${config.users.users.${user}.home}/.local/share/downloads";
-  #     section = "others";
-  #     options = "--sort name --view grid --display stack";
-  #   }
-  # ];
+  local.dock.enable = true;
+  local.dock.entries = [
+    # { path = "/Applications/Slack.app/"; }
+    { path = "/Applications/Safari.app/"; }
+    { path = "/System/Applications/App Store.app/"; }
+    { path = "/System/Applications/Mail.app/"; }
+    { path = "/System/Applications/Messages.app/"; }
+    { path = "/System/Applications/Facetime.app/"; }
+    # { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
+    { path = "/System/Applications/Music.app/"; }
+    { path = "/System/Applications/Books.app/"; }
+    { path = "/System/Applications/Photos.app/"; }
+    { path = "/System/Applications/Calendar.app/"; }
+    { path = "/Applications/WhatsApp.app/"; }
+    { path = "/Applications/Telegram.app/"; }
+    { path = "/Applications/Obsidian.app/"; }
+    { path = "/Applications/Ghostty.app/"; }
+    { path = "/Applications/Caido.app/"; }
+    { path = "/Applications/Burp Suite Community Edition.app/"; }
+    { path = "/Applications/Wireshark.app/"; }
+    {
+      path = "${config.users.users.${user}.home}";
+      section = "others";
+      options = "--sort name --view grid --display folder";
+    }
+    {
+      path = "${config.users.users.${user}.home}/Downloads";
+      section = "others";
+      options = "--sort name --view grid --display stack";
+    }
+  ];
 
 }
