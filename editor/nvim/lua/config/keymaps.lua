@@ -86,7 +86,7 @@ Steps:
 - Reference any issue or ticket (e.g. “Closes #123”).  
 - Do not include implementation details, code snippets, or unrelated commentary.  
 
-6. Output **only** the commit message (title, blank line, description).  
+6. Output **only** the commit message (title, blank line, description) enclosed with markdown code block (```).  
 - Do not include any metadata, analysis, or commentary.  
 - Do not include any additional text, explanations, or formatting.
 ]]
@@ -100,16 +100,13 @@ Steps:
 				vim.notify("No staged files to commit", vim.log.levels.WARN)
 				return
 			end
+			vim.notify("Generating commit message with Copilot...", vim.log.levels.INFO)
 			vim.schedule(function()
 				require("CopilotChat").ask(prompt, {
 					model = "gpt-4",
 					context = { "git:staged" },
 					system_prompt = system_prompt,
 					headless = true,
-					window = {
-						title = "Copilot Commit Message",
-						layout = "float",
-					},
 					callback = function(response)
 						local _, msg = string.match(response, [[^```(%w*)%W(.+)%W```]])
 						if not msg then
@@ -121,6 +118,7 @@ Steps:
 							if commit_out.code ~= 0 then
 								vim.notify("Git commit failed: " .. commit_out.stderr, vim.log.levels.ERROR)
 							else
+								print(msg)
 								vim.notify("Changes committed successfully!", vim.log.levels.INFO)
 							end
 						end)
