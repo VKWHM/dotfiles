@@ -38,9 +38,9 @@ let user = "whoami"; in
         NSGlobalDomain = {
           TISRomanSwitchState = 1;
         };
-        "com.apple.Safari" = {
-          "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
-        };
+        # "com.apple.Safari" = {
+        #   "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
+        # };
       };
       NSGlobalDomain = {
         AppleShowAllExtensions = true;
@@ -103,7 +103,8 @@ let user = "whoami"; in
     };
     keyboard = {
       enableKeyMapping = true;
-      remapCapsLockToControl = true;
+      # remapCapsLockToControl = true;
+      remapCapsLockToControl = false;
     };
     tools = {
       darwin-rebuild.enable = true;
