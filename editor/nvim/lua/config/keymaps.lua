@@ -46,19 +46,51 @@ end
 
 -- Git commit with Copilot Chat
 do
+	local system_prompt = [[
+You are an expert Git commit message generator.  
+
+When given repository staged diff, produce exactly one Conventional Commits–style commit message and nothing else.
+]]
+
 	local prompt = [[
-    Generate a Git commit message using the Conventional Commits format based on my staged changes. Use the following structure:
+Please generate a Git commit message based on the following staged changes.
+Steps:
 
-    <type>(<optional scope>): <title line> (max 50 characters, imperative mood)
+1. Read the staged changes (the diff) only to extract relevant information.  
+2. Classify the change under one of these types:  
+   - **feat**     — a new feature  
+   - **fix**      — a bug fix  
+   - **docs**     — documentation only changes  
+   - **style**    — formatting, code style (no logic changes)  
+   - **refactor** — code change that neither fixes a bug nor adds a feature  
+   - **perf**     — code change that improves performance  
+   - **test**     — adding or correcting tests  
+   - **build**    — changes affecting the build system or dependencies  
+   - **ci**       — CI configuration or scripts  
+   - **chore**    — other changes that don’t modify src or test files  
+   - **revert**   — reverts a previous commit  
 
-    <blank line>
+3. (Optional) If applicable, identify a single-word scope for the affected module (e.g. `(auth)`). Otherwise omit the scope.  
 
-    <Description>
-    Explain what the change does and why it was made. Include relevant context but avoid implementation details. Use the staged diff to guide the message.
+4. Generate a one-line **title** in imperative mood, ≤50 characters:  
 
-    Valid <type> values include: feat, fix, chore, docs, style, refactor, perf, test, build, ci, revert.
-  ]]
-	local function sanitize(str, allowed_chars) end
+```
+<type>(<scope>): <short description>
+```
+
+- Omit `(scope)` if none.  
+- Do not exceed 50 characters including type and scope.  
+
+5. Add a blank line, then a **detailed description** wrapped at ~72 characters per line:  
+- Explain **what** changed and **why** in concise prose.  
+- Reference any issue or ticket (e.g. “Closes #123”).  
+- Do not include implementation details, code snippets, or unrelated commentary.  
+
+6. Output **only** the commit message (title, blank line, description).  
+- Do not include any metadata, analysis, or commentary.  
+- Do not include any additional text, explanations, or formatting.
+]]
+
 	map("n", "<leader>ac", function()
 		vim.system({ "git", "diff", "--staged", "--name-only" }, { text = true }, function(out)
 			if out.code ~= 0 then
@@ -68,20 +100,34 @@ do
 				vim.notify("No staged files to commit", vim.log.levels.WARN)
 				return
 			end
-			require("CopilotChat").ask(prompt, {
-				model = "gpt-4",
-				context = { "git:staged" },
-				callback = function(response)
-					vim.system({ "git", "commit", "-m", response }, {}, function(commit_out)
-						if commit_out.code ~= 0 then
-							vim.notify("Git commit failed: " .. commit_out.stderr, vim.log.levels.ERROR)
-						else
-							vim.notify("Changes committed successfully!", vim.log.levels.INFO)
+			vim.schedule(function()
+				require("CopilotChat").ask(prompt, {
+					model = "gpt-4",
+					context = { "git:staged" },
+					system_prompt = system_prompt,
+					headless = true,
+					window = {
+						title = "Copilot Commit Message",
+						layout = "float",
+					},
+					callback = function(response)
+						local _, msg = string.match(response, [[^```(%w*)%W(.+)%W```]])
+						if not msg then
+							print("Copilot response:", response)
+							vim.notify("Failed to parse Copilot response", vim.log.levels.ERROR)
+							return response
 						end
-					end)
-					return response
-				end,
-			})
+						vim.system({ "git", "commit", "-m", msg }, {}, function(commit_out)
+							if commit_out.code ~= 0 then
+								vim.notify("Git commit failed: " .. commit_out.stderr, vim.log.levels.ERROR)
+							else
+								vim.notify("Changes committed successfully!", vim.log.levels.INFO)
+							end
+						end)
+						return response
+					end,
+				})
+			end)
 		end)
 	end, { desc = "Commit changes with Copilot generated message" })
 end
