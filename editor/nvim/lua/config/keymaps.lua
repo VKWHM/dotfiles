@@ -43,3 +43,45 @@ do
 	map("n", "<leader><tab>", "<cmd>tabn<cr>", { desc = "Next Tab" })
 	map("n", "<leader><s-tab>", "<cmd>tabp<cr>", { desc = "Previous Tab" })
 end
+
+-- Git commit with Copilot Chat
+do
+	local prompt = [[
+    Generate a Git commit message using the Conventional Commits format based on my staged changes. Use the following structure:
+
+    <type>(<optional scope>): <title line> (max 50 characters, imperative mood)
+
+    <blank line>
+
+    <Description>
+    Explain what the change does and why it was made. Include relevant context but avoid implementation details. Use the staged diff to guide the message.
+
+    Valid <type> values include: feat, fix, chore, docs, style, refactor, perf, test, build, ci, revert.
+  ]]
+	local function sanitize(str, allowed_chars) end
+	map("n", "<leader>ac", function()
+		vim.system({ "git", "diff", "--staged", "--name-only" }, { text = true }, function(out)
+			if out.code ~= 0 then
+				vim.notify("Getting staged files failed: " .. out.stderr, vim.log.levels.ERROR)
+				return
+			elseif out.stdout == "" then
+				vim.notify("No staged files to commit", vim.log.levels.WARN)
+				return
+			end
+			require("CopilotChat").ask(prompt, {
+				model = "gpt-4",
+				context = { "git:staged" },
+				callback = function(response)
+					vim.system({ "git", "commit", "-m", response }, {}, function(commit_out)
+						if commit_out.code ~= 0 then
+							vim.notify("Git commit failed: " .. commit_out.stderr, vim.log.levels.ERROR)
+						else
+							vim.notify("Changes committed successfully!", vim.log.levels.INFO)
+						end
+					end)
+					return response
+				end,
+			})
+		end)
+	end, { desc = "Commit changes with Copilot generated message" })
+end
