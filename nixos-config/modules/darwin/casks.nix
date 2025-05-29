@@ -4,7 +4,6 @@ _:
   # "homebrew/cask/docker"
   "orbstack" # containerization app
   "ghostty" # terminal emulator
-  "raycast" # productivity app
   # "visual-studio-code"
   #
   # # Cyber Security Tools
@@ -31,7 +30,7 @@ _:
   # "vlc"
   #
   # # Productivity Tools
-  # "raycast"
+  "raycast"
   "hazeover" # window dimmer
   #
   # # Browsers

@@ -2,13 +2,6 @@
 
 let
   user = "whoami";
-  # Define the content of your file as a derivation
-  # myEmacsLauncher = pkgs.writeScript "emacs-launcher.command" ''
-  #   #!/bin/sh
-  #   emacsclient -c -n &
-  # '';
-  # sharedFiles = import ../shared/files.nix { inherit config pkgs; };
-  # additionalFiles = import ./files.nix { inherit user config pkgs; };
   fontsFiles = import ../shared/fonts.nix pkgs;
 in
 {
@@ -90,16 +83,15 @@ in
   # Fully declarative dock using the latest from Nix Store
   local.dock.enable = true;
   local.dock.entries = [
-    # { path = "/Applications/Slack.app/"; }
+    { path = "/System/Applications/System Settings.app/"; }
     { path = "/Applications/Safari.app/"; }
     { path = "/System/Applications/App Store.app/"; }
     { path = "/System/Applications/Mail.app/"; }
     { path = "/System/Applications/Messages.app/"; }
     { path = "/System/Applications/Facetime.app/"; }
-    # { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
     { path = "/System/Applications/Music.app/"; }
     { path = "/System/Applications/Books.app/"; }
-    { path = "/System/Applications/Photos.app/"; }
+    # { path = "/System/Applications/Photos.app/"; }
     { path = "/System/Applications/Calendar.app/"; }
     { path = "/Applications/WhatsApp.app/"; }
     { path = "/Applications/Telegram.app/"; }
@@ -109,14 +101,14 @@ in
     { path = "/Applications/Burp Suite Community Edition.app/"; }
     { path = "/Applications/Wireshark.app/"; }
     {
-      path = "${config.users.users.${user}.home}";
-      section = "others";
-      options = "--sort name --view grid --display folder";
-    }
-    {
       path = "${config.users.users.${user}.home}/Downloads";
       section = "others";
       options = "--sort name --view grid --display stack";
+    }
+    {
+      path = "${config.users.users.${user}.home}";
+      section = "others";
+      options = "--sort name --view grid --display folder";
     }
   ];
 

@@ -37,10 +37,27 @@ let user = "whoami"; in
       CustomUserPreferences = {
         NSGlobalDomain = {
           TISRomanSwitchState = 1;
+          WebKitDeveloperExtras = true;
+
         };
-        # "com.apple.Safari" = {
-        #   "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
-        # };
+        "com.apple.desktopservices" = {
+          # Avoid creating .DS_Store files on network or USB volumes
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+        "com.apple.Safari" = {
+          # Privacy: don’t send search queries to Apple
+          UniversalSearchEnabled = false;
+          SuppressSearchSuggestions = true;
+          # Prevent Safari from opening ‘safe’ files automatically after downloading
+          AutoOpenSafeDownloads = false;
+          IncludeDevelopMenu = true;
+          WebKitDeveloperExtrasEnabledPreferenceKey = true;
+          WebContinuousSpellCheckingEnabled = true;
+          WebAutomaticSpellingCorrectionEnabled = false;
+          WebKitJavaEnabled = false;
+
+        };
       };
       NSGlobalDomain = {
         AppleShowAllExtensions = true;
