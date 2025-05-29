@@ -48,8 +48,7 @@ in
       focusEvents = true;
       aggressiveResize = true;
       shell = "${pkgs.zsh}/bin/zsh";
-      # TODO: Enable tmuxinator
-      # tmuxinator = true;
+      tmuxinator.enable = true;
       plugins = with pkgs; [
         (mkIf config.programs.fzf.enable (tmuxPlugins.mkTmuxPlugin {
           pluginName = "tmux-fzf";
