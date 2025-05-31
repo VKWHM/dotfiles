@@ -5,10 +5,6 @@ let
   fontsFiles = import ../shared/fonts.nix pkgs;
 in
 {
-  imports = [
-   ./dock
-  ];
-
   # It me
   users.users.${user} = {
     name = "${user}";
@@ -79,37 +75,5 @@ in
       # manual.manpages.enable = false;
     };
   };
-
-  # Fully declarative dock using the latest from Nix Store
-  local.dock.enable = true;
-  local.dock.entries = [
-    { path = "/System/Applications/System Settings.app/"; }
-    { path = "/Applications/Safari.app/"; }
-    { path = "/System/Applications/App Store.app/"; }
-    { path = "/System/Applications/Mail.app/"; }
-    { path = "/System/Applications/Messages.app/"; }
-    { path = "/System/Applications/Facetime.app/"; }
-    { path = "/System/Applications/Music.app/"; }
-    { path = "/System/Applications/Books.app/"; }
-    # { path = "/System/Applications/Photos.app/"; }
-    { path = "/System/Applications/Calendar.app/"; }
-    { path = "/Applications/WhatsApp.app/"; }
-    { path = "/Applications/Telegram.app/"; }
-    { path = "/Applications/Obsidian.app/"; }
-    { path = "/Applications/Ghostty.app/"; }
-    { path = "/Applications/Caido.app/"; }
-    { path = "/Applications/Burp Suite Community Edition.app/"; }
-    { path = "/Applications/Wireshark.app/"; }
-    {
-      path = "${config.users.users.${user}.home}/Downloads";
-      section = "others";
-      options = "--sort name --view grid --display stack";
-    }
-    {
-      path = "${config.users.users.${user}.home}";
-      section = "others";
-      options = "--sort name --view grid --display folder";
-    }
-  ];
 
 }

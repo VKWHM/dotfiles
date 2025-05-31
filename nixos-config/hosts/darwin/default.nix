@@ -98,6 +98,31 @@ let user = "whoami"; in
         orientation = "bottom";
         tilesize = 48;
         wvous-bl-corner = 10;
+        persistent-apps = [
+          { app = "/System/Applications/App Store.app/"; }
+          { app = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/"; }
+          { app = "/System/Applications/Calendar.app/"; }
+          { app = "/System/Applications/System Settings.app/"; }
+          # { spacer = { small = true; }; }
+          { app = "/System/Applications/Music.app/"; }
+          { app = "/System/Applications/Books.app/"; }
+          { app = "/System/Applications/Messages.app/"; }
+          { app = "/System/Applications/Facetime.app/"; }
+          # { spacer = { small = true; }; }
+          { app = "/Applications/WhatsApp.app/"; }
+          { app = "/Applications/Telegram.app/"; }
+          { app = "/System/Applications/Mail.app/"; }
+          { spacer = { small = true; }; }
+          { app = "/Applications/Obsidian.app/"; }
+          { app = "/Applications/Ghostty.app/"; }
+          { app = "/Applications/Caido.app/"; }
+          { app = "/Applications/Burp Suite Community Edition.app/"; }
+          { app = "/Applications/Wireshark.app/"; }
+        ];
+        persistent-others = [
+          "${config.users.users.${user}.home}/Downloads"
+          "${config.users.users.${user}.home}"
+        ];
       };
   
       finder = {
