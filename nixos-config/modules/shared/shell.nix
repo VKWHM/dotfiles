@@ -10,6 +10,7 @@ in {
     programs/tmux.nix
     programs/zsh.nix
     programs/fzf.nix
+    programs/bat.nix
   ];
   # ZSH
   programs.zsh.enable = true;
