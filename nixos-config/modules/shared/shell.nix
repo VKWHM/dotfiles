@@ -8,11 +8,13 @@ in {
   ## Programs
   imports = [
     programs/tmux.nix
+    programs/zsh.nix
+    programs/fzf.nix
   ];
   # ZSH
-  programs.zsh = import programs/zsh.nix pkgs;
-  programs.fzf = import programs/fzf.nix  pkgs;
-  programs.bat = import programs/bat.nix pkgs;
+  programs.zsh.enable = true;
+  programs.fzf.enable = true;
+  programs.bat.enable = true;
   programs.ripgrep = {
     enable = true;
     arguments = [
