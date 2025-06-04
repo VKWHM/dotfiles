@@ -6,8 +6,6 @@
     };
     fonts.fontconfig.enable = true;
     home.packages = [
-      pkgs.wezterm
-      pkgs.zed-editor
-    ] ++ (import ./fonts.nix pkgs);
+    ] ++ (import ../shared/fonts.nix pkgs);
   };
 }
