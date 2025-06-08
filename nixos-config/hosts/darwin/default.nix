@@ -109,15 +109,15 @@ let user = "whoami"; in
           { app = "/System/Applications/Messages.app/"; }
           { app = "/System/Applications/Facetime.app/"; }
           # { spacer = { small = true; }; }
+          { app = "/System/Applications/Mail.app/"; }
           { app = "/Applications/WhatsApp.app/"; }
           { app = "/Applications/Telegram.app/"; }
-          { app = "/System/Applications/Mail.app/"; }
           { spacer = { small = true; }; }
-          { app = "/Applications/Obsidian.app/"; }
           { app = "/Applications/Ghostty.app/"; }
-          { app = "/Applications/Caido.app/"; }
+          { app = "/Applications/Obsidian.app/"; }
+          { app = "/Applications/Firefox.app/"; }
           { app = "/Applications/Burp Suite Community Edition.app/"; }
-          { app = "/Applications/Wireshark.app/"; }
+          { app = "/Applications/Caido.app/"; }
         ];
         persistent-others = [
           "${config.users.users.${user}.home}/Downloads"

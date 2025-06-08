@@ -7,7 +7,7 @@ _:
   # "visual-studio-code"
   #
   # # Cyber Security Tools
-  "utm" # virtual machine
+  "vmware-fusion" # virtual machine
   "wireshark" # network protocol analyzer
   "stratoshark" # syscall analyzer
   "tor-browser" # anonymous web browser
