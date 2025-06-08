@@ -83,7 +83,7 @@ Steps:
 
 5. Add a blank line, then a **detailed description** wrapped at ~72 characters per line:  
 - Explain **what** changed and **why** in concise prose.  
-- Reference any issue or ticket (e.g. “Closes #123”).  
+- Reference any issue or ticket if mensioned in changes.  
 - Do not include implementation details, code snippets, or unrelated commentary.  
 
 6. Output **only** the commit message (title, blank line, description) enclosed with markdown code block (```).  
