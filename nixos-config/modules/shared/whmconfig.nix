@@ -66,7 +66,7 @@ in {
       whm1Install = ''
         _WHMCONFIG_INSTALLED=$(test -d "${whmDotDir}" && echo "true" || echo "false")
         if [[ $_WHMCONFIG_INSTALLED == "false" ]]; then
-          ${pkgs.git}/bin/git clone https://github.com/${cfg.repo}.git ${whmDotDir}
+          ${pkgs.git}/bin/git clone -b nix https://github.com/${cfg.repo}.git ${whmDotDir}
           _WHMCONFIG_INSTALLED=true;
         fi
       '';
@@ -133,8 +133,8 @@ in {
               if [[ ! -L "${link.dst}" ]]; then
                 echo "[!!] ${name} configuration already exists. Create Backup..." >&2;
                 extension=".backup-$(date +%Y-%m-%d_%H-%M-%S)";
-                mv "${link.dst}" "${link.dst}.$\{extension}";
-                echo "[!!] Backup created: ${link.dst}.$\{extension}" >&2;
+                mv "${link.dst}" "${link.dst}.$extension";
+                echo "[!!] Backup created: ${link.dst}.$extension" >&2;
               elif [[ "$(readlink '${link.dst}')" != "${link.src}" ]]; then
                 echo "[!!] Remove link $(stat -c '%N' '${link.dst}')" >&2;
                 unlink "${link.dst}";

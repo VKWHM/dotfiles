@@ -75,7 +75,7 @@
         # Helper to make a Home-Manager config for any system
       makeHomeCfg = build:
         let
-          user = "vkwhm";
+          user = "ugurcira";
           matchSystem = builtins.match "^([^-]+)-linux(-desktop)?$" build;
           isDesktop = (builtins.elemAt matchSystem 1) == "-desktop";
           system = "${builtins.elemAt matchSystem 0}-linux";
