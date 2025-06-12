@@ -25,7 +25,7 @@ in {
   };
   programs.starship = {
     enable = true;
-    settings = builtins.fromTOML (builtins.unsafeDiscardStringContext (builtins.readFile "${rootDir}/shell/starship.toml"));
+    settings = builtins.fromTOML (builtins.unsafeDiscardStringContext (builtins.readFile "${rootDir}/shell/starship_mocha.toml"));
   };
   programs.neovim = {
     enable = true;
