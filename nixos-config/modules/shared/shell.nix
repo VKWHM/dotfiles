@@ -89,7 +89,7 @@ in {
     {
       name = "Hash/SHA";
       key = "M-h";
-      regex = "\\b([0-9a-f]{7,40}|[[:alnum:]]{52}|[0-9a-f]{64})\\b";
+      regex = "([0-9a-f]{7,40}|[[:alnum:]]{52}|[0-9a-f]{64})";
     }
     {
       name = "IP Address";
@@ -99,7 +99,7 @@ in {
     {
       name = "Email Address";
       key = "M-e";
-      regex = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b";
+      regex = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
     }
   ];
 }
