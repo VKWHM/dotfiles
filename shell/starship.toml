@@ -7,12 +7,12 @@ format = """
 $os\
 $nix_shell\
 $username\
-[](bg:mauve fg:surface0)\
+[](bg:red fg:surface0)\
 $directory\
-[](fg:mauve bg:blue)\
+[](fg:red bg:maroon)\
 $git_branch\
 $git_status\
-[](fg:blue bg:lavender)\
+[](fg:maroon bg:pink)\
 $c\
 $rust\
 $golang\
@@ -22,13 +22,13 @@ $java\
 $kotlin\
 $haskell\
 $python\
-[](fg:lavender bg:pink)\
+[](fg:pink bg:flamingo)\
 $docker_context\
 $jobs\
 $cmake\
-[](fg:pink bg:yellow)\
+[](fg:flamingo bg:rosewater)\
 $time\
-[](fg:yellow)\
+[](fg:rosewater)\
 $line_break$character"""
 
 palette = 'catppuccin_mocha'
@@ -97,7 +97,7 @@ symbol = ""
 format = '[ | [$symbol](bold fg:sky bg:surface0)]($style)'
 
 [directory]
-style = "fg:surface0 bg:mauve"
+style = "fg:surface0 bg:red"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -111,78 +111,78 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = ""
-style = "bg:blue"
-format = '[[ $symbol $branch ](fg:base bg:blue)]($style)'
+style = "bg:maroon"
+format = '[[ $symbol $branch ](fg:base bg:maroon)]($style)'
 
 [git_status]
-style = "bg:blue"
-format = '[[($all_status$ahead_behind )](fg:surface0 bg:blue)]($style)'
+style = "bg:maroon"
+format = '[[($all_status$ahead_behind )](fg:base bg:maroon)]($style)'
 
 [nodejs]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [c]
 symbol = " "
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [rust]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [golang]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [php]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [java]
 symbol = " "
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [kotlin]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [haskell]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [python]
 symbol = ""
-style = "bg:lavender"
-format = '[[ $symbol( $version) ](fg:base bg:lavender)]($style)'
+style = "bg:pink"
+format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
 
 [docker_context]
 symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $context) ](fg:base bg:pink)]($style)'
+style = "bg:flamingo"
+format = '[[ $symbol( $context) ](fg:base bg:flamingo)]($style)'
 
 [jobs]
 symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $jobs) ](fg:base bg:pink)]($style)'
+style = "bg:flamingo"
+format = '[[ $symbol( $jobs) ](fg:base bg:flamingo)]($style)'
 
 [cmake]
 symbol = "△"
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+style = "bg:flamingo"
+format = '[[ $symbol( $version) ](fg:base bg:flamingo)]($style)'
 
 [time]
 disabled = false
 time_format = "%R"
-style = "bg:yellow"
-format = '[[  $time ](fg:base bg:yellow)]($style)'
+style = "bg:rosewater"
+format = '[[  $time ](fg:base bg:rosewater)]($style)'
 
 [line_break]
 disabled = false
