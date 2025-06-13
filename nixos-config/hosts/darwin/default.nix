@@ -38,6 +38,7 @@ let user = "whoami"; in
         NSGlobalDomain = {
           TISRomanSwitchState = 1;
           WebKitDeveloperExtras = true;
+          "com.apple.trackpad.scaling" = 1; 
 
         };
         "com.apple.desktopservices" = {
@@ -75,9 +76,9 @@ let user = "whoami"; in
 
       # Window
       WindowManager = {
-        GloballyEnabled = true;
+        GloballyEnabled = false;
         HideDesktop = false;
-        StageManagerHideWidgets = true;
+        StageManagerHideWidgets = false;
       };
 
       # Firwall
@@ -141,12 +142,11 @@ let user = "whoami"; in
       trackpad = {
         Clicking = true;
         TrackpadThreeFingerDrag = true;
+        TrackpadThreeFingerTapGesture = 2;
       };
     };
     keyboard = {
       enableKeyMapping = true;
-      # remapCapsLockToControl = true;
-      remapCapsLockToControl = false;
     };
     tools = {
       darwin-rebuild.enable = true;

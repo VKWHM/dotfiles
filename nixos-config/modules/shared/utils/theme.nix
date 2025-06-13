@@ -1,5 +1,5 @@
 {pkgs, lib, config, ...}: let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkMerge;
   catppuccin = import ./catppuccin.nix;
   inherit (catppuccin) latte mocha;
   cfg = config.utils.theme;
@@ -10,7 +10,7 @@ in
   options = {
     utils.theme = {
       appearance = lib.mkOption {
-        type = lib.types.attrsOf lib.types.str;
+        type = lib.types.str;
         default = "dark";
         description = ''
           The appearance theme for the system.

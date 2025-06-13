@@ -3,13 +3,13 @@
 command_timeout = 100
 
 format = """
-[](surface0)\
+[](base)\
 $os\
 $nix_shell\
 $username\
-[](bg:peach fg:surface0)\
+[](bg:surface0 fg:base)\
 $directory\
-[](fg:peach bg:red)\
+[](fg:surface0 bg:red)\
 $git_branch\
 $git_status\
 [](fg:red bg:maroon)\
@@ -62,7 +62,7 @@ crust     = "#11111b"
 
 [os]
 disabled = false
-style = "bg:surface0 fg:text"
+style = "bg:base fg:text"
 
 [os.symbols]
 Windows = "󰍲"
@@ -87,17 +87,17 @@ RedHatEnterprise = "󱄛"
 
 [username]
 show_always = true
-style_user = "bg:surface0 fg:text"
-style_root = "bg:surface0 fg:text"
+style_user = "bg:base fg:text"
+style_root = "bg:base fg:text"
 format = '[  $user ]($style)'
 
 [nix_shell]
-style = "bg:surface0"
+style = "bg:base"
 symbol = ""
-format = '[ | [$symbol](bold fg:sky bg:surface0)]($style)'
+format = '[ | [$symbol](bold fg:sky bg:base)]($style)'
 
 [directory]
-style = "fg:surface0 bg:peach"
+style = "fg:text bg:surface0"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
