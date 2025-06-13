@@ -5,6 +5,9 @@ let
   homeDir = config.home.homeDirectory;
   whmDotDir = "${homeDir}/${cfg.dotDir}";
 in {
+  imports = [
+    ./utils/theme.nix
+  ];
   options = {
     home.whmConfig = {
       enable = mkEnableOption "WHM Configurations";
