@@ -7,12 +7,12 @@ format = """
 $os\
 $nix_shell\
 $username\
-[](bg:red fg:surface0)\
+[](bg:peach fg:surface0)\
 $directory\
-[](fg:red bg:maroon)\
+[](fg:peach bg:red)\
 $git_branch\
 $git_status\
-[](fg:maroon bg:pink)\
+[](fg:red bg:maroon)\
 $c\
 $rust\
 $golang\
@@ -22,7 +22,7 @@ $java\
 $kotlin\
 $haskell\
 $python\
-[](fg:pink bg:flamingo)\
+[](fg:maroon bg:flamingo)\
 $docker_context\
 $jobs\
 $cmake\
@@ -97,7 +97,7 @@ symbol = ""
 format = '[ | [$symbol](bold fg:sky bg:surface0)]($style)'
 
 [directory]
-style = "fg:surface0 bg:red"
+style = "fg:surface0 bg:peach"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -110,58 +110,58 @@ truncation_symbol = "…/"
 "Developer" = "󰲋 "
 
 [git_branch]
-symbol = ""
-style = "bg:maroon"
-format = '[[ $symbol $branch ](fg:base bg:maroon)]($style)'
+symbol = ""
+style = "bg:red"
+format = '[[ $symbol $branch ](fg:base bg:red)]($style)'
 
 [git_status]
-style = "bg:maroon"
-format = '[[($all_status$ahead_behind )](fg:base bg:maroon)]($style)'
+style = "bg:red"
+format = '[[($all_status$ahead_behind )](fg:base bg:red)]($style)'
 
 [nodejs]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [c]
-symbol = " "
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = " "
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [rust]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [golang]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [php]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [java]
-symbol = " "
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = " "
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [kotlin]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [haskell]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [python]
-symbol = ""
-style = "bg:pink"
-format = '[[ $symbol( $version) ](fg:base bg:pink)]($style)'
+symbol = ""
+style = "bg:maroon"
+format = '[[ $symbol( $version) ](fg:base bg:maroon)]($style)'
 
 [docker_context]
 symbol = ""
