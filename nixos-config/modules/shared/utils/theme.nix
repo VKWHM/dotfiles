@@ -1,5 +1,5 @@
 {pkgs, lib, config, ...}: let
-  inherit (lib) mkIf mkMerge;
+  inherit (lib) mkIf;
   catppuccin = import ./catppuccin.nix;
   inherit (catppuccin) latte mocha;
   cfg = config.utils.theme;
