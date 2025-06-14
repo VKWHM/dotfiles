@@ -38,6 +38,7 @@ in {
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+    silent = true;
   };
   programs.fd.enable = true;
   # programs.git.enable = true;
