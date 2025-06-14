@@ -4,4 +4,5 @@ pkgs.stdenv.mkDerivation {
   pname = "gwatch";
   version = "1.0";
   src = ./.;
+  buildInputs = with pkgs; [ glib procps ];
 }

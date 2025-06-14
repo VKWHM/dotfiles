@@ -1,17 +1,25 @@
+CC = gcc
+SRC = src/main.c
+OBJ = src/main.o
+OUT = gwatch
 BINDIR := ${out}/bin
+CFLAGS := $(shell pkg-config --cflags glib-2.0 gio-2.0) -lprocps
+LDFLAGS := $(shell pkg-config --libs glib-2.0 gio-2.0) -lprocps
 
-
-build: gwatch
+build: $(OUT)
 
 install: build
 	mkdir -p $(BINDIR)
 	install gwatch $(BINDIR)
 
-gwatch: src/main.o
-	gcc -o gwatch src/main.o
+$(OUT): $(OBJ)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
-	rm -f src/*.o gwatch
+	rm -f $(OUT) $(OBJ)
 
-.PHONY: build gwatch clean
+.PHONY: clean install build
 
