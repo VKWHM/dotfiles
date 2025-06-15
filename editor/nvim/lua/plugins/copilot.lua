@@ -1,5 +1,6 @@
 return {
 	"github/copilot.vim",
+	enabled = false,
 	config = function()
 		local map = vim.keymap.set
 		map("n", "<leader>at", function()
