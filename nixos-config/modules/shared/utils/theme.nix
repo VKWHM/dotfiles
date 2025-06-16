@@ -1,15 +1,13 @@
 {pkgs, lib, config, ...}: let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkMerge mkOrder mkOption;
   catppuccin = import ./catppuccin.nix;
   inherit (catppuccin) latte mocha;
   cfg = config.utils.theme;
-
-  themeIs = light: dark: "\\$([[ \\$WHM_APPEARANCE == 'Light'* ]] && echo '${light}' || echo '${dark}')";
 in
 {
   options = {
     utils.theme = {
-      appearance = lib.mkOption {
+      appearance = mkOption {
         type = lib.types.str;
         default = "dark";
         description = ''
@@ -18,31 +16,95 @@ in
           Default is "dark".
         '';
       };
+      autoconfig.light = mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = ''
+          A configuration for light appearance.
+          It can be used to set environment variables or run commands.
+          Default is an empty string.
+        '';
+      };
+      autoconfig.dark = mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = ''
+          A configuration for dark appearance.
+          It can be used to set environment variables or run commands.
+          Default is an empty string.
+        '';
+      };
     };
   };
   config = {
-    programs.fzf = mkIf config.programs.fzf.enable (let 
-      colorPalette = if cfg.appearance == "dark" then mocha else latte;
-      fileOrDir = "if [ -d {} ]; then eza --tree --color=always {} | head -300; else ${pkgs.bat}/bin/bat --theme=\\\"${themeIs "Catppuccin Latte" "Catppuccin Mocha"}\\\" -n --color=always --line-range :500 {}; fi";
+    programs.zsh = mkIf config.programs.zsh.enable (let
+      appearance = cfg.appearance;
+      theme = if appearance == "dark" then "Catppuccin Mocha" else "Catppuccin Latte";
     in {
-      colors = {
-        "bg+" = colorPalette.surface0;
-        bg = colorPalette.base;
-        spinner = colorPalette.rosewater;
-        hl = colorPalette.red;
-        fg = colorPalette.text;
-        header = colorPalette.red;
-        info = colorPalette.mauve;
-        pointer = colorPalette.rosewater;
-        marker = colorPalette.lavender;
-        "fg+" = colorPalette.text;
-        prompt = colorPalette.mauve;
-        "hl+" = colorPalette.red;
-        "selected-bg" = colorPalette.surface1;
-        border = colorPalette.surface0;
-        label = colorPalette.text;
-      };
-      fileWidgetOptions = ["--preview='${fileOrDir}'"];
+      initContent = mkMerge [
+        (mkIf (appearance == "dark") ( mkOrder 2048 ''
+          export WHM_APPEARANCE="Dark"
+        ''))
+        (mkIf (appearance == "light") ( mkOrder 2048 ''
+          export WHM_APPEARANCE="Light"
+        ''))
+        (mkIf (appearance == "auto" && pkgs.hostPlatform.isLinux) ( mkOrder 2048 ''
+          if command -v gsettings &> /dev/null && (gsettings get org.gnome.desktop.interface color-scheme | grep -iq light); then
+            export WHM_APPEARANCE="Light"
+            ${cfg.autoconfig.light}
+          else
+            export WHM_APPEARANCE="Dark"
+            ${cfg.autoconfig.dark}
+          fi
+        ''))
+        (mkIf (appearance == "auto" && pkgs.hostPlatform.isDarwin) ( mkOrder 2048 ''
+          if [[ $(defaults read -g AppleInterfaceStyle 2>/dev/null) == "Dark" ]]; then
+            export WHM_APPEARANCE="Dark"
+          else
+            export WHM_APPEARANCE="Light"
+          fi
+        ''))
+
+        (mkIf (appearance == "auto") ( mkOrder 2049 ''
+          function _whm_appearance_change_dark_notifier() {
+            export WHM_APPEARANCE="Dark"
+            ${cfg.autoconfig.dark}
+          }
+
+          function _whm_appearance_change_light_notifier() {
+            export WHM_APPEARANCE="Light"
+            ${cfg.autoconfig.light}
+          }
+
+          trap '_whm_appearance_change_dark_notifier' USR1
+          trap '_whm_appearance_change_light_notifier' USR2
+        ''))
+      ];
     });
+    systemd.user = mkIf (cfg.appearance == "auto" && pkgs.hostPlatform.isLinux) {
+      enable = true;
+      services."gnome-appearance-watcher" = {
+        Unit = {
+          Description = "Gnome Appearance Watcher";
+          After = [ "graphical-session.target" ];
+        };
+
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.callPackage ../../../../scripts/GnomeWatcher {}}/bin/gwatch";
+          Restart = "always";
+          RestartSec = "5";
+        };
+      };
+    };
+    # launchd = mkIf (cfg.appearance == "auto" && pkgs.hostPlatform.isLinux) {
+    #   enable = true;
+    #   agents."gnome-appearance-watcher" = {
+    #     enable = true;
+    #     config = {
+    #       # ProgramArguments = [ "${pkgs.packageCall ../../../../scripts/GnomeWatcher {}}/bin/gwatch" ];
+    #     }
+    #   };
+    # };
   };
 }

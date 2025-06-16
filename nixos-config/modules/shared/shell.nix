@@ -11,6 +11,7 @@ in {
     programs/zsh.nix
     programs/fzf.nix
     programs/bat.nix
+    programs/starship.nix
   ];
   # ZSH
   programs.zsh.enable = true;
@@ -22,10 +23,6 @@ in {
       "--smart-case" 
       "--max-columns-preview"
     ];
-  };
-  programs.starship = {
-    enable = true;
-    settings = builtins.fromTOML (builtins.unsafeDiscardStringContext (builtins.readFile "${rootDir}/shell/starship_mocha.toml"));
   };
   programs.neovim = {
     enable = true;

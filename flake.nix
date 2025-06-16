@@ -94,8 +94,10 @@
                 link.vim         = true;
                 link.tmux        = true;
               };
+              utils.theme.appearance = if isDesktop then "auto" else "dark";
             })
             ./nixos-config/modules/shared/whmconfig.nix
+            ./nixos-config/modules/shared/utils/theme.nix
             ./nixos-config/modules/shared/shell.nix
           ] ++ (if isDesktop then [
             ./nixos-config/modules/linux/desktop.nix
