@@ -61,8 +61,12 @@ in
         (mkIf (appearance == "auto" && pkgs.hostPlatform.isDarwin) ( mkOrder 2048 ''
           if [[ $(defaults read -g AppleInterfaceStyle 2>/dev/null) == "Dark" ]]; then
             export WHM_APPEARANCE="Dark"
+            ${cfg.autoconfig.dark}
+            ${cfg.autoconfig.no-init.dark}
           else
             export WHM_APPEARANCE="Light"
+            ${cfg.autoconfig.light}
+            ${cfg.autoconfig.no-init.light}
           fi
         ''))
 

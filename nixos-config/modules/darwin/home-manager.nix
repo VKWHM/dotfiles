@@ -60,6 +60,7 @@ in
         # Shared
         ../shared/whmconfig.nix
         ../shared/shell.nix 
+        ../shared/utils/theme.nix
       ];
       home.stateVersion = "24.11";
       home.whmConfig = {
@@ -69,6 +70,7 @@ in
         link.tmux = true;
         link.wezterm = false;
       };
+      utils.theme.appearance = "auto";
       # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
 
       # # Marked broken Oct 20, 2022 check later to remove this

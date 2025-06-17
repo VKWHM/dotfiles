@@ -2,11 +2,6 @@ import AppKit
 import Foundation
 
 final class AppearanceObserverNotifier: NSObject {
-    var ppid: UInt16
-    init(ppid: UInt16) {
-        self.ppid = ppid
-        super.init()
-    }
     
     func observe() {
       DistributedNotificationCenter.default.addObserver(
@@ -21,14 +16,14 @@ final class AppearanceObserverNotifier: NSObject {
         let style = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
         print("Appearance Changed: \(style)")
         // returns `[kinfo_proc]?`
-        guard let procs = try? listChildren(of: ["zsh"]),
+        guard let procs = try? listChildren(of: ["zsh", "nvim"]),
               !procs.isEmpty else {
             print("No zsh children found")
             return
         }
         let signal = style == "Dark" ? SIGUSR1 : SIGUSR2
         for proc in procs {
-            proc.notify(signal: signal)
+            proc.notify(signal: proc.cmd == "nvim" ? SIGUSR1 : signal)
         }
 
     }
@@ -38,13 +33,7 @@ final class AppearanceObserverNotifier: NSObject {
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let argv = CommandLine.arguments
-        guard argv.count == 2, let ppid = UInt16(argv[1]) else {
-            fputs("Usage: \(argv[0]) <ppid>", stderr)
-            NSApp.terminate(nil)
-            return
-        }
-        let observer = AppearanceObserverNotifier.init(ppid: ppid)
+        let observer = AppearanceObserverNotifier.init()
         observer.observe()
     }
 
