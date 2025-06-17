@@ -1,9 +1,15 @@
-{pkgs ? import <nixpkgs> {} }:
+{ stdenv, glib, dconf, wrapGAppsHook, pkg-config, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "gwatch";
   version = "1.0";
   src = ./.;
-  nativeBuildInputs = [ pkgs.pkg-config ];
-  buildInputs = with pkgs; [ glib procps ];
+  nativeBuildInputs = [ pkg-config wrapGAppsHook ];
+  buildInputs = [ glib dconf ];
+
+  postFixup = ''
+    wrapProgram $out/bin/gwatch \
+      --prefix GIO_EXTRA_MODULES : "${glib.out}/lib/gio/modules" \
+      --prefix XDG_DATA_DIRS : "${glib.out}/share:${dconf}/share"
+  '';
 }

@@ -83,17 +83,29 @@ in
     });
     systemd.user = mkIf (cfg.appearance == "auto" && pkgs.hostPlatform.isLinux) {
       enable = true;
+      startServices = "suggest";
       services."gnome-appearance-watcher" = {
         Unit = {
           Description = "Gnome Appearance Watcher";
           After = [ "graphical-session.target" ];
         };
-
+        Install = {
+          WantedBy = [ "default.target" ];
+        };
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.callPackage ../../../../scripts/GnomeWatcher {}}/bin/gwatch";
           Restart = "always";
-          RestartSec = "5";
+          RestartSec = 5;
+
+          # Environment variables required for GSettings to work
+          Environment = [
+            "DISPLAY=:0"
+            "XDG_CURRENT_DESKTOP=GNOME"
+            "GSETTINGS_BACKEND=dconf"
+            "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus"
+            "XDG_RUNTIME_DIR=/run/user/%U"
+          ];
         };
       };
     };
