@@ -17,6 +17,8 @@ int notify_proc(short is_dark) { // 1 -> Dark, 0 -> Light
   while (-1 != read_proc(pt, &pi)) {
     if (strncmp(pi.name, "zsh", 3) == 0)
       kill(pi.pid, is_dark ? SIGUSR1 : SIGUSR2);
+    if (strncmp(pi.name, "nvim", 4) == 0)
+      kill(pi.pid, SIGUSR1);
   }
 
   close_proc(pt);

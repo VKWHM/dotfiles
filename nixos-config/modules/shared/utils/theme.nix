@@ -6,7 +6,7 @@
 in
 {
   options = {
-    utils.theme = {
+    utils.theme = rec {
       appearance = mkOption {
         type = lib.types.str;
         default = "dark";
@@ -34,6 +34,7 @@ in
           Default is an empty string.
         '';
       };
+      autoconfig.no-init = autoconfig;
     };
   };
   config = {
@@ -69,11 +70,13 @@ in
           function _whm_appearance_change_dark_notifier() {
             export WHM_APPEARANCE="Dark"
             ${cfg.autoconfig.dark}
+            ${cfg.autoconfig.no-init.dark}
           }
 
           function _whm_appearance_change_light_notifier() {
             export WHM_APPEARANCE="Light"
             ${cfg.autoconfig.light}
+            ${cfg.autoconfig.no-init.light}
           }
 
           trap '_whm_appearance_change_dark_notifier' USR1

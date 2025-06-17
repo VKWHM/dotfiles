@@ -89,14 +89,14 @@ in
         (lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin == false ) tmuxPlugins.sensible)
         # TODO: config tmux yank plugin
         # tmuxPlugins.yank
-        {
-          plugin = tmuxPlugins.open;
-          extraConfig = ''
-            set -g @open 'x'
-            set -g @open-editor 'f'
-            set -g @open-S 'https://www.google.com/search?q='
-          '';
-        }
+        # {
+        #   plugin = tmuxPlugins.open;
+        #   extraConfig = ''
+        #     set -g @open 'x'
+        #     set -g @open-editor 'f'
+        #     set -g @open-S 'https://www.google.com/search?q='
+        #   '';
+        # }
         {
           plugin = tmuxPlugins.prefix-highlight;
           extraConfig = ''
@@ -129,6 +129,24 @@ in
             tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
           fi"
       '') config.programs.tmux.searchKeys));
+    };
+    utils.theme.autoconfig.no-init = {
+      light = ''
+        if _tmux_env=$(tmux show-environment 2>/dev/null); then
+          if ! echo $_tmux_env | grep -q "WHM_APPEARANCE=Light"; then
+            tmux set-environment WHM_APPEARANCE Light
+            tmux source-file ~/.tmux.conf ~/.config/tmux/tmux.conf
+          fi
+        fi
+      '';
+      dark = ''
+        if _tmux_env=$(tmux show-environment 2>/dev/null); then
+          if ! echo $_tmux_env | grep -q "WHM_APPEARANCE=Dark"; then
+            tmux set-environment WHM_APPEARANCE Dark
+            tmux source-file ~/.tmux.conf ~/.config/tmux/tmux.conf
+          fi
+        fi
+      '';
     };
   });
 }
