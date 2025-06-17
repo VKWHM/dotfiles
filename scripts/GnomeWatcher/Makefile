@@ -1,10 +1,9 @@
 CC = gcc
-SRC = src/main.c
-OBJ = src/main.o
+OBJ = src/main.o src/procs.o
 OUT = gwatch
 BINDIR := ${out}/bin
-CFLAGS := $(shell pkg-config --cflags glib-2.0 gio-2.0) -lprocps
-LDFLAGS := $(shell pkg-config --libs glib-2.0 gio-2.0) -lprocps
+CFLAGS := $(shell pkg-config --cflags glib-2.0 gio-2.0) -Iinclude
+LDFLAGS := $(shell pkg-config --libs glib-2.0 gio-2.0)
 
 build: $(OUT)
 

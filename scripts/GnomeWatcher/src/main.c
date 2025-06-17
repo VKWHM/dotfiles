@@ -1,31 +1,25 @@
 #include "glib-object.h"
 #include "glib.h"
+#include "procs.h"
 #include <gio/gio.h>
-#include <proc/readproc.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int notify_proc(short is_dark) { // 1 -> Dark, 0 -> Light
-  PROCTAB *proc_tab;
-  proc_t proc_info;
+  PROCTAB *pt = open_proc();
+  PROCINFO pi = {0};
 
-  proc_tab = openproc(PROC_FILLCOM | PROC_FILLSTAT);
-
-  if (proc_tab == NULL) {
+  if (pt == NULL) {
     perror("Failed to open process table");
     return -1;
   }
 
-  while (1) {
-    memset(&proc_info, 0, sizeof(proc_t));
-    if (readproc(proc_tab, &proc_info) == NULL)
-      break;
-
-    if (strncmp(proc_info.cmd, "zsh", 3) == 0)
-      kill(proc_info.tid, is_dark ? SIGUSR1 : SIGUSR2);
+  while (-1 != read_proc(pt, &pi)) {
+    if (strncmp(pi.name, "zsh", 3) == 0)
+      kill(pi.pid, is_dark ? SIGUSR1 : SIGUSR2);
   }
-  closeproc(proc_tab);
+
+  close_proc(pt);
   return 0;
 }
 
@@ -40,7 +34,6 @@ static void on_setting_changed(GSettings *settings, gchar *key,
 }
 
 int main(int argc, char *argv[]) {
-
   GMainLoop *loop;
   GSettings *settings;
 
