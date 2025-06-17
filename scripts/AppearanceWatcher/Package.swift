@@ -9,15 +9,10 @@ let package = Package(
   products: [
     .executable(name: "appearance-watcher", targets: ["AppearanceWatcher"])
   ],
-  dependencies: [
-//    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.3.0")
-  ],
   targets: [
     .executableTarget(
       name: "AppearanceWatcher",
-      dependencies: [
-//        .product(name: "ArgumentParser", package: "swift-argument-parser")
-      ],
+      path: "Sources",
       linkerSettings: [.linkedFramework("AppKit")]
     )
   ]
