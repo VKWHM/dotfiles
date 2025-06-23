@@ -7,7 +7,7 @@ let
   catppuccin = import ../utils/catppuccin.nix;
   inherit (catppuccin) latte mocha;
   colorPalette = if config.utils.theme.appearance == "dark" then mocha else latte;
-  themeIs = light: dark: "\\$([[ \\$WHM_APPEARANCE == 'Light'* ]] && echo '${light}' || echo '${dark}')";
+  themeIs = light: dark: "\\$([[ \\$WHM_APPEARANCE == 'Light'* ]] && echo ${light} || echo ${dark})";
   fileOrDir = "if [ -d {} ]; then eza --tree --color=always {} | head -300; else ${pkgs.bat}/bin/bat --theme=\\\"${themeIs "Catppuccin Latte" "Catppuccin Mocha"}\\\" -n --color=always --line-range :500 {}; fi";
 in {
     config = mkIf cfg.enable {
@@ -17,6 +17,7 @@ in {
           "--height=80%"
           "--layout=reverse"
           "--border"
+          "--bind=ctrl-r:toggle-preview,ctrl-t:toggle-preview-wrap,ctrl-e:preview-up,ctrl-y:preview-down,ctrl-f:preview-page-down,ctrl-b:preview-page-up,ctrl-a:toggle-all"
           "--tmux=center,80%,90%"
         ];
         defaultCommand = defaultCmd;

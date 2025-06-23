@@ -32,7 +32,12 @@ in
           EOF
         '')
         (mkIf config.programs.fzf.enable ( mkOrder 2000 ''
-          zstyle ':fzf-tab:*' fzf-flags $(echo $FZF_DEFAULT_OPTS) --height 40%
+          zstyle ':completion:*:git-checkout:*' sort false
+          zstyle ':completion:*:descriptions' format '[%d]'
+          zstyle ':completion:*' menu no
+          zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza -1 --tree --color=always $realpath'
+          zstyle ':fzf-tab:*' use-fzf-default-opts yes
+          zstyle ':fzf-tab:*' use-fzf-default-opts yes
           function zvm_after_init() {
             zvm_bindkey viins "^R" fzf-history-widget
             eval $__PLUGIN_HSS
