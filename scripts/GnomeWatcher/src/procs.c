@@ -11,17 +11,17 @@
 #include <unistd.h>
 
 void init_pids(PIDS *pids) {
-  pids->array = calloc(INITIAL_CAPACITY, sizeof(uint16_t));
+  pids->array = calloc(INITIAL_CAPACITY, sizeof(uint32_t));
   if (pids->array == NULL)
     ERROR("Failed to allocate memory for PIDS array");
   pids->size = 0;
   pids->capacity = INITIAL_CAPACITY;
 }
 
-void append_pid(PIDS *pids, uint16_t pid) {
+void append_pid(PIDS *pids, uint32_t pid) {
   if (pids->size >= pids->capacity) {
     size_t caps = pids->capacity * 2;
-    uint16_t *newArray = reallocarray(pids->array, caps, sizeof(uint16_t));
+    uint32_t *newArray = reallocarray(pids->array, caps, sizeof(uint32_t));
     if (newArray == NULL) {
       perror("failed to reallocate memory for PIDS array");
       return;
@@ -54,7 +54,7 @@ PROCTAB *open_proc() {
   if (dir == NULL)
     ERROR("Failed to open /proc directory");
 
-  uint16_t pid;
+  uint32_t pid;
   PIDS *pids = malloc(sizeof(PIDS));
   init_pids(pids);
 
@@ -73,7 +73,7 @@ PROCTAB *open_proc() {
 int read_proc(PROCTAB *proc_tab, PROCINFO *proc_info) {
   if (proc_tab->current_index >= proc_tab->pids->size)
     return -1;
-  uint16_t pid = proc_tab->pids->array[proc_tab->current_index++];
+  uint32_t pid = proc_tab->pids->array[proc_tab->current_index++];
   char buf[64] = {0}, name[64] = {0};
   snprintf(buf, 64, "/proc/%d/comm", pid);
   int fd = open(buf, O_RDONLY);

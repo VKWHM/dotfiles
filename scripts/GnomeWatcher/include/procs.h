@@ -8,7 +8,7 @@
 #define INITIAL_CAPACITY 25
 
 typedef struct {
-  uint16_t *array;
+  uint32_t *array;
   size_t size;
   size_t capacity;
 } PIDS;
@@ -27,7 +27,7 @@ typedef struct {
 PROCTAB *open_proc();
 int read_proc(PROCTAB *proc_tab, PROCINFO *proc_info);
 void init_pids(PIDS *pids);
-void append_pid(PIDS *pids, uint16_t pid);
+void append_pid(PIDS *pids, uint32_t pid);
 void free_pids(PIDS *pids);
 void close_proc(PROCTAB *proc_tab);
 
