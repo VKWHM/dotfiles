@@ -8,8 +8,15 @@
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
 -- Define your Lua function
+local snacks = require("snacks")
+
 local function on_sigusr1()
-	vim.opt.background = vim.opt.background._value == "dark" and "light" or "dark"
+	local backgroundClass = snacks.toggle.get("background")
+	if backgroundClass then
+		backgroundClass:toggle()
+	else
+		vim.notify("Background toggle class not found", vim.log.levels.WARN)
+	end
 end
 
 -- Set up signal handler
