@@ -21,11 +21,7 @@ in {
 
     gc = {
       automatic = true;
-      interval = {
-        Weekday = 1;
-        Hour = 3;
-        Minute = 30;
-      };
+      interval = { Weekday = 1; Hour = 13; Minute = 30; };
       options = "--delete-older-than 30d";
     };
 
