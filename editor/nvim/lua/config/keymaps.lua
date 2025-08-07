@@ -103,8 +103,8 @@ Steps:
 			vim.notify("Generating commit message with Copilot...", vim.log.levels.INFO)
 			vim.schedule(function()
 				require("CopilotChat").ask(prompt, {
-					model = "gpt-4",
-					context = { "git:staged" },
+					model = "gpt-4.1",
+					sticky = { "#gitdiff:staged" },
 					system_prompt = system_prompt,
 					headless = true,
 					callback = function(response)
