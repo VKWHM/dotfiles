@@ -1,5 +1,9 @@
-{lib, pkgs, config, ...}:
-let
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: let
   inherit (lib) mkIf mkOption types;
   searchKey = types.submodule {
     options = {
@@ -10,15 +14,14 @@ let
       key = mkOption {
         type = types.str;
         description = "The keybinding to trigger search action";
-      }; 
+      };
       regex = mkOption {
         type = types.str;
         description = "The regex to search";
       };
     };
   };
-in
-{
+in {
   options = {
     programs.tmux.searchKeys = mkOption {
       type = types.listOf searchKey;
@@ -35,7 +38,7 @@ in
       '';
     };
   };
-  config = (mkIf (config.home.whmConfig.link.tmux) {
+  config = mkIf (config.home.whmConfig.link.tmux) {
     programs.tmux = {
       enable = true;
       historyLimit = 50000;
@@ -82,11 +85,11 @@ in
             '';
             license = lib.licenses.mit;
             platforms = lib.platforms.unix;
-            maintainers = with lib.maintainers; [ kyleondy ];
+            maintainers = with lib.maintainers; [kyleondy];
           };
         }))
         tmuxPlugins.pain-control
-        (lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin == false ) tmuxPlugins.sensible)
+        (lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin == false) tmuxPlugins.sensible)
         # TODO: config tmux yank plugin
         # tmuxPlugins.yank
         # {
@@ -118,17 +121,18 @@ in
           '';
         }
       ];
-      extraConfig = (builtins.concatStringsSep "\n" (builtins.map (binding: ''
-        # ${binding.name} search (prefix + ${binding.key})
-        bind-key ${binding.key} run-shell "\
-          pane_id=$(tmux display-message -p '#{pane_id}'); \
-          if tmux capture-pane -p -t \"$pane_id\" | grep -qE '${binding.regex}'; then \
-            tmux copy-mode -t \"$pane_id\" && \
-            tmux send-keys -t \"$pane_id\" -X search-backward '${binding.regex}'; \
-          else \
-            tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
-          fi"
-      '') config.programs.tmux.searchKeys));
+      extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: ''
+          # ${binding.name} search (prefix + ${binding.key})
+          bind-key ${binding.key} run-shell "\
+            pane_id=$(tmux display-message -p '#{pane_id}'); \
+            if tmux capture-pane -p -t \"$pane_id\" | grep -qE '${binding.regex}'; then \
+              tmux copy-mode -t \"$pane_id\" && \
+              tmux send-keys -t \"$pane_id\" -X search-backward '${binding.regex}'; \
+            else \
+              tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
+            fi"
+        '')
+        config.programs.tmux.searchKeys);
     };
     utils.theme.autoconfig.no-init = {
       light = ''
@@ -148,5 +152,5 @@ in
         fi
       '';
     };
-  });
+  };
 }

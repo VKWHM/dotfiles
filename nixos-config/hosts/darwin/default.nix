@@ -1,8 +1,10 @@
-{ config, pkgs, ... }:
-
-let user = "whoami"; in
-
 {
+  config,
+  pkgs,
+  ...
+}: let
+  user = "whoami";
+in {
   imports = [
     ../../modules/darwin/home-manager.nix
     # ../../modules/shared
@@ -12,14 +14,18 @@ let user = "whoami"; in
     package = pkgs.nix;
 
     settings = {
-      trusted-users = [ "@admin" "${user}" ];
+      trusted-users = ["@admin" "${user}"];
       # substituters = [ "https://nix-community.cachix.org" "https://cache.nixos.org" ];
       # trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
     };
 
     gc = {
       automatic = true;
-      interval = { Weekday = 1; Hour = 3; Minute = 30; };
+      interval = {
+        Weekday = 1;
+        Hour = 3;
+        Minute = 30;
+      };
       options = "--delete-older-than 30d";
     };
 
@@ -30,7 +36,7 @@ let user = "whoami"; in
 
   system = {
     stateVersion = 6;
-  
+
     defaults = {
       ".GlobalPreferences"."com.apple.sound.beep.sound" = "/System/Library/Sounds/Glass.aiff";
       ActivityMonitor.IconType = 2;
@@ -38,8 +44,7 @@ let user = "whoami"; in
         NSGlobalDomain = {
           TISRomanSwitchState = 1;
           WebKitDeveloperExtras = true;
-          "com.apple.trackpad.scaling" = 1; 
-
+          "com.apple.trackpad.scaling" = 1;
         };
         "com.apple.desktopservices" = {
           # Avoid creating .DS_Store files on network or USB volumes
@@ -57,7 +62,6 @@ let user = "whoami"; in
           WebContinuousSpellCheckingEnabled = true;
           WebAutomaticSpellingCorrectionEnabled = false;
           WebKitJavaEnabled = false;
-
         };
       };
       NSGlobalDomain = {
@@ -69,7 +73,7 @@ let user = "whoami"; in
 
         NSAutomaticCapitalizationEnabled = false;
         NSAutomaticSpellingCorrectionEnabled = false;
-  
+
         "com.apple.mouse.tapBehavior" = 1;
       };
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
@@ -87,7 +91,6 @@ let user = "whoami"; in
         stealthenabled = 1;
       };
 
-  
       dock = {
         autohide = false;
         largesize = 64;
@@ -100,32 +103,32 @@ let user = "whoami"; in
         tilesize = 48;
         wvous-bl-corner = 10;
         persistent-apps = [
-          { app = "/System/Applications/App Store.app/"; }
-          { app = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/"; }
-          { app = "/System/Applications/Calendar.app/"; }
-          { app = "/System/Applications/System Settings.app/"; }
+          {app = "/System/Applications/App Store.app/";}
+          {app = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/";}
+          {app = "/System/Applications/Calendar.app/";}
+          {app = "/System/Applications/System Settings.app/";}
           # { spacer = { small = true; }; }
-          { app = "/System/Applications/Music.app/"; }
-          { app = "/System/Applications/Books.app/"; }
-          { app = "/System/Applications/Messages.app/"; }
-          { app = "/System/Applications/Facetime.app/"; }
+          {app = "/System/Applications/Music.app/";}
+          {app = "/System/Applications/Books.app/";}
+          {app = "/System/Applications/Messages.app/";}
+          {app = "/System/Applications/Facetime.app/";}
           # { spacer = { small = true; }; }
-          { app = "/System/Applications/Mail.app/"; }
-          { app = "/Applications/WhatsApp.app/"; }
-          { app = "/Applications/Telegram.app/"; }
-          { spacer = { small = true; }; }
-          { app = "/Applications/Ghostty.app/"; }
-          { app = "/Applications/Obsidian.app/"; }
-          { app = "/Applications/Firefox.app/"; }
-          { app = "/Applications/Burp Suite Community Edition.app/"; }
-          { app = "/Applications/Caido.app/"; }
+          {app = "/System/Applications/Mail.app/";}
+          {app = "/Applications/WhatsApp.app/";}
+          {app = "/Applications/Telegram.app/";}
+          {spacer = {small = true;};}
+          {app = "/Applications/Ghostty.app/";}
+          {app = "/Applications/Obsidian.app/";}
+          {app = "/Applications/Firefox.app/";}
+          {app = "/Applications/Burp Suite Community Edition.app/";}
+          {app = "/Applications/Caido.app/";}
         ];
         persistent-others = [
           "${config.users.users.${user}.home}/Downloads"
           "${config.users.users.${user}.home}"
         ];
       };
-  
+
       finder = {
         _FXSortFoldersFirst = true;
         FXPreferredViewStyle = "clmv";
@@ -138,7 +141,7 @@ let user = "whoami"; in
       hitoolbox.AppleFnUsageType = "Change Input Source";
 
       loginwindow.GuestEnabled = false;
-  
+
       trackpad = {
         Clicking = true;
         TrackpadThreeFingerDrag = true;

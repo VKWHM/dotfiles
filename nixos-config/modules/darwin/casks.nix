@@ -1,5 +1,4 @@
-_:
-[
+_: [
   # # Development Tools
   # "homebrew/cask/docker"
   "orbstack" # containerization app
@@ -13,7 +12,7 @@ _:
   "tor-browser" # anonymous web browser
   "caido" # network analysis tool
   "burp-suite" # network analysis tool
-  
+
   # # Communication Tools
   "obsidian" # note-taking app
   # "discord"

@@ -1,4 +1,3 @@
-pkgs: with pkgs;
-[
+pkgs: with pkgs; [
   nerd-fonts.jetbrains-mono
 ]

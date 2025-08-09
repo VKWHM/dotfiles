@@ -1,5 +1,10 @@
-{config, lib, pkgs, user, ...}:
-let
+{
+  config,
+  lib,
+  pkgs,
+  user,
+  ...
+}: let
   rootDir = ../../../.;
   ln = path: {
     source = "${rootDir}/${path}";
@@ -20,7 +25,7 @@ in {
   programs.ripgrep = {
     enable = true;
     arguments = [
-      "--smart-case" 
+      "--smart-case"
       "--max-columns-preview"
     ];
   };
@@ -30,6 +35,21 @@ in {
     withPython3 = true;
     withNodeJs = true;
     withRuby = true;
+    extraPackages = with pkgs; [
+      # LSPs
+      nixd
+      # Dependencies
+      python3
+      lua51Packages.lua
+      luajitPackages.luarocks
+      julia
+      zulu
+      php
+      php84Packages.composer
+      unzip
+      imagemagick
+      sqlite
+    ];
   };
   programs.direnv = {
     enable = true;
@@ -43,9 +63,12 @@ in {
   programs.zoxide.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
-    btop lazygit
-    go cargo # for neovim
-    gh git
+    btop
+    lazygit
+    go
+    cargo # for neovim
+    gh
+    git
   ];
   # Tmux search keybindings
   programs.tmux.searchKeys = [

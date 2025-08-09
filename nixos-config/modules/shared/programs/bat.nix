@@ -1,4 +1,9 @@
-{pkgs, lib, config, ...}: let
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}: let
   inherit (lib) mkIf;
   cfg = config.programs.bat;
 in {
@@ -19,16 +24,16 @@ in {
         catppuccin-bat-derivation = pkgs.stdenv.mkDerivation {
           name = "catppuccin-bat";
           sourceRoot = ".";
-          srcs = [ cpLatte cpMocha ];
+          srcs = [cpLatte cpMocha];
           unpackPhase = "true";
           dontBuild = true;
           installPhase = ''
-          mkdir -p $out
-          cp ${cpLatte} $out/cpLatte.tmTheme
-          cp ${cpMocha} $out/cpMocha.tmTheme
+            mkdir -p $out
+            cp ${cpLatte} $out/cpLatte.tmTheme
+            cp ${cpMocha} $out/cpMocha.tmTheme
           '';
         };
-      in { 
+      in {
         "Catppuccin Latte" = {
           src = catppuccin-bat-derivation;
           file = "cpLatte.tmTheme";

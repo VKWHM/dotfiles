@@ -1,10 +1,14 @@
-{pkgs, lib, config, ...}: let
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}: let
   inherit (lib) mkIf mkMerge mkOrder mkOption;
   catppuccin = import ./catppuccin.nix;
   inherit (catppuccin) latte mocha;
   cfg = config.utils.theme;
-in
-{
+in {
   options = {
     utils.theme = rec {
       appearance = mkOption {
@@ -40,16 +44,19 @@ in
   config = {
     programs.zsh = mkIf config.programs.zsh.enable (let
       appearance = cfg.appearance;
-      theme = if appearance == "dark" then "Catppuccin Mocha" else "Catppuccin Latte";
+      theme =
+        if appearance == "dark"
+        then "Catppuccin Mocha"
+        else "Catppuccin Latte";
     in {
       initContent = mkMerge [
-        (mkIf (appearance == "dark") ( mkOrder 2048 ''
+        (mkIf (appearance == "dark") (mkOrder 2048 ''
           export WHM_APPEARANCE="Dark"
         ''))
-        (mkIf (appearance == "light") ( mkOrder 2048 ''
+        (mkIf (appearance == "light") (mkOrder 2048 ''
           export WHM_APPEARANCE="Light"
         ''))
-        (mkIf (appearance == "auto" && pkgs.hostPlatform.isLinux) ( mkOrder 2048 ''
+        (mkIf (appearance == "auto" && pkgs.hostPlatform.isLinux) (mkOrder 2048 ''
           if command -v gsettings &> /dev/null && (gsettings get org.gnome.desktop.interface color-scheme | grep -iq light); then
             export WHM_APPEARANCE="Light"
             ${cfg.autoconfig.light}
@@ -58,7 +65,7 @@ in
             ${cfg.autoconfig.dark}
           fi
         ''))
-        (mkIf (appearance == "auto" && pkgs.hostPlatform.isDarwin) ( mkOrder 2048 ''
+        (mkIf (appearance == "auto" && pkgs.hostPlatform.isDarwin) (mkOrder 2048 ''
           if [[ $(defaults read -g AppleInterfaceStyle 2>/dev/null) == "Dark" ]]; then
             export WHM_APPEARANCE="Dark"
             ${cfg.autoconfig.dark}
@@ -70,7 +77,7 @@ in
           fi
         ''))
 
-        (mkIf (appearance == "auto") ( mkOrder 2049 ''
+        (mkIf (appearance == "auto") (mkOrder 2049 ''
           function _whm_appearance_change_dark_notifier() {
             export WHM_APPEARANCE="Dark"
             ${cfg.autoconfig.dark}
@@ -94,10 +101,10 @@ in
       services."gnome-appearance-watcher" = {
         Unit = {
           Description = "Gnome Appearance Watcher";
-          After = [ "graphical-session.target" ];
+          After = ["graphical-session.target"];
         };
         Install = {
-          WantedBy = [ "default.target" ];
+          WantedBy = ["default.target"];
         };
         Service = {
           Type = "simple";

@@ -1,5 +1,4 @@
-_:
-[
+_: [
   {
     name = "batt";
     start_service = true;

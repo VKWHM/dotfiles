@@ -1,5 +1,9 @@
-{ lib, pkgs, config, ...}:
-let 
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: let
   inherit (lib) mkMerge mkOrder concatStrings mkIf;
   cfg = config.programs.zsh;
   rootDir = ../../../../.;
@@ -13,25 +17,25 @@ let
     (absPath "shell/aliases.sh")
   ];
   aliasColor = "#7287fd";
-in
-{
+in {
   config = mkIf cfg.enable {
     programs.zsh = {
       autocd = true;
       dotDir = ".config/zsh.hm";
-      initContent = mkMerge [ # Hack for wrap plugins inside zvm_after_init function :p
-# Wrap plugins 
+      initContent = mkMerge [
+        # Hack for wrap plugins inside zvm_after_init function :p
+        # Wrap plugins
         (mkOrder 899 ''
           read -r -d "" __PLUGINS <<"# History options should be set in .zshrc and after oh-my-zsh sourcing."
         '')
-# Wrap historySubstringSearch
+        # Wrap historySubstringSearch
         (mkOrder 1249 ''
           read -r -d "" __PLUGIN_HSS <<EOF
         '')
         (mkOrder 1251 ''
           EOF
         '')
-        (mkIf config.programs.fzf.enable ( mkOrder 2000 ''
+        (mkIf config.programs.fzf.enable (mkOrder 2000 ''
           zstyle ':completion:*:git-checkout:*' sort false
           zstyle ':completion:*:descriptions' format '[%d]'
           zstyle ':completion:*' menu no
@@ -43,7 +47,7 @@ in
             eval $__PLUGIN_HSS
             eval $__PLUGINS
           }
-        '' ))
+        ''))
         (mkOrder 2001 ''
           if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
             . ~/.nix-profile/etc/profile.d/nix.sh;
@@ -54,14 +58,19 @@ in
             source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
           fi
         '')
-        (mkOrder 2002 # Sourcing custom functions and aliases
-          (concatStrings
-            (builtins.map
+        (
+          mkOrder 2002 # Sourcing custom functions and aliases
+          
+          (
+            concatStrings
+            (
+              builtins.map
               (file: ''
                 if [[ -f ${file} ]]; then
                   source ${file}
                 fi
-              '') sourceFiles
+              '')
+              sourceFiles
             )
           )
         )
@@ -84,9 +93,17 @@ in
           "whoami"
           "clear"
           "history"
-          "ls" "ls -l" "ls -la"
-          "cd" "cd ~" "cd .." "cd ..." "cd ...."
-          ".." "..." "...."
+          "ls"
+          "ls -l"
+          "ls -la"
+          "cd"
+          "cd ~"
+          "cd .."
+          "cd ..."
+          "cd ...."
+          ".."
+          "..."
+          "...."
         ];
         ignoreSpace = true;
       };
@@ -98,7 +115,7 @@ in
         };
         patterns = let
           dangerous = "fg=black,bold,bg=red";
-          in {
+        in {
           "rm -rf \*" = dangerous;
           "rm -rf /\*" = dangerous;
           "git push origin --force" = dangerous;
@@ -141,18 +158,18 @@ in
         }
       ];
       localVariables = {
-# Alias Finder
+        # Alias Finder
         ZSH_ALIAS_FINDER_SUFFIX = "%F{${aliasColor}}";
         ZSH_ALIAS_FINDER_IGNORED = "run-help";
-# vi-mode
+        # vi-mode
         ZVM_LAZY_KEYBINDINGS = "false";
-        ZVM_VI_INSERT_ESCAPE_BINDKEY= "jk";
+        ZVM_VI_INSERT_ESCAPE_BINDKEY = "jk";
       };
       sessionVariables = let
-          nvimConf = "${pkgs.neovim}/bin/nvim -u ${absPath "editor/nvim/whoami-init.lua"}";
-        in {
-# forgit
-        WHMCONFIG = absPath "." ;
+        nvimConf = "${pkgs.neovim}/bin/nvim -u ${absPath "editor/nvim/whoami-init.lua"}";
+      in {
+        # forgit
+        WHMCONFIG = absPath ".";
         WHMSHELLCONFIG = absPath "shell/.";
         EDITOR = nvimConf;
         ZVM_VI_EDITOR = nvimConf;
