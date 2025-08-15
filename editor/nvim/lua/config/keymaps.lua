@@ -108,7 +108,7 @@ Steps:
 					system_prompt = system_prompt,
 					headless = true,
 					callback = function(response)
-						local _, msg = string.match(response, [[^```(%w*)%W(.+)%W```]])
+						local _, msg = string.match(response.content, [[^```(%w*)%W(.+)%W```]])
 						if not msg then
 							print("Copilot response:", response)
 							vim.notify("Failed to parse Copilot response", vim.log.levels.ERROR)
