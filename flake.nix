@@ -31,6 +31,22 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zsh-alias-finder = {
+      url = "github:akash329d/zsh-alias-finder";
+      flake = false;
+    };
+    zsh-autopair = {
+      url = "github:hlissner/zsh-autopair";
+      flake = false;
+    };
+    fzf-tab = {
+      url = "github:Aloxaf/fzf-tab";
+      flake = false;
+    };
+    forgit = {
+      url = "github:wfxr/forgit";
+      flake = false;
+    };
   };
   outputs = {
     self,
@@ -43,6 +59,7 @@
     nixpkgs,
     disko,
     flake-utils,
+    ...
   } @ inputs: let
     user = "whoami";
     linuxSystems = ["x86_64-linux" "aarch64-linux"];
@@ -124,7 +141,7 @@
             else []
           );
 
-        extraSpecialArgs = {inherit user;};
+        extraSpecialArgs = {inherit user inputs;};
       };
   in {
     # devShells = forAllSystems devShell;
@@ -139,7 +156,7 @@
       in
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = inputs;
+          specialArgs = { inherit inputs; };
           modules = [
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew

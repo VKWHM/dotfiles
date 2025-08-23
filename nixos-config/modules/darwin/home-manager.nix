@@ -3,6 +3,7 @@
   pkgs,
   lib,
   home-manager,
+  inputs,
   ...
 }: let
   user = "whoami";
@@ -53,6 +54,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     extraSpecialArgs = {
+      inherit inputs;
       user = {
         name = user;
         home = "/Users/${user}";

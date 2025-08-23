@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   ...
 }: let
   inherit (lib) mkMerge mkOrder concatStrings mkIf;
@@ -139,22 +140,12 @@ in {
         {
           name = "zsh-alias-finder";
           file = "zsh-alias-finder.plugin.zsh";
-          src = pkgs.fetchFromGitHub {
-            owner = "akash329d";
-            repo = "zsh-alias-finder";
-            rev = "ef6451c";
-            sha256 = "sha256-aB5kI+Jt7TVQMCeLcvpAmoMaGxRF1xqw1tioQxbJOzE=";
-          };
+          src = inputs.zsh-alias-finder;
         }
         {
           name = "zsh-autopair";
           file = "autopair.zsh";
-          src = pkgs.fetchFromGitHub {
-            owner = "hlissner";
-            repo = "zsh-autopair";
-            rev = "v1.0";
-            sha256 = "sha256-wd/6x2p5QOSFqWYgQ1BTYBUGNR06Pr2viGjV/JqoG8A=";
-          };
+          src = inputs.zsh-autopair;
         }
       ];
       localVariables = {

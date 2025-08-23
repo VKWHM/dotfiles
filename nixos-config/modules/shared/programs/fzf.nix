@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }: let
   inherit (lib) mkIf;
@@ -61,22 +62,12 @@ in {
         {
           name = "fzf-tab-completion";
           file = "fzf-tab.plugin.zsh";
-          src = pkgs.fetchFromGitHub {
-            owner = "Aloxaf";
-            repo = "fzf-tab";
-            rev = "v1.2.0";
-            sha256 = "sha256-q26XVS/LcyZPRqDNwKKA9exgBByE0muyuNb0Bbar2lY=";
-          };
+          src = inputs.fzf-tab;
         }
         {
           name = "forgit";
           file = "forgit.plugin.zsh";
-          src = pkgs.fetchFromGitHub {
-            owner = "wfxr";
-            repo = "forgit";
-            rev = "25.02.0";
-            sha256 = "sha256-vVsJe/MycQrwHLJOlBFLCuKuVDwQfQSMp56Y7beEUyg=";
-          };
+          src = inputs.forgit;
         }
       ];
       sessionVariables = {
