@@ -34,6 +34,10 @@ in {
     '';
   };
 
+  networking.applicationFirewall = {
+    enableStealthMode = true;
+  };
+
   system = {
     stateVersion = 6;
 
@@ -83,12 +87,6 @@ in {
         GloballyEnabled = false;
         HideDesktop = false;
         StageManagerHideWidgets = false;
-      };
-
-      # Firwall
-      alf = {
-        globalstate = 1;
-        stealthenabled = 1;
       };
 
       dock = {
