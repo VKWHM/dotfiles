@@ -7,6 +7,7 @@
     "lazyvim.plugins.extras.dap.core",
     "lazyvim.plugins.extras.editor.aerial",
     "lazyvim.plugins.extras.editor.dial",
+    "lazyvim.plugins.extras.editor.fzf",
     "lazyvim.plugins.extras.editor.refactoring",
     "lazyvim.plugins.extras.formatting.black",
     "lazyvim.plugins.extras.lang.clangd",
