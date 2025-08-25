@@ -115,11 +115,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755914636,
-        "narHash": "sha256-VJ+Gm6YsHlPfUCpmRQxvdiZW7H3YPSrdVOewQHAhZN8=",
+        "lastModified": 1756022458,
+        "narHash": "sha256-J1i35r4HfNDdPpwL0vOBaZopQudAUVtartEerc1Jryc=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "8b55a6ac58b678199e5bba701aaff69e2b3281c0",
+        "rev": "9e3a33c0bcbc25619e540b9dfea372282f8a9740",
         "type": "github"
       },
       "original": {
@@ -147,11 +147,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1755969719,
-        "narHash": "sha256-EdSn3/TX9GUMO5x9NgF7a1meK2jnpFzNgMYZWkO8GSA=",
+        "lastModified": 1756089620,
+        "narHash": "sha256-bnOstasJ59s/NCc/RMLGf7w/aTGmvrGgowm1KKVbzlo=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "55a59eda9f440ad082aaf023bd29e4e4d9118aa1",
+        "rev": "f7a3affb60cc8ac37444849c9860f4a8031c7cf8",
         "type": "github"
       },
       "original": {
@@ -163,16 +163,32 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1755971546,
-        "narHash": "sha256-tx/3urxwmec3f0nEzZoylZ/+azI+nwkefN+Fs3yqWJU=",
+        "lastModified": 1756091039,
+        "narHash": "sha256-3XjCyutOimUUv0fveWZgGWqqaCsqFPKwNDESLoO/bGY=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "1e830ca2230ffc2e81a315ddf3efbe7e02891e73",
+        "rev": "6401188d407090e8459547295eb882e6dad52aba",
         "type": "github"
       },
       "original": {
         "owner": "homebrew",
         "repo": "homebrew-core",
+        "type": "github"
+      }
+    },
+    "homebrew-tap-opencode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1756076449,
+        "narHash": "sha256-1O0dmCiAcgjpo4MrLaH290DcIw0HyoGZbkdapFPcHos=",
+        "owner": "sst",
+        "repo": "homebrew-tap",
+        "rev": "ab51d306ddea3ea6cc9f756551353c71c0bcb6d2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sst",
+        "repo": "homebrew-tap",
         "type": "github"
       }
     },
@@ -221,6 +237,7 @@
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
+        "homebrew-tap-opencode": "homebrew-tap-opencode",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs",
         "zsh-alias-finder": "zsh-alias-finder",

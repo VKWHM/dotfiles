@@ -22,7 +22,7 @@ in {
   config = mkIf cfg.enable {
     programs.zsh = {
       autocd = true;
-      dotDir = ".config/zsh.hm";
+      dotDir = "${config.xdg.configHome}/zsh.hm";
       initContent = mkMerge [
         # Hack for wrap plugins inside zvm_after_init function :p
         # Wrap plugins

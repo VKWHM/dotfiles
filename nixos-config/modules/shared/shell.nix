@@ -17,11 +17,13 @@ in {
     programs/fzf.nix
     programs/bat.nix
     programs/starship.nix
+    programs/btop.nix
   ];
   # ZSH
   programs.zsh.enable = true;
   programs.fzf.enable = true;
   programs.bat.enable = true;
+  programs.btop.enable = true;
   programs.ripgrep = {
     enable = true;
     arguments = [
@@ -35,21 +37,26 @@ in {
     withPython3 = true;
     withNodeJs = true;
     withRuby = true;
-    extraPackages = with pkgs; [
-      # LSPs
-      nixd
-      # Dependencies
-      python3
-      lua51Packages.lua
-      luajitPackages.luarocks
-      julia
-      zulu
-      php
-      php84Packages.composer
-      unzip
-      imagemagick
-      sqlite
-    ];
+    extraPackages =
+      (with pkgs; [
+        # LSPs
+        nixd
+        # Dependencies
+        python3
+        lua51Packages.lua
+        luajitPackages.luarocks
+        zulu
+        php
+        php84Packages.composer
+        unzip
+        imagemagick
+        sqlite
+      ])
+      ++ (
+        if (builtins.elemAt (builtins.match ".+-(.+)" pkgs.system) 0) == "darwin"
+        then []
+        else [pkgs.julia]
+      );
   };
   programs.direnv = {
     enable = true;
@@ -63,7 +70,6 @@ in {
   programs.zoxide.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
-    btop
     lazygit
     go
     cargo # for neovim

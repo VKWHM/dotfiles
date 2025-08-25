@@ -23,6 +23,10 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+    homebrew-tap-opencode = {
+      url = "github:sst/homebrew-tap";
+      flake = false;
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,6 +59,7 @@
     homebrew-bundle,
     homebrew-core,
     homebrew-cask,
+    homebrew-tap-opencode,
     home-manager,
     nixpkgs,
     disko,
@@ -164,12 +169,14 @@
               nix-homebrew = {
                 inherit user;
                 enable = true;
+                enableRosetta = true;
                 taps = {
                   "homebrew/homebrew-core" = homebrew-core;
                   "homebrew/homebrew-cask" = homebrew-cask;
                   "homebrew/homebrew-bundle" = homebrew-bundle;
+                  "sst/homebrew-tap" = homebrew-tap-opencode;
                 };
-                mutableTaps = false;
+                mutableTaps = true;
                 autoMigrate = true;
               };
             }
