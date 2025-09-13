@@ -19,6 +19,31 @@
         type = types.str;
         description = "The regex to search";
       };
+      onceKey = mkOption {
+        type = types.str;
+        default = "";
+        description = "The keybinding to trigger search action only once (unbind after use)";
+      }; 
+      pcre = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to use pcre regex";
+      };
+      fzf = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether to use fzf to select from multiple matches";
+      };
+      preProcessor = mkOption {
+        type = types.str;
+        default = "";
+        description = "A command to preprocess the captured pane content before searching";
+      };
+      postProcessor = mkOption {
+        type = types.str;
+        default = "";
+        description = "A command to postprocess the matched result before sending to tmux prompt";
+      };
     };
   };
 in {
@@ -121,13 +146,25 @@ in {
           '';
         }
       ];
-      extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: ''
+      extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: let
+        preProcessor = if binding.preProcessor != "" then "${builtins.replaceStrings ["\"" "\\\""] preProcessor} |" else "";
+        grepFlags = if binding.pcre then "-P" else "-E";
+        ripgrepFlags = [
+          "--color=never"
+          "--no-filename"
+          "--no-line-number"
+          "--only-matching"
+        ] ++ (if binding.fzf then ["--json"] else []) ++ (if binding.postProcessor != "" then ["--context=0"] else []);
+        ];
+        in ''
           # ${binding.name} search (prefix + ${binding.key})
           bind-key ${binding.key} run-shell "\
             pane_id=$(tmux display-message -p '#{pane_id}'); \
-            if tmux capture-pane -p -t \"$pane_id\" | grep -qE '${binding.regex}'; then \
-              tmux copy-mode -t \"$pane_id\" && \
-              tmux send-keys -t \"$pane_id\" -X search-backward '${binding.regex}'; \
+            if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} '${binding.regex}'; then \
+              tmux capture-pane -p -t \"$pane_id\" -S - | \
+              ${preProcessor} rg ${lib.strings.escapeShellArgs ripgrepFlags} '${binding.regex}' | \
+              ${if binding.fzf then "fzf --ansi --no-sort --tac --preview 'echo {} | jq -r .data' | jq -r .data | ${binding.postProcessor}" else "head -n 1 ${if binding.postProcessor != "" then "| " + binding.postProcessor else ""}"} | \
+              tmux load-buffer -
             else \
               tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
             fi"
