@@ -34,6 +34,11 @@
         default = false;
         description = "Whether to use fzf to select from multiple matches";
       };
+      fzfPreview = mkOption {
+        type = types.str;
+        default = "";
+        description = "A command to generate preview in fzf, {1} is the matched text, {2} is the full line";
+      };
       preProcessor = mkOption {
         type = types.str;
         default = "";
@@ -180,9 +185,9 @@ in {
             "--ansi"
             "--multi"
             "--layout=default"
-            "--tmux center"
-            "--preview-window=top:20%,"
-            "--preview='echo {2}'"
+            "--tmux center,30%,50%"
+            "--preview-window=top:25%,"
+            "--preview='${binding.fzfPreview}'"
           ];
         in ''
           # ${binding.name} FZF search (prefix + ${key})

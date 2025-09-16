@@ -85,6 +85,7 @@ in {
       onceKey = "M-u";
       pcre = true;
       fzf = true;
+      fzfPreview = ''echo "$" {2} | tr -d '' | tr -d '' | bat --style=grid --language=zsh --color=always && echo {1} | bat --style=plain --language=url --color=always'';
       preProcessor = "${pkgs.coreutils}/bin/tac";
       regex = ''(?i)\b(?:https?|ftps?|file|wss?|ssh|git):///?(?:\w+?:.+@)?(?:(?:(?:25[0-5]|(?:2[0-4]|1\d|[1-9]|)\d)\.?\b){4}|(?:(?:xn--)?[a-z0-9-]{1,63}\.)+(?:[a-z]{2,63})|[a-z0-9-]{1,63})(?::\d{2,5})?(?:/(?:[a-z0-9._~!$&'()*+,;=:@%/-]|%[0-9a-f]{2}|)*)?(?:\?(?:[a-z0-9._~!$&'()*+,;=:@%/?-]|%[0-9a-f]{2})*)?(?:\#(?:[A-Za-z0-9._~!$&'()*+,;=:@%/?-]|%[0-9A-Fa-f]{2})*)?(?<![)\]}'".,;:!?])'';
     }
