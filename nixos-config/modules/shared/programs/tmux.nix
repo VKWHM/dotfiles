@@ -178,6 +178,7 @@ in {
             then ["--pcre2"]
             else []
           );
+        coreutils = "${pkgs.coreutils}/bin";
         withFzf = key: let
           fzfFlags = [
             "--delimiter='\\\\t'"
@@ -192,26 +193,26 @@ in {
         in ''
           # ${binding.name} FZF search (prefix + ${key})
           bind-key ${key} run-shell "\
-            if tmux capture-pane -p  | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
-              tmux capture-pane -p  -S - | \
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
               ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.regex} | \
-              ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | awk '!seen[$1]++' | \
-              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | cut -f1 | tr -d '\\n' | \
-              ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message  \"Copied $(cat)\") >/dev/null ) || true;
+              ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | ${pkgs.gawk}/bin/awk '!seen[$1]++' | \
+              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | ${coreutils}/cut -f1 |${coreutils}/tr -d '\\n' | \
+              ${coreutils}/tee >(${pkgs.tmux}/bin/tmux load-buffer -) >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") >/dev/null ) || true;
               unlink /tmp/tspipe3-${binding.name}; \
             else \
-              tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
         '';
         withoutFzf = key: ''
           # ${binding.name} search (prefix + ${key})
           bind-key ${key} run-shell "\
-            if tmux capture-pane -p  | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
-              tmux capture-pane -p  -S - | \
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
               ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.regex} | \
-              ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message  \"Copied $(cat)\") >/dev/null; \
+              ${pkgs.coreutils}/bin/tee >(${pkgs.tmux}/bin/tmux load-buffer -) >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") >/dev/null; \
             else \
-              tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
         '';
       in
@@ -231,10 +232,10 @@ in {
         else ''
           # ${binding.name} search (prefix + ${binding.key})
           bind-key ${binding.key} run-shell "\
-            if tmux capture-pane -p  | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
-              tmux copy-mode && tmux send-keys -X search-backward ${escapeRegex binding.regex}
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              ${pkgs.tmux}/bin/tmux copy-mode && ${pkgs.tmux}/bin/tmux send-keys -X search-backward ${escapeRegex binding.regex}
             else \
-              tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
         '')
       config.programs.tmux.searchKeys);
