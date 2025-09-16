@@ -82,7 +82,11 @@ end
 
 function M.unmap_keys()
 	local map = vim.keymap.set
+	local unmap = vim.keymap.del
+
 	for _, key in ipairs(M.opts.keys) do
+		unmap("n", key)
+
 		local backup = M.pop(key)
 		if backup then
 			map("n", backup.lhs, backup.rhs or backup.callback, {

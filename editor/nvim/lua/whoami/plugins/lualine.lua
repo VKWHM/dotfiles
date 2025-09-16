@@ -57,7 +57,8 @@ return {
 				local is_dark = vim.opt.background._value ~= "light"
 				require("lualine").setup({
 					options = {
-						theme = (is_tokyo and is_dark) and my_lualine_theme or "auto",
+						-- theme = (is_tokyo and is_dark) and my_lualine_theme or "auto",
+						theme = "auto",
 					},
 				})
 			end,
@@ -68,7 +69,8 @@ return {
 				local colorscheme = vim.g.colors_name or ""
 				require("lualine").setup({
 					options = {
-						theme = (colorscheme:find("^catppuccin")) and "auto" or my_lualine_theme,
+						-- theme = (colorscheme:find("^catppuccin")) and "auto" or my_lualine_theme,
+						theme = "auto",
 					},
 				})
 			end,
@@ -77,7 +79,8 @@ return {
 		-- configure lualine with modified theme
 		lualine.setup({
 			options = {
-				theme = utils.appearance() == "dark" and my_lualine_theme or "catppuccin-latte",
+				-- theme = utils.appearance() == "dark" and my_lualine_theme or "catppuccin-latte",
+				theme = "auto",
 			},
 			sections = {
 				lualine_x = {

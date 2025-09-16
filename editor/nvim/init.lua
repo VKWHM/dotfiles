@@ -10,3 +10,4 @@ vim.api.nvim_create_autocmd("User", {
 })
 require("config.lazy")
 require("config.dev")
+require("config.lsp")

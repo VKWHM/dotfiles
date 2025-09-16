@@ -1,0 +1,3 @@
+ vim.lsp.enable({
+   "nixd",
+ })

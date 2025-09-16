@@ -27,7 +27,7 @@ do
 		italic = true,
 		-- stretch = 'Expanded',
 	})
-	config.font_size = 12
+	config.font_size = 10
 	config.line_height = 1.2
 
 	config.enable_scroll_bar = true
