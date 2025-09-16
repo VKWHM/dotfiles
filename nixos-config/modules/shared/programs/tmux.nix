@@ -147,61 +147,77 @@ in {
         }
       ];
       extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: let
-          escapeTmux = text: builtins.replaceStrings ["\"" "\\"] ["\\\"" "\\\\"] text;
-          escapeRegex = regex:
-            escapeTmux ''                $(cat <<END
-              ${regex}
-              END
-              )'';
-          preProcessor =
-            if binding.preProcessor != ""
-            then "${escapeTmux binding.preProcessor} |"
-            else "";
-          grepFlags =
+        escapeTmux = text: builtins.replaceStrings ["\"" "\\"] ["\\\"" "\\\\"] text;
+        escapeRegex = regex:
+          escapeTmux ''              $(cat <<END
+            ${regex}
+            END
+            )'';
+        preProcessor =
+          if binding.preProcessor != ""
+          then "${escapeTmux binding.preProcessor} |"
+          else "";
+        grepFlags =
+          if binding.pcre
+          then "-P"
+          else "-E";
+        ripgrepFlags =
+          [
+            "--color=never"
+            "--no-filename"
+            "--no-line-number"
+            "--only-matching"
+          ]
+          ++ (
             if binding.pcre
-            then "-P"
-            else "-E";
-          ripgrepFlags =
-            [
-              "--color=never"
-              "--no-filename"
-              "--no-line-number"
-              "--only-matching"
-            ]
-            ++ (
-              if binding.pcre
-              then ["--pcre2"]
-              else []
-            )
-            ++ (
-              if binding.fzf
-              then ["--json"]
-              else ["--max-count=1"]
-            );
+            then ["--pcre2"]
+            else []
+          );
+        withFzf = key: let
           fzfFlags = [
             "--delimiter='\\\\t'"
             "--with-nth=2"
             "--preview='echo {2}'"
           ];
         in ''
-          # ${binding.name} search (prefix + ${binding.key})
-          bind-key ${binding.key} run-shell "\
+          # ${binding.name} FZF search (prefix + ${key})
+          bind-key ${key} run-shell "\
             pane_id=$(tmux display-message -p '#{pane_id}'); \
             if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
               tmux capture-pane -p -t \"$pane_id\" -S - | \
-              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs ripgrepFlags} ${escapeRegex binding.regex} | ${
-            if binding.fzf
-            then ''
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.regex} | \
               ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | awk '!seen[$1]++' | \
               ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} | cut -f1 | tr -d '\\n'| \
-            ''
-            else ""
-          } ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message -t \"$pane_id\" \"Copied $(cat)\") >/dev/null; \
+          ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message -t \"$pane_id\" \"Copied $(cat)\") >/dev/null; \
             else \
               tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
             fi"
-        '')
-        config.programs.tmux.searchKeys);
+        '';
+        withoutFzf = key: ''
+          # ${binding.name} search (prefix + ${key})
+          bind-key ${key} run-shell "\
+            pane_id=$(tmux display-message -p '#{pane_id}'); \
+            if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              tmux capture-pane -p -t \"$pane_id\" -S - | \
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.regex} | \
+              ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message -t \"$pane_id\" \"Copied $(cat)\") >/dev/null; \
+            else \
+              tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
+            fi"
+        '';
+      in
+        if binding.fzf
+        then
+          (
+            if binding.onceKey != ""
+            then ''
+              ${withFzf binding.key}
+              ${withoutFzf binding.onceKey}
+            ''
+            else withFzf binding.key
+          )
+        else withoutFzf binding.key)
+      config.programs.tmux.searchKeys);
     };
     utils.theme.autoconfig.no-init = {
       light = ''
