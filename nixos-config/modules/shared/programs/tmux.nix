@@ -215,17 +215,28 @@ in {
             fi"
         '';
       in
-        if binding.fzf
+        if binding.pcre || binding.fzf
         then
-          (
-            if binding.onceKey != ""
-            then ''
-              ${withFzf binding.key}
-              ${withoutFzf binding.onceKey}
-            ''
-            else withFzf binding.key
-          )
-        else withoutFzf binding.key)
+          if binding.fzf
+          then
+            (
+              if binding.onceKey != ""
+              then ''
+                ${withFzf binding.key}
+                ${withoutFzf binding.onceKey}
+              ''
+              else withFzf binding.key
+            )
+          else withoutFzf binding.key
+        else ''
+          # ${binding.name} search (prefix + ${binding.key})
+          bind-key ${binding.key} run-shell "\
+            if tmux capture-pane -p  | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              tmux copy-mode && tmux send-keys -X search-backward ${escapeRegex binding.regex}
+            else \
+              tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+            fi"
+        '')
       config.programs.tmux.searchKeys);
     };
     utils.theme.autoconfig.no-init = {

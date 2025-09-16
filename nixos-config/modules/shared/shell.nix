@@ -192,11 +192,11 @@ in {
     #   key = "M-u";
     #   regex = "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
     # }
-    # {
-    #   name = "Docker ID";
-    #   key = "M-d";
-    #   regex = "[0-9a-f]{12}";
-    # }
+    {
+      name = "Docker ID";
+      key = "M-d";
+      regex = "[0-9a-f]{12}";
+    }
     # {
     #   name = "MAC Address";
     #   key = "M-m";
