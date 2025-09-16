@@ -155,7 +155,7 @@ in {
               )'';
           preProcessor =
             if binding.preProcessor != ""
-            then "${escapeTmux preProcessor} |"
+            then "${escapeTmux binding.preProcessor} |"
             else "";
           grepFlags =
             if binding.pcre
@@ -176,7 +176,7 @@ in {
             ++ (
               if binding.fzf
               then ["--json"]
-              else []
+              else ["--max-count=1"]
             );
           fzfFlags = [
             "--delimiter='\\\\t'"
@@ -195,8 +195,8 @@ in {
               ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | awk '!seen[$1]++' | \
               ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} | cut -f1 | tr -d '\\n'| \
             ''
-            else "head -n 1 "
-          } tmux load-buffer -; \
+            else ""
+          } ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message -t \"$pane_id\" \"Copied $(cat)\") >/dev/null; \
             else \
               tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
             fi"
