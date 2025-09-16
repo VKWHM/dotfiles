@@ -176,33 +176,37 @@ in {
         withFzf = key: let
           fzfFlags = [
             "--delimiter='\\\\t'"
-            "--with-nth=2"
+            "--with-nth=1"
+            "--ansi"
+            "--multi"
+            "--layout=default"
+            "--tmux center"
+            "--preview-window=top:20%,"
             "--preview='echo {2}'"
           ];
         in ''
           # ${binding.name} FZF search (prefix + ${key})
           bind-key ${key} run-shell "\
-            pane_id=$(tmux display-message -p '#{pane_id}'); \
-            if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
-              tmux capture-pane -p -t \"$pane_id\" -S - | \
+            if tmux capture-pane -p  | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              tmux capture-pane -p  -S - | \
               ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.regex} | \
               ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | awk '!seen[$1]++' | \
-              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} | cut -f1 | tr -d '\\n'| \
-          ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message -t \"$pane_id\" \"Copied $(cat)\") >/dev/null; \
+              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | cut -f1 | tr -d '\\n' | \
+              ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message  \"Copied $(cat)\") >/dev/null ) || true;
+              unlink /tmp/tspipe3-${binding.name}; \
             else \
-              tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
+              tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
         '';
         withoutFzf = key: ''
           # ${binding.name} search (prefix + ${key})
           bind-key ${key} run-shell "\
-            pane_id=$(tmux display-message -p '#{pane_id}'); \
-            if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
-              tmux capture-pane -p -t \"$pane_id\" -S - | \
+            if tmux capture-pane -p  | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+              tmux capture-pane -p  -S - | \
               ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.regex} | \
-              ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message -t \"$pane_id\" \"Copied $(cat)\") >/dev/null; \
+              ${pkgs.coreutils}/bin/tee >(tmux load-buffer -) >(tmux display-message  \"Copied $(cat)\") >/dev/null; \
             else \
-              tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
+              tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
         '';
       in
