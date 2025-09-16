@@ -23,7 +23,7 @@
         type = types.str;
         default = "";
         description = "The keybinding to trigger search action only once (unbind after use)";
-      }; 
+      };
       pcre = mkOption {
         type = types.bool;
         default = false;
@@ -147,24 +147,56 @@ in {
         }
       ];
       extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: let
-        preProcessor = if binding.preProcessor != "" then "${builtins.replaceStrings ["\"" "\\\""] preProcessor} |" else "";
-        grepFlags = if binding.pcre then "-P" else "-E";
-        ripgrepFlags = [
-          "--color=never"
-          "--no-filename"
-          "--no-line-number"
-          "--only-matching"
-        ] ++ (if binding.fzf then ["--json"] else []) ++ (if binding.postProcessor != "" then ["--context=0"] else []);
-        ];
+          escapeTmux = text: builtins.replaceStrings ["\"" "\\"] ["\\\"" "\\\\"] text;
+          escapeRegex = regex:
+            escapeTmux ''                $(cat <<END
+              ${regex}
+              END
+              )'';
+          preProcessor =
+            if binding.preProcessor != ""
+            then "${escapeTmux preProcessor} |"
+            else "";
+          grepFlags =
+            if binding.pcre
+            then "-P"
+            else "-E";
+          ripgrepFlags =
+            [
+              "--color=never"
+              "--no-filename"
+              "--no-line-number"
+              "--only-matching"
+            ]
+            ++ (
+              if binding.pcre
+              then ["--pcre2"]
+              else []
+            )
+            ++ (
+              if binding.fzf
+              then ["--json"]
+              else []
+            );
+          fzfFlags = [
+            "--delimiter='\\\\t'"
+            "--with-nth=2"
+            "--preview='echo {2}'"
+          ];
         in ''
           # ${binding.name} search (prefix + ${binding.key})
           bind-key ${binding.key} run-shell "\
             pane_id=$(tmux display-message -p '#{pane_id}'); \
-            if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} '${binding.regex}'; then \
+            if tmux capture-pane -p -t \"$pane_id\" | grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
               tmux capture-pane -p -t \"$pane_id\" -S - | \
-              ${preProcessor} rg ${lib.strings.escapeShellArgs ripgrepFlags} '${binding.regex}' | \
-              ${if binding.fzf then "fzf --ansi --no-sort --tac --preview 'echo {} | jq -r .data' | jq -r .data | ${binding.postProcessor}" else "head -n 1 ${if binding.postProcessor != "" then "| " + binding.postProcessor else ""}"} | \
-              tmux load-buffer -
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs ripgrepFlags} ${escapeRegex binding.regex} | ${
+            if binding.fzf
+            then ''
+              ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | awk '!seen[$1]++' | \
+              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} | cut -f1 | tr -d '\\n'| \
+            ''
+            else "head -n 1 "
+          } tmux load-buffer -; \
             else \
               tmux display-message -t \"$pane_id\" 'No ${lib.strings.toLower binding.name} found!'; \
             fi"
