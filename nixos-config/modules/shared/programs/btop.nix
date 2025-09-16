@@ -19,12 +19,12 @@ in {
     utils.theme.autoconfig = {
       dark = ''
         if [[ -n "$HOME" && -f "$HOME/.config/btop/btop.conf" ]]; then
-          sed -Ei ''' "/^color_theme/s|\".+\"|\"$HOME/.config/btop/themes/catppuccin_mocha.theme\"|" ~/.config/btop/btop.conf
+          ${pkgs.gnused}/bin/sed -Ei''' "/^color_theme/s|\".+\"|\"$HOME/.config/btop/themes/catppuccin_mocha.theme\"|" ~/.config/btop/btop.conf
         fi
       '';
       light = ''
         if [[ -n "$HOME" && -f "$HOME/.config/btop/btop.conf" ]]; then
-          sed -Ei ''' "/^color_theme/s|\".+\"|\"$HOME/.config/btop/themes/catppuccin_latte.theme\"|" ~/.config/btop/btop.conf
+          ${pkgs.gnused}/bin/sed -Ei''' "/^color_theme/s|\".+\"|\"$HOME/.config/btop/themes/catppuccin_latte.theme\"|" ~/.config/btop/btop.conf
         fi
       '';
     };
