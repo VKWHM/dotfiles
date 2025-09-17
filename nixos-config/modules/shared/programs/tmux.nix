@@ -173,8 +173,8 @@ in {
           plugin = tmuxPlugins.prefix-highlight;
           extraConfig = ''
             set -g @prefix_highlight_fg "#{@thm_bg}"
-            set -g @prefix_highlight_bg "#{@thm_red}"
-            set -g @prefix_highlight_empty_attr 'bg=#{@thm_red},fg=#{@thm_bg}' # default is 'fg=default,bg=default'
+            set -g @prefix_highlight_bg "#{@thm_pink}"
+            set -g @prefix_highlight_empty_attr 'bg=#{@thm_pink},fg=#{@thm_bg}' # default is 'fg=default,bg=default'
             set -g @prefix_highlight_prefix_prompt ' '
             set -g @prefix_highlight_empty_prompt '   '
           '';

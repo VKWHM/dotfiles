@@ -27,8 +27,8 @@ do
 		italic = true,
 		-- stretch = 'Expanded',
 	})
-	config.font_size = 10
-	config.line_height = 1.2
+	config.font_size = 14
+	config.line_height = 1.0
 
 	config.enable_scroll_bar = true
 end
@@ -42,16 +42,16 @@ do
 	-- end)
 	-- Window padding
 	config.window_padding = {
-		left = 1,
-		right = 2,
-		top = 1,
-		bottom = 1,
+		left = 0,
+		right = 1,
+		top = 10,
+		bottom = 0,
 	}
 
 	-- Window elements and background
 	config.enable_tab_bar = true
 	config.window_decorations = "RESIZE"
-	config.window_background_opacity = 0.95
+	config.window_background_opacity = 1.00
 
 	config.macos_window_background_blur = 10
 
