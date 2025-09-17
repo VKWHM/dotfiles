@@ -11,43 +11,82 @@
         type = types.str;
         description = "The name of the search";
       };
-      key = mkOption {
-        type = types.str;
-        description = "The keybinding to trigger search action";
+
+      keys = mkOption {
+        type = types.submodule {
+          options = {
+            primary = mkOption {
+              type = types.str;
+              description = "The primary keybinding to trigger search action";
+            };
+            once = mkOption {
+              type = types.str;
+              default = "";
+              description = "The keybinding to trigger search action and copy the first result";
+            };
+          };
+        };
+        description = "Keybinding configuration";
       };
-      regex = mkOption {
-        type = types.str;
-        description = "The regex to search";
+
+      search = mkOption {
+        type = types.submodule {
+          options = {
+            regex = mkOption {
+              type = types.str;
+              description = "The regex to search";
+            };
+            extraArgs = mkOption {
+              type = types.listOf types.str;
+              default = [];
+              description = "Extra arguments to pass to the search command (ripgrep)";
+            };
+            pcre = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Whether to use pcre regex";
+            };
+          };
+        };
+        description = "Search configuration";
       };
-      onceKey = mkOption {
-        type = types.str;
-        default = "";
-        description = "The keybinding to trigger search action only once (unbind after use)";
-      };
-      pcre = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to use pcre regex";
-      };
+
       fzf = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to use fzf to select from multiple matches";
+        type = types.submodule {
+          options = {
+            enable = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Whether to use fzf to select from multiple matches";
+            };
+            preview = mkOption {
+              type = types.str;
+              default = "";
+              description = "A command to generate preview in fzf, {1} is the matched text, {2} is the full line";
+            };
+          };
+        };
+        default = {};
+        description = "FZF integration settings";
       };
-      fzfPreview = mkOption {
-        type = types.str;
-        default = "";
-        description = "A command to generate preview in fzf, {1} is the matched text, {2} is the full line";
-      };
-      preProcessor = mkOption {
-        type = types.str;
-        default = "";
-        description = "A command to preprocess the captured pane content before searching";
-      };
-      postProcessor = mkOption {
-        type = types.str;
-        default = "";
-        description = "A command to postprocess the matched result before sending to tmux prompt";
+
+      processing = mkOption {
+        type = types.submodule {
+          options = {
+            preProcessor = mkOption {
+              type = types.str;
+              default = "";
+              description = "A command to preprocess the captured pane content before searching";
+            };
+            postProcessor = mkOption {
+              type = types.str;
+              default = "";
+              description = "A command to postprocess the matched result before sending to tmux prompt";
+            };
+          };
+        };
+        default = {};
+        description = "Processing hooks configuration";
       };
     };
   };
@@ -58,8 +97,8 @@ in {
       default = [
         {
           name = "Number";
-          key = "C-d";
-          regex = "[[:digit:]]+";
+          keys.primary = "C-d";
+          search.regex = "[[:digit:]]+";
         }
       ];
       description = ''
@@ -153,17 +192,23 @@ in {
       ];
       extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: let
         escapeTmux = text: builtins.replaceStrings ["\"" "\\"] ["\\\"" "\\\\"] text;
+        matchSystem = builtins.match "^([^-]+)-(linux|darwin)$" pkgs.stdenv.hostPlatform.system;
+        clipboardPipe =
+          if (builtins.elemAt matchSystem 1) == "linux"
+          then ''${pkgs.xsel}/bin/xsel -b >/dev/null''
+          else ''pbcopy'';
+
         escapeRegex = regex:
           escapeTmux ''              $(cat <<END
             ${regex}
             END
             )'';
         preProcessor =
-          if binding.preProcessor != ""
-          then "${escapeTmux binding.preProcessor} |"
+          if binding.processing.preProcessor != ""
+          then "${escapeTmux binding.processing.preProcessor} |"
           else "";
         grepFlags =
-          if binding.pcre
+          if binding.search.pcre
           then "-P"
           else "-E";
         ripgrepFlags =
@@ -173,8 +218,9 @@ in {
             "--no-line-number"
             "--only-matching"
           ]
+          ++ binding.search.extraArgs
           ++ (
-            if binding.pcre
+            if binding.search.pcre
             then ["--pcre2"]
             else []
           );
@@ -188,17 +234,21 @@ in {
             "--layout=default"
             "--tmux center,30%,50%"
             "--preview-window=top:25%,"
-            "--preview='${binding.fzfPreview}'"
+            "--preview='${binding.fzf.preview}'"
           ];
         in ''
           # ${binding.name} FZF search (prefix + ${key})
           bind-key ${key} run-shell "\
-            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
               ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
-              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.regex} | \
-              ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | ${pkgs.gawk}/bin/awk '!seen[$1]++' | \
-              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | ${coreutils}/cut -f1 |${coreutils}/tr -d '\\n' | \
-              ${coreutils}/tee >(${pkgs.tmux}/bin/tmux load-buffer -) >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") >/dev/null ) || true;
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.search.regex} | \
+              ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | ${pkgs.gawk}/bin/awk '!seen[$1]++ && NF > 0' | \
+              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | ${coreutils}/cut -f1 | \
+              ${coreutils}/tee \
+              >(${clipboardPipe}) \
+              >(${pkgs.tmux}/bin/tmux load-buffer -) \
+              >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") \
+              >/dev/null ) || true;
               unlink /tmp/tspipe3-${binding.name}; \
             else \
               ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
@@ -207,33 +257,37 @@ in {
         withoutFzf = key: ''
           # ${binding.name} search (prefix + ${key})
           bind-key ${key} run-shell "\
-            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
               ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
-              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.regex} | \
-              ${pkgs.coreutils}/bin/tee >(${pkgs.tmux}/bin/tmux load-buffer -) >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") >/dev/null; \
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.search.regex} | \
+              ${coreutils}/tee \
+              >(${clipboardPipe}) \
+              >(${pkgs.tmux}/bin/tmux load-buffer -) \
+              >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") \
+              >/dev/null; \
             else \
               ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
         '';
       in
-        if binding.pcre || binding.fzf
+        if binding.search.pcre || binding.fzf.enable
         then
-          if binding.fzf
+          if binding.fzf.enable
           then
             (
-              if binding.onceKey != ""
+              if binding.keys.once != ""
               then ''
-                ${withFzf binding.key}
-                ${withoutFzf binding.onceKey}
+                ${withFzf binding.keys.primary}
+                ${withoutFzf binding.keys.once}
               ''
-              else withFzf binding.key
+              else withFzf binding.keys.primary
             )
-          else withoutFzf binding.key
+          else withoutFzf binding.keys.primary
         else ''
-          # ${binding.name} search (prefix + ${binding.key})
-          bind-key ${binding.key} run-shell "\
-            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.regex}; then \
-              ${pkgs.tmux}/bin/tmux copy-mode && ${pkgs.tmux}/bin/tmux send-keys -X search-backward ${escapeRegex binding.regex}
+          # ${binding.name} search (prefix + ${binding.keys.primary})
+          bind-key ${binding.keys.primary} run-shell "\
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
+              ${pkgs.tmux}/bin/tmux copy-mode && ${pkgs.tmux}/bin/tmux send-keys -X search-backward ${escapeRegex binding.search.regex}
             else \
               ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi"
