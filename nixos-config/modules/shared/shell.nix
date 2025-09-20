@@ -45,12 +45,15 @@ in {
         python3
         lua51Packages.lua
         luajitPackages.luarocks
+        luajitPackages.jsregexp
         zulu
         php
         php84Packages.composer
         unzip
         imagemagick
         sqlite
+        # Plugin Dependencies
+        ast-grep
       ])
       ++ (
         if (builtins.elemAt (builtins.match ".+-(.+)" pkgs.system) 0) == "darwin"
@@ -115,7 +118,7 @@ in {
       fzf.enable = true;
       fzf.preview = ''echo {2} | bat --style=grid --language=nix --color=always'';
       processing.preProcessor = "${pkgs.coreutils}/bin/tac";
-      search.regex = ''(?<=^|\s|["'\`])(?:\.{1,2}/|~/|/)(?:[A-Za-z0-9~_.-]+(?:/))+[A-Za-z0-9._\[\]#$%&+=@-]*'';
+      search.regex = ''(?<=^|\s|["'\`])(?:\.{1,2}/|~/|/)?(?:[A-Za-z0-9~_.-]+(?:/))+[A-Za-z0-9._\[\]#$%&+=@-]*'';
     }
 
     # {

@@ -232,7 +232,7 @@ in {
             "--ansi"
             "--multi"
             "--layout=default"
-            "--tmux center,30%,50%"
+            "--tmux center,40%,50%"
             "--preview-window=top:25%,"
             "--preview='${binding.fzf.preview}'"
           ];
