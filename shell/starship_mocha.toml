@@ -73,6 +73,8 @@ Mint = "󰣭"
 Macos = ""
 Manjaro = ""
 Linux = "󰌽"
+Kali = ""
+NixOS = ""
 Gentoo = "󰣨"
 Fedora = "󰣛"
 Alpine = ""
@@ -93,7 +95,7 @@ format = '[  $user ]($style)'
 
 [nix_shell]
 style = "bg:base"
-symbol = ""
+symbol = ""
 format = '[ | [$symbol](bold fg:sky bg:base)]($style)'
 
 [directory]
