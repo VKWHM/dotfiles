@@ -4,7 +4,7 @@ command_timeout = 100
 
 format = """
 [](base)\
-$os\
+$os \
 $nix_shell\
 $username\
 [](bg:surface0 fg:base)\
