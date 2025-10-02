@@ -5,6 +5,13 @@
   ...
 }: let
   inherit (lib) mkIf mkOption types;
+  scriptName = name: ".config/tmux/scripts/${builtins.replaceStrings [" "] ["-"] name}.sh";
+  scriptNameOnce = name: ".config/tmux/scripts/${builtins.replaceStrings [" "] ["-"] name}-once.sh";
+  escapeRegex = regex: ''
+    $(cat <<END
+      ${regex}
+    END
+    )'';
   searchKey = types.submodule {
     options = {
       name = mkOption {
@@ -190,103 +197,25 @@ in {
           '';
         }
       ];
-      extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding: let
-        escapeTmux = text: builtins.replaceStrings ["\"" "\\"] ["\\\"" "\\\\"] text;
-        matchSystem = builtins.match "^([^-]+)-(linux|darwin)$" pkgs.stdenv.hostPlatform.system;
-        clipboardPipe =
-          if (builtins.elemAt matchSystem 1) == "linux"
-          then ''${pkgs.xsel}/bin/xsel -b >/dev/null''
-          else ''pbcopy'';
-
-        escapeRegex = regex:
-          escapeTmux ''              $(cat <<END
-            ${regex}
-            END
-            )'';
-        preProcessor =
-          if binding.processing.preProcessor != ""
-          then "${escapeTmux binding.processing.preProcessor} |"
-          else "";
-        grepFlags =
-          if binding.search.pcre
-          then "-P"
-          else "-E";
-        ripgrepFlags =
-          [
-            "--color=never"
-            "--no-filename"
-            "--no-line-number"
-            "--only-matching"
-          ]
-          ++ binding.search.extraArgs
-          ++ (
-            if binding.search.pcre
-            then ["--pcre2"]
-            else []
-          );
-        coreutils = "${pkgs.coreutils}/bin";
-        withFzf = key: let
-          fzfFlags = [
-            "--delimiter='\\\\t'"
-            "--with-nth=1"
-            "--ansi"
-            "--multi"
-            "--layout=default"
-            "--tmux center,40%,50%"
-            "--preview-window=top:25%,"
-            "--preview='${binding.fzf.preview}'"
-          ];
-        in ''
-          # ${binding.name} FZF search (prefix + ${key})
-          bind-key ${key} run-shell "\
-            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
-              ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
-              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.search.regex} | \
-              ${pkgs.jq}/bin/jq -r 'select(.type==\"match\") | \"\\(.data.submatches[0].match.text)\\t\\(.data.lines.text)\"' | ${pkgs.gawk}/bin/awk '!seen[$1]++ && NF > 0' | \
-              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | ${coreutils}/cut -f1 | \
-              ${coreutils}/tee \
-              >(${clipboardPipe}) \
-              >(${pkgs.tmux}/bin/tmux load-buffer -) \
-              >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") \
-              >/dev/null ) || true;
-              unlink /tmp/tspipe3-${binding.name}; \
-            else \
-              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
-            fi"
-        '';
-        withoutFzf = key: ''
-          # ${binding.name} search (prefix + ${key})
-          bind-key ${key} run-shell "\
-            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
-              ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
-              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.search.regex} | \
-              ${coreutils}/tee \
-              >(${clipboardPipe}) \
-              >(${pkgs.tmux}/bin/tmux load-buffer -) \
-              >(${pkgs.tmux}/bin/tmux display-message  \"Copied $(cat)\") \
-              >/dev/null; \
-            else \
-              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
-            fi"
-        '';
-      in
+      extraConfig = builtins.concatStringsSep "\n" (builtins.map (binding:
         if binding.search.pcre || binding.fzf.enable
         then
-          if binding.fzf.enable
-          then
-            (
-              if binding.keys.once != ""
-              then ''
-                ${withFzf binding.keys.primary}
-                ${withoutFzf binding.keys.once}
-              ''
-              else withFzf binding.keys.primary
-            )
-          else withoutFzf binding.keys.primary
+          if binding.keys.once != ""
+          then ''
+            # ${binding.name} search (prefix + ${binding.keys.primary})
+            bind-key ${binding.keys.primary} run-shell "${config.home.homeDirectory}/${scriptName binding.name}"
+
+            # ${binding.name} search (prefix + ${binding.keys.once})
+            bind-key ${binding.keys.once} run-shell "${config.home.homeDirectory}/${scriptNameOnce binding.name}"
+          ''
+          else ''
+            # ${binding.name} search (prefix + ${binding.keys.primary})
+            bind-key ${binding.keys.primary} run-shell "${config.home.homeDirectory}/${scriptName binding.name}"
+          ''
         else ''
           # ${binding.name} search (prefix + ${binding.keys.primary})
           bind-key ${binding.keys.primary} run-shell "\
-            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -qE ${escapeRegex binding.search.regex}; then \
               ${pkgs.tmux}/bin/tmux copy-mode && ${pkgs.tmux}/bin/tmux send-keys -X search-backward ${escapeRegex binding.search.regex}
             else \
               ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
@@ -294,6 +223,109 @@ in {
         '')
       config.programs.tmux.searchKeys);
     };
+    home.file = builtins.listToAttrs (builtins.concatLists (builtins.map (
+        binding: let
+          matchSystem = builtins.match "^([^-]+)-(linux|darwin)$" pkgs.stdenv.hostPlatform.system;
+          clipboardPipe =
+            if (builtins.elemAt matchSystem 1) == "linux"
+            then ''${pkgs.xsel}/bin/xsel -b >/dev/null''
+            else ''pbcopy'';
+          preProcessor =
+            if binding.processing.preProcessor != ""
+            then "${binding.processing.preProcessor} |"
+            else "";
+          grepFlags =
+            if binding.search.pcre
+            then "-P"
+            else "-E";
+          ripgrepFlags =
+            [
+              "--color=never"
+              "--no-filename"
+              "--no-line-number"
+              "--only-matching"
+            ]
+            ++ binding.search.extraArgs
+            ++ (
+              if binding.search.pcre
+              then ["--pcre2"]
+              else []
+            );
+          coreutils = "${pkgs.coreutils}/bin";
+          withFzf = key: let
+            fzfFlags = [
+              "--delimiter='\\\\t'"
+              "--with-nth=1"
+              "--ansi"
+              "--multi"
+              "--layout=default"
+              "--tmux center,40%,50%"
+              "--preview-window=top:25%,"
+              "--preview='${binding.fzf.preview}'"
+            ];
+          in ''
+            #!${pkgs.bash}/bin/bash
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
+              ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.search.regex} | \
+              ${pkgs.jq}/bin/jq -r 'select(.type=="match") | "\(.data.submatches[0].match.text)\t\(.data.lines.text)"' | ${pkgs.gawk}/bin/awk '!seen[$1]++ && NF > 0' | \
+              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | ${coreutils}/cut -f1 | \
+              ${coreutils}/tee \
+              >(${clipboardPipe}) \
+              >(${pkgs.tmux}/bin/tmux load-buffer -) \
+              >(${pkgs.tmux}/bin/tmux display-message  "Copied $(cat)") \
+              >/dev/null ) || true;
+              unlink /tmp/tspipe3-${binding.name}; \
+            else \
+              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+            fi
+          '';
+          withoutFzf = key: ''
+            #!${pkgs.bash}/bin/bash
+            if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -q ${grepFlags} ${escapeRegex binding.search.regex}; then \
+              ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
+              ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--max-count=1"])} ${escapeRegex binding.search.regex} | \
+              ${coreutils}/tee \
+              >(${clipboardPipe}) \
+              >(${pkgs.tmux}/bin/tmux load-buffer -) \
+              >(${pkgs.tmux}/bin/tmux display-message  "Copied $(cat)") \
+              >/dev/null; \
+            else \
+              ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+            fi
+          '';
+        in
+          [
+            {
+              name = scriptName binding.name;
+              value = {
+                enable = true;
+                executable = true;
+                text = (
+                  if binding.fzf.enable
+                  then withFzf binding.keys.primary
+                  else withoutFzf binding.keys.primary
+                );
+              };
+            }
+          ]
+          ++ (
+            if binding.keys.once != ""
+            then [
+              {
+                name = scriptNameOnce binding.name;
+                value = {
+                  enable = true;
+                  executable = true;
+                  text = withoutFzf binding.keys.once;
+                };
+              }
+            ]
+            else []
+          )
+      )
+      (builtins.filter (binding: binding.search.pcre || binding.fzf.enable)
+        config.programs.tmux.searchKeys)));
     utils.theme.autoconfig.no-init = {
       light = ''
         if _tmux_env=$(tmux show-environment 2>/dev/null); then
