@@ -41,6 +41,7 @@ in {
       (with pkgs; [
         # LSPs
         nixd
+        marksman
         # Dependencies
         python3
         lua51Packages.lua

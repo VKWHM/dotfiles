@@ -1,5 +1,17 @@
 # WHM Shell - Advanced Development Environment
 
+<!--toc:start-->
+- [WHM Shell - Advanced Development Environment](#whm-shell-advanced-development-environment)
+  - [🌟 Key Features](#🌟-key-features)
+  - [📁 Project Structure](#📁-project-structure)
+  - [🛠 Major Updates](#🛠-major-updates)
+  - [📋 Configuration Options](#📋-configuration-options)
+  - [🔧 Development Utilities](#🔧-development-utilities)
+  - [🤝 Contributing](#🤝-contributing)
+  - [📄 License](#📄-license)
+  - [🙏 Acknowledgements](#🙏-acknowledgements)
+<!--toc:end-->
+
 A comprehensive, Nix-powered development environment that streamlines system configuration and enhances productivity across multiple platforms. This repository provides a unified approach to managing dotfiles, system configurations, and development tools through Nix and Home Manager.
 
 ## 🌟 Key Features
@@ -100,7 +112,7 @@ home-manager switch --flake .#aarch64-linux-desktop # For aarch64 with GUI tools
 
 ```
 
-## 🛠 Major Updates Since Fork
+## 🛠 Major Updates
 
 ### **Nix Infrastructure (82 commits)**
 
@@ -199,4 +211,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Note**: This configuration has evolved significantly from a simple dotfiles collection to a comprehensive, Nix-powered development environment. The 82+ commits since the main branch represent a complete architectural overhaul focused on reproducibility, modularity, and cross-platform consistency.
-
