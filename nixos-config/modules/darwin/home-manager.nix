@@ -8,8 +8,7 @@
 }: let
   user = "whoami";
   fontsFiles = import ../shared/fonts.nix pkgs;
-in
-{
+in {
   system.primaryUser = user;
   # It me
   users.users.${user} = {
@@ -24,8 +23,8 @@ in
     casks = pkgs.callPackage ./casks.nix {};
     brews = pkgs.callPackage ./brews.nix {};
     onActivation = {
-     cleanup = "uninstall";
-     autoUpdate = true;
+      cleanup = "uninstall";
+      autoUpdate = true;
     };
 
     # These app IDs are from using the mas CLI app
@@ -78,6 +77,7 @@ in
       home.whmConfig = {
         enable = true;
         link.nvim = true;
+        link.opencode = true;
         link.vim = true;
         link.tmux = true;
         link.wezterm = false;

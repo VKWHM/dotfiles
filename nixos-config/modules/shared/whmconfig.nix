@@ -37,6 +37,14 @@ in {
             This will create a symlink from ${homeDir}/.vim to ${cfg.dotDir}/editor/vim.
           '';
         };
+        opencode = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Link the opencode configuration to the WHM shell.
+            This will create a symlink from ${homeDir}/.config/opencode/command to ${cfg.dotDir}/terminal/opencode/command.
+          '';
+        };
         tmux = mkOption {
           type = types.bool;
           default = false;
@@ -123,6 +131,15 @@ in {
               }
             ];
           })
+          ++ (getLink {
+            name = "opencode";
+            files = [
+              {
+                src = "${whmDotDir}/terminal/opencode/command";
+                dst = "${homeDir}/.config/opencode/command";
+              }
+            ];
+          })
         );
       in (builtins.concatStringsSep "\n" [
         ''
@@ -140,8 +157,8 @@ in {
                     if [[ ! -L "${link.dst}" ]]; then
                       echo "[!!] ${name} configuration already exists. Create Backup..." >&2;
                       extension=".backup-$(date +%Y-%m-%d_%H-%M-%S)";
-                      mv "${link.dst}" "${link.dst}.$extension";
-                      echo "[!!] Backup created: ${link.dst}.$extension" >&2;
+                      mv "${link.dst}" "${link.dst}$extension";
+                      echo "[!!] Backup created: ${link.dst}$extension" >&2;
                     elif [[ "$(readlink '${link.dst}')" != "${link.src}" ]]; then
                       echo "[!!] Remove link $(stat -c '%N' '${link.dst}')" >&2;
                       unlink "${link.dst}";
@@ -158,7 +175,8 @@ in {
                     echo "[*] Remove link $(stat -c '%N' '${link.dst}')" >&2;
                     unlink "${link.dst}";
                   fi;
-                '') prog.files))
+                '')
+              prog.files))
           )
           linkList))
         ''
