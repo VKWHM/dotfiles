@@ -23,6 +23,31 @@
         auto-update = "check";
       };
       themes = {
+        catppuccin-latte = {
+          background = "eff1f5";
+          cursor-color = "dc8a78";
+          foreground = "4c4f69";
+          palette = [
+            "0=#5c5f77"
+            "1=#d20f39"
+            "2=#40a02b"
+            "3=#df8e1d"
+            "4=#1e66f5"
+            "5=#ea76cb"
+            "6=#179299"
+            "7=#acb0be"
+            "8=#6c6f85"
+            "9=#d20f39"
+            "10=#40a02b"
+            "11=#df8e1d"
+            "12=#1e66f5"
+            "13=#ea76cb"
+            "14=#179299"
+            "15=#bcc0cc"
+          ];
+          selection-background = "ccd0da";
+          selection-foreground = "4c4f69";
+        };
         catppuccin-mocha = {
           background = "1e1e2e";
           cursor-color = "f5e0dc";
