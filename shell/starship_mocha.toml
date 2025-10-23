@@ -4,7 +4,7 @@ command_timeout = 100
 
 format = """
 [](base)\
-$os \
+$os\
 $nix_shell\
 $username\
 [](bg:surface0 fg:base)\
@@ -63,6 +63,7 @@ crust     = "#11111b"
 [os]
 disabled = false
 style = "bg:base fg:text"
+format = "[$symbol]($style)"
 
 [os.symbols]
 Windows = "󰍲"
