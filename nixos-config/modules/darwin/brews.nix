@@ -1,7 +1,8 @@
 _: [
   "opencode"
+  "container"
   {
     name = "batt";
-    start_service = true;
+    start_service = false;
   }
 ]

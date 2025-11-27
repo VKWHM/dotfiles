@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: let
-  user = "whoami";
+  user = "vkwhm";
 in {
   imports = [
     ../../modules/darwin/home-manager.nix
@@ -113,6 +113,7 @@ in {
           {spacer = {small = true;};}
           {app = "/Applications/Ghostty.app/";}
           {app = "/Applications/Obsidian.app/";}
+          {app = "/Applications/Zed.app/";}
           {app = "/Applications/Firefox.app/";}
           {app = "/Applications/Burp Suite Community Edition.app/";}
           {app = "/Applications/Caido.app/";}

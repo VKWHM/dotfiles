@@ -5,7 +5,7 @@
   ...
 }: let
   name = "VKWHM";
-  user = "whoami";
+  user = "vkwhm";
   email = "111775089+VKWHM@users.noreply.github.com";
 in {
   # Shared shell configuration

@@ -7,7 +7,7 @@ _: [
   # "visual-studio-code"
   #
   # # Cyber Security Tools
-  "vmware-fusion" # virtual machine
+  "imhex"
   "wireshark" # network protocol analyzer
   "stratoshark" # syscall analyzer
   "tor-browser" # anonymous web browser
@@ -25,11 +25,13 @@ _: [
   # # Utility Tools
   # "syncthing"
   "betterzip" # archive manager
+  "zed"
   #
   # # Entertainment Tools
   # "vlc"
   #
   # # Productivity Tools
+  "chatgpt"
   "raycast"
   "hazeover" # window dimmer
   #

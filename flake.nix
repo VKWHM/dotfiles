@@ -66,7 +66,7 @@
     flake-utils,
     ...
   } @ inputs: let
-    user = "whoami";
+    user = "vkwhm";
     linuxSystems = ["x86_64-linux" "aarch64-linux"];
     darwinSystems = ["aarch64-darwin" "x86_64-darwin"];
     forAllSystems = f: nixpkgs.lib.genAttrs (linuxSystems ++ darwinSystems) f;
@@ -157,7 +157,7 @@
     );
     darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (
       system: let
-        user = "whoami";
+        user = "vkwhm";
       in
         darwin.lib.darwinSystem {
           inherit system;

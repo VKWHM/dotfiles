@@ -6,7 +6,7 @@
   inputs,
   ...
 }: let
-  user = "whoami";
+  user = "vkwhm";
   fontsFiles = import ../shared/fonts.nix pkgs;
 in {
   system.primaryUser = user;
@@ -41,7 +41,8 @@ in {
       # "1password" = 1333542190;
       # "wireguard" = 1451685025;
       # "micorosoft-word" = 462054704;
-      # "xcode" = 497799835;
+      "goodnotes" = 1444383602;
+      "xcode" = 497799835;
       "bitwarden" = 1352778147;
       "nextdns" = 1464122853;
       "whatsapp" = 310633997;
