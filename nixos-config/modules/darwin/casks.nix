@@ -2,6 +2,7 @@ _: [
   # # Development Tools
   # "homebrew/cask/docker"
   "orbstack" # containerization app
+  "container"
   "xquartz"
   "ghostty" # terminal emulator
   # "visual-studio-code"

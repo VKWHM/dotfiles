@@ -21,6 +21,9 @@
         macos-icon = "xray";
         auto-update-channel = "stable";
         auto-update = "check";
+        keybind = [
+          "global:cmd+backquote=toggle_quick_terminal"
+        ];
       };
       themes = {
         catppuccin-latte = {
