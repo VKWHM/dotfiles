@@ -1,6 +1,7 @@
 return {
 	"hrsh7th/nvim-cmp",
 	optional = true,
+	enabled = false,
 	dependencies = {
 		{ "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
 	},
