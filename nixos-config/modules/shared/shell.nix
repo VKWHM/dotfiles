@@ -87,7 +87,7 @@ in {
       name = "URL";
       keys = {
         primary = "C-u";
-        once = "M-u";
+        once = "u";
       };
       search.pcre = true;
       fzf.enable = true;
@@ -166,18 +166,18 @@ in {
     #   search.regex = qr/\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)\b/;
     # }
 
-    # {
-    #   name  = "Email Address";  # practical, avoids hyphens at label ends
-    #   keys.primary   = "M-e";
-    #   search.regex = qr/
-    #     \b
-    #     [A-Za-z0-9._%+-]+
-    #     @
-    #     (?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+
-    #     [A-Za-z]{2,63}
-    #     \b
-    #   /x;
-    # }
+    {
+      name = "Email Address"; # practical, avoids hyphens at label ends
+      keys.once = "M-e";
+      fzf.enable = true;
+      keys.primary = "C-e";
+      search.pcre = true;
+      search.regex = ''(?i)\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'';
+      search.extraArgs = [
+        "--line-regexp"
+      ];
+      processing.preProcessor = ''${pkgs.coreutils}/bin/tac'';
+    }
 
     {
       name = "Number";
@@ -189,11 +189,11 @@ in {
     #   keys.primary = "M-b";
     #   search.regex = "([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?";
     # }
-    # {
-    #   name = "UUID";
-    #   keys.primary = "M-u";
-    #   search.regex = "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
-    # }
+    {
+      name = "UUID";
+      keys.primary = "M-u";
+      search.regex = "[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}";
+    }
     {
       name = "Docker ID";
       keys.primary = "M-d";
@@ -212,12 +212,12 @@ in {
     {
       name = "IP Address";
       keys.primary = "M-i";
-      search.regex = "[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}";
+      search.regex = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])";
     }
-    {
-      name = "Email Address";
-      keys.primary = "M-e";
-      search.regex = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
-    }
+    # {
+    #   name = "Email Address";
+    #   keys.primary = "M-e";
+    #   search.regex = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
+    # }
   ];
 }
