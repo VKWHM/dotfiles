@@ -1,19 +1,28 @@
+local flake = "(builtins.getFlake (\"git+file://\" + toString ./.))"
 return {
-	cmd = { "nixd" },
 	settings = {
 		nixd = {
 			nixpkgs = {
-				expr = "import (if builtins.pathExists ./flake.nix then (builtins.getFlake(toString ./.)).inputs.nixpkgs else <nixpkgs>) { }",
+				expr = "import " .. flake .. ".inputs.nixpkgs { }",
+			},
+			formatting = {
+				command = { "nixfmt" },
 			},
 			options = {
-				-- nixos = {
-				-- 	expr = "let flake = builtins.getFlake(toString ./.); in flake.nixosConfigurations.nz.options",
-				-- },
-				["home-manager"] = {
-					expr = "(builtins.getFlake (\"git+file://\" + toString ./.)).homeConfigurations.${builtins.currentSystem}.options",
+				nixos = {
+					expr = flake .. ".nixosConfigurations.\"${builtins.currentSystem}\".options",
 				},
 				darwin = {
-					expr = "(builtins.getFlake (\"git+file://\" + toString ./.)).darwinConfigurations.\"${builtins.elemAt (builtins.match \"^([^-]+)-(linux|darwin)?$\" builtins.currentSystem) 0}-darwin\".options",
+					expr = flake .. ".darwinConfigurations.\"${builtins.currentSystem}\".options",
+				},
+				["home-manager"] = {
+					expr = flake .. ".homeConfigurations.\"${builtins.currentSystem}\".options",
+				},
+			},
+		
+diagnostic = {
+				suppress = {
+					"nixpkgs-unfree",
 				},
 			},
 		},
