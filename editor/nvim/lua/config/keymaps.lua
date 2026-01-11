@@ -129,3 +129,149 @@ Steps:
 		end)
 	end, { desc = "Commit changes with Copilot generated message" })
 end
+
+-- Gemini CLI Integration
+do
+	local function run_gemini(prompt, range, replace)
+		-- Get the selected text
+		local lines
+		if range then
+			local start_row, _, end_row, _ = unpack(range)
+			-- Adjust for 0-based indexing if needed, but vim.api works with 0-based
+			-- getpos returns 1-based, get_lines expects 0-based start, exclusive end?
+			-- vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+			lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+		else
+			lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+		end
+		local code = table.concat(lines, "\n")
+
+		local full_prompt = prompt .. "\n\nCode Context:\n" .. code
+
+		-- UI Setup: Floating window with spinner
+		local spinner_frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+		local spinner_idx = 1
+		local buf = vim.api.nvim_create_buf(false, true)
+		local width = 24
+		local height = 1
+		local win = vim.api.nvim_open_win(buf, false, {
+			relative = "editor",
+			width = width,
+			height = height,
+			col = math.floor((vim.o.columns - width) / 2),
+			row = math.floor((vim.o.lines - height) / 2),
+			style = "minimal",
+			border = "rounded",
+			title = " Gemini ",
+			title_pos = "center",
+		})
+
+		local timer = (vim.uv or vim.loop).new_timer()
+		timer:start(
+			0,
+			80,
+			vim.schedule_wrap(function()
+				if vim.api.nvim_buf_is_valid(buf) then
+					vim.api.nvim_buf_set_lines(
+						buf,
+						0,
+						-1,
+						false,
+						{ " " .. spinner_frames[spinner_idx] .. " Processing..." }
+					)
+					spinner_idx = (spinner_idx % #spinner_frames) + 1
+				end
+			end)
+		)
+
+		local function cleanup_ui()
+			if timer then
+				timer:stop()
+				timer:close()
+				timer = nil
+			end
+			if vim.api.nvim_win_is_valid(win) then
+				vim.api.nvim_win_close(win, true)
+			end
+			if vim.api.nvim_buf_is_valid(buf) then
+				vim.api.nvim_buf_delete(buf, { force = true })
+			end
+		end
+
+		-- Execute the gemini command
+		-- Note: Ensure 'gemini' is in your PATH and configured.
+		-- Adjust the command arguments based on the specific CLI tool version.
+		-- Example: `gemini prompt "..."`
+		vim.system({ "gemini", "--resume", "--model", "flash", "prompt", full_prompt }, { text = true }, function(out)
+			vim.schedule(cleanup_ui)
+
+			if out.code ~= 0 then
+				vim.schedule(function()
+					vim.notify("Gemini Error: " .. (out.stderr or "Unknown error"), vim.log.levels.ERROR)
+				end)
+				return
+			end
+
+			local result = out.stdout or ""
+			-- Remove potential markdown code block wrappers if replacing
+			if replace then
+				result = result:gsub("^```%w*\n", ""):gsub("\n```$", "")
+			end
+
+			vim.schedule(function()
+				if replace and range then
+					local new_lines = vim.split(result, "\n")
+					vim.api.nvim_buf_set_lines(0, range[1] - 1, range[3], false, new_lines)
+					vim.notify("Code refactored!", vim.log.levels.INFO)
+				else
+					-- Show in floating window
+					local buf = vim.api.nvim_create_buf(false, true)
+					vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(result, "\n"))
+					vim.api.nvim_set_option_value("filetype", "markdown", { buf = buf })
+
+					local width = math.floor(vim.o.columns * 0.8)
+					local height = math.floor(vim.o.lines * 0.8)
+					vim.api.nvim_open_win(buf, true, {
+						relative = "editor",
+						width = width,
+						height = height,
+						col = math.floor((vim.o.columns - width) / 2),
+						row = math.floor((vim.o.lines - height) / 2),
+						style = "minimal",
+						border = "rounded",
+						title = " Gemini Response ",
+						title_pos = "center",
+					})
+					-- Map q to close
+					vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = buf })
+				end
+			end)
+		end)
+	end
+
+	local function get_visual_range()
+		-- Must exit visual mode to update the '< and '> marks
+		if vim.fn.mode():match("^[vV\22]") then
+			vim.cmd("normal! \27")
+		end
+
+		local start_row = vim.api.nvim_buf_get_mark(0, "<")[1]
+		local end_row = vim.api.nvim_buf_get_mark(0, ">")[1]
+
+		return { start_row, 0, end_row, 0 }
+	end
+
+	-- Keymaps
+	map("v", "<leader>gr", function()
+		local prompt = [[
+You are a Clean Code expert. Refactor the following code to improve its readability, maintainability, and performance.
+
+Guidelines:
+1. Strict Logic Preservation: The refactored code must behave exactly the same as the original.
+2. Idiomatic Style: Use standard conventions and idioms for the language.
+3. No Markdown: Return ONLY the raw code. Do not wrap it in markdown code blocks (```).
+4. No Commentary: Do not include any explanations or text before/after the code.
+]]
+		run_gemini(prompt, get_visual_range(), true)
+	end, { desc = "Gemini Refactor" })
+end
