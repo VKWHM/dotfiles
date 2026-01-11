@@ -5,8 +5,9 @@
   ...
 }: let
   inherit (lib) mkIf mkOption types;
-  scriptName = name: ".config/tmux/scripts/${builtins.replaceStrings [" "] ["-"] name}.sh";
-  scriptNameOnce = name: ".config/tmux/scripts/${builtins.replaceStrings [" "] ["-"] name}-once.sh";
+  formatName = name: builtins.replaceStrings [" "] ["-"] name;
+  scriptName = name: ".config/tmux/scripts/${formatName name}.sh";
+  scriptNameOnce = name: ".config/tmux/scripts/${formatName name}-once.sh";
   escapeRegex = regex: ''
     $(cat <<END
       ${regex}
@@ -269,13 +270,13 @@ in {
               ${pkgs.tmux}/bin/tmux capture-pane -p  -S - | \
               ${preProcessor} ${pkgs.ripgrep}/bin/rg ${lib.strings.escapeShellArgs (ripgrepFlags ++ ["--json"])} ${escapeRegex binding.search.regex} | \
               ${pkgs.jq}/bin/jq -r 'select(.type=="match") | "\(.data.submatches[0].match.text)\t\(.data.lines.text)"' | ${pkgs.gawk}/bin/awk '!seen[$1]++ && NF > 0' | \
-              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${binding.name} && ( cat </tmp/tspipe3-${binding.name} | ${coreutils}/cut -f1 | \
+              ${pkgs.fzf}/bin/fzf ${lib.concatStringsSep " " fzfFlags} >/tmp/tspipe3-${formatName binding.name} && ( cat </tmp/tspipe3-${formatName binding.name} | ${coreutils}/cut -f1 | \
               ${coreutils}/tee \
               >(${clipboardPipe}) \
               >(${pkgs.tmux}/bin/tmux load-buffer -) \
               >(${pkgs.tmux}/bin/tmux display-message  "Copied $(cat)") \
               >/dev/null ) || true;
-              unlink /tmp/tspipe3-${binding.name}; \
+              unlink /tmp/tspipe3-${formatName binding.name}; \
             else \
               ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
             fi

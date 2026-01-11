@@ -13,7 +13,7 @@
         background-opacity = 0.95;
         background-blur = 2;
         theme = "dark:catppuccin-mocha,light:catppuccin-latte";
-        font-family = "JetBrainsMono Nerd Font";
+        font-family = "CaskaydiaCove Nerd Font";
         mouse-hide-while-typing = true;
         mouse-shift-capture = true;
         focus-follows-mouse = "true";

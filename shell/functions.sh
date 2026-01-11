@@ -224,3 +224,37 @@ tp() { # tmux directory session creation
   fi
   cd -
 }
+
+# Renew IP address from DHCP server
+iprenew() {
+  local iface=$1
+  local os_type=$(get_ostype)
+
+  if [ -z "$iface" ]; then
+    if [ "$os_type" == "darwin" ]; then
+      iface=$(route get default 2>/dev/null | awk '/interface/ {print $2}')
+    else
+      iface=$(ip route show default 2>/dev/null | awk '/default/ { for(i=1;i<=NF;i++) if($i=="dev") print $(i+1) }' | head -n 1)
+    fi
+  fi
+
+  if [ -z "$iface" ]; then
+    echo "[-] Could not detect default interface. Please provide one."
+    return 1
+  fi
+
+  echo "[*] Renewing IP for interface: $iface"
+
+  if [ "$os_type" == "darwin" ]; then
+    sudo ipconfig set "$iface" DHCP
+  else
+    if command -v dhclient &>/dev/null; then
+      sudo dhclient -r "$iface" && sudo dhclient -v "$iface"
+    elif command -v dhcpcd &>/dev/null; then
+      sudo dhcpcd -k "$iface" && sudo dhcpcd "$iface"
+    else
+      echo "[-] No supported DHCP client found (checked dhclient and dhcpcd)."
+      return 1
+    fi
+  fi
+}

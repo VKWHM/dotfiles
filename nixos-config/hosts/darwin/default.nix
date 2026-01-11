@@ -143,9 +143,9 @@ in {
         TrackpadThreeFingerTapGesture = 2;
       };
     };
-    keyboard = {
-      enableKeyMapping = true;
-    };
+    # keyboard = {
+    #   enableKeyMapping = true;
+    # };
     tools = {
       darwin-rebuild.enable = true;
       darwin-version.enable = true;

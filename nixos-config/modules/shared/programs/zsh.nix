@@ -24,6 +24,10 @@ in {
       autocd = true;
       dotDir = "${config.xdg.configHome}/zsh.hm";
       initContent = mkMerge [
+        # Add ~/.zsh/completion directory path to fpath during compinit initialization
+        (mkOrder 521 ''
+          fpath+=(${config.home.homeDirectory}/.zsh/completion)
+        '')
         # Hack for wrap plugins inside zvm_after_init function :p
         # Wrap plugins
         (mkOrder 899 ''
