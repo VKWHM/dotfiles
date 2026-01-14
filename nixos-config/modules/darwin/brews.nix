@@ -1,4 +1,5 @@
 _: [
+  "gemini-cli"
   "opencode"
   {
     name = "batt";

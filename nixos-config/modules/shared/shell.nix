@@ -18,6 +18,7 @@ in {
     programs/bat.nix
     programs/starship.nix
     programs/btop.nix
+    programs/opencode.nix
   ];
   # ZSH
   programs.zsh.enable = true;
@@ -55,6 +56,7 @@ in {
         sqlite
         # Plugin Dependencies
         ast-grep
+        rustup # for neovim
       ])
       ++ (
         if (builtins.elemAt (builtins.match ".+-(.+)" pkgs.system) 0) == "darwin"
@@ -76,7 +78,6 @@ in {
   home.packages = with pkgs; [
     lazygit
     go
-    cargo # for neovim
     gh
     git
   ];

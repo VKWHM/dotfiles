@@ -78,7 +78,6 @@ in {
       home.whmConfig = {
         enable = true;
         link.nvim = true;
-        link.opencode = true;
         link.vim = true;
         link.tmux = true;
         link.wezterm = false;

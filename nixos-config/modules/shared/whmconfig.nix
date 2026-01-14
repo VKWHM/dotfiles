@@ -37,14 +37,6 @@ in {
             This will create a symlink from ${homeDir}/.vim to ${cfg.dotDir}/editor/vim.
           '';
         };
-        opencode = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Link the opencode configuration to the WHM shell.
-            This will create a symlink from ${homeDir}/.config/opencode/command to ${cfg.dotDir}/terminal/opencode/command.
-          '';
-        };
         tmux = mkOption {
           type = types.bool;
           default = false;
@@ -128,15 +120,6 @@ in {
               {
                 src = "${whmDotDir}/terminal/wezterm/wezterm.lua";
                 dst = "${homeDir}/.wezterm.lua";
-              }
-            ];
-          })
-          ++ (getLink {
-            name = "opencode";
-            files = [
-              {
-                src = "${whmDotDir}/terminal/opencode/command";
-                dst = "${homeDir}/.config/opencode/command";
               }
             ];
           })
