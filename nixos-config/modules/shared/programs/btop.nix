@@ -13,7 +13,7 @@
 in {
   config = lib.mkIf config.programs.btop.enable {
     home.file.".config/btop/themes" = {
-      source = "${catppuccin-btop}/themes";
+      source = catppuccin-btop + /themes;
       recursive = true;
     };
     utils.theme.autoconfig = {
