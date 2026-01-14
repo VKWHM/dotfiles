@@ -5,14 +5,18 @@
   ...
 }: let
   appearance = config.utils.theme.appearance;
-  rootDir = ../../../../.;
+  opencode = ../../../../terminal/opencode;
 in {
   config = {
     programs.opencode = {
       enable = true;
       package = null;
       commands = {
-        readme = "${rootDir}/terminal/opencode/command/readme.md";
+        readme = opencode + /command/readme.md;
+        codereview = opencode + /command/codereview.md;
+      };
+      agents = {
+        code-mentor = opencode + /agents/code-mentor.md;
       };
       settings = {
         theme = "catppuccin";
