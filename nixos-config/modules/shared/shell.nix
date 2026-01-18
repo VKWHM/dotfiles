@@ -52,6 +52,12 @@ in {
         php
         php84Packages.composer
         unzip
+        viu
+        chafa
+        ueberzugpp
+        wget
+        prettier
+        julia
         imagemagick
         sqlite
         # Plugin Dependencies
