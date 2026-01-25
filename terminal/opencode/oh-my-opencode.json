@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "git_master": {
+    "commit_footer": true,
+    "include_co_authored_by": true
+  }
+}

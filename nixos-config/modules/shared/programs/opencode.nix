@@ -11,6 +11,7 @@ in {
     programs.opencode = {
       enable = true;
       package = null;
+
       commands = {
         readme = opencode + /command/readme.md;
         codereview = opencode + /command/codereview.md;
@@ -20,6 +21,7 @@ in {
       };
       settings = {
         theme = "catppuccin";
+        model = "github-copilot/claude-sonnect-4-5";
         autoshare = false;
         autoupdate = false;
         plugin = [
