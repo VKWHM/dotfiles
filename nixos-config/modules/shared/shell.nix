@@ -57,12 +57,12 @@ in {
         ueberzugpp
         wget
         prettier
-        julia
+        # julia # unsupported for darwin systems
         imagemagick
         sqlite
+        rustup # for neovim
         # Plugin Dependencies
         ast-grep
-        rustup # for neovim
       ])
       ++ (
         if (builtins.elemAt (builtins.match ".+-(.+)" pkgs.system) 0) == "darwin"

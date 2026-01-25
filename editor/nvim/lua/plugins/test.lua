@@ -8,7 +8,15 @@ return {
 		opts = {
 			adapters = {
 				"neotest-plenary",
-				["neotest-vitest"] = {},
+				["neotest-vitest"] = {
+					vitestCommand = function()
+						local root = vim.fs.root(0, ".git")
+						if root and vim.uv.fs_stat(vim.fs.joinpath(root, "encore.app")) then
+							return "encore test"
+						end
+						return "vitest"
+					end,
+				},
 			},
 		},
 	},
