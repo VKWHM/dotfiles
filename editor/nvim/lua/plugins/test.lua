@@ -14,7 +14,7 @@ return {
 						if root and vim.uv.fs_stat(vim.fs.joinpath(root, "encore.app")) then
 							return "encore test"
 						end
-						return "vitest"
+						return "bun run test"
 					end,
 				},
 			},
