@@ -22,7 +22,7 @@ in {
       };
       settings = {
         theme = "catppuccin";
-        model = "github-copilot/claude-sonnect-4-5";
+        model = "github-copilot/claude-opus-4-5";
         autoshare = false;
         autoupdate = false;
         plugin = [
