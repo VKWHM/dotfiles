@@ -5,10 +5,13 @@ load_skills:
 ---
 
 Execute the **git-master** skill to analyze staged changes and create atomic commits.
+
 ## Your Task
+
 1. **Verify staged changes exist** — If no staged changes, notify user and stop.
 2. **Follow git-master phases 0-6** — Style detection, atomic planning, execution.
 3. **Auto-commit** — After generating the message, execute the commit immediately.
+
 ## Commit Message Format
 
 Each commit MUST include a **description body** (not just a title). Follow this structure:
@@ -46,6 +49,7 @@ Ultraworked with [Sisyphus](https://github.com/code-yeongyu/oh-my-opencode)
 - Do NOT just list files — summarize the intent
 
 **Good example:**
+
 ```
 feat(opencode): add /commit command with git-master skill
 
@@ -55,8 +59,8 @@ opencode.nix to make it available in the CLI.
 ```
 
 ## Strict Rules
+
 - Follow ALL git-master rules (multiple commits, style detection, atomic units)
-- Include commit footer without co-authored-by as configured in oh-my-opencode.json
+- Include commit footer without co-authored-by
 - Do NOT ask for confirmation — commit directly after analysis
 - Do NOT push — only commit locally
-
