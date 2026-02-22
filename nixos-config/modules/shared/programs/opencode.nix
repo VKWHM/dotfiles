@@ -14,7 +14,6 @@ in {
 
       commands = {
         readme = opencode + /command/readme.md;
-        codereview = opencode + /command/codereview.md;
         commit = opencode + /command/commit.md;
       };
       agents = {
@@ -22,11 +21,12 @@ in {
       };
       settings = {
         theme = "catppuccin";
-        model = "github-copilot/claude-opus-4-5";
+        # model = "github-copilot/claude-opus-4.6";
         autoshare = false;
         autoupdate = false;
         plugin = [
-          "opencode-gemini-auth@latest"
+          "@mohak34/opencode-notifier@latest"
+          # "opencode-gemini-auth@latest"
           "oh-my-opencode@latest"
           # "${rootDir}/scripts/opencode-theme-watcher"
         ];

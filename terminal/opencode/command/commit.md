@@ -1,5 +1,6 @@
 ---
 description: Analyze staged changes and generate commit message, then commit
+model: github-copilot/claude-haiku-4.5
 load_skills:
   - git-master
 ---
@@ -61,6 +62,6 @@ opencode.nix to make it available in the CLI.
 ## Strict Rules
 
 - Follow ALL git-master rules (multiple commits, style detection, atomic units)
-- Include commit footer without co-authored-by
 - Do NOT ask for confirmation — commit directly after analysis
 - Do NOT push — only commit locally
+- DO NOT INCLUDE COMMIT FOOTER WITH CO-AUTHORED-BY
