@@ -15,6 +15,7 @@ in {
       commands = {
         readme = opencode + /command/readme.md;
         codereview = opencode + /command/codereview.md;
+        commit = opencode + /command/commit.md;
       };
       agents = {
         code-mentor = opencode + /agents/code-mentor.md;
