@@ -35,6 +35,7 @@ _: [
   "chatgpt"
   "raycast"
   "hazeover" # window dimmer
+  "repobar" # Github repository showing
   #
   # # Browsers
   # "google-chrome"

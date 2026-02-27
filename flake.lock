@@ -192,6 +192,22 @@
         "type": "github"
       }
     },
+    "homebrew-tap-steipete": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771223140,
+        "narHash": "sha256-F+hJm88+HAQ5kMKnve3Atf3mfwlRTZgE7e4b9mo66iI=",
+        "owner": "steipete",
+        "repo": "homebrew-tap",
+        "rev": "b3d483692d3343deeaf74b222e6c50586af349ca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "steipete",
+        "repo": "homebrew-tap",
+        "type": "github"
+      }
+    },
     "nix-homebrew": {
       "inputs": {
         "brew-src": "brew-src"
@@ -238,6 +254,7 @@
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
         "homebrew-tap-opencode": "homebrew-tap-opencode",
+        "homebrew-tap-steipete": "homebrew-tap-steipete",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs",
         "zsh-alias-finder": "zsh-alias-finder",

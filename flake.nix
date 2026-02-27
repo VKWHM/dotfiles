@@ -23,6 +23,10 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+    homebrew-tap-steipete = {
+      url = "github:steipete/homebrew-tap";
+      flake = false;
+    };
     homebrew-tap-opencode = {
       url = "github:sst/homebrew-tap";
       flake = false;
@@ -60,6 +64,7 @@
     homebrew-core,
     homebrew-cask,
     homebrew-tap-opencode,
+    homebrew-tap-steipete,
     home-manager,
     nixpkgs,
     disko,
@@ -175,6 +180,7 @@
                   "homebrew/homebrew-cask" = homebrew-cask;
                   "homebrew/homebrew-bundle" = homebrew-bundle;
                   "sst/homebrew-tap" = homebrew-tap-opencode;
+                  "steipete/homebrew-tap" = homebrew-tap-steipete;
                 };
                 mutableTaps = true;
                 autoMigrate = true;
