@@ -28,3 +28,4 @@ Temporary Items
 
 # Exclude lazy lock file
 lazy-lock.json
+.sisyphus
