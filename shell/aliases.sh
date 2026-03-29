@@ -107,7 +107,7 @@ alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
 alias lsize='du -sh * | sort -rh'
 
 # Show command usage statistics
-alias hs='cat $HISTFILE | awk "{CMD[\$2]++; count++;} END {for (a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -vE "^[%.0-9 ]+./" | column -c3 -s " " -t | sort -nr | nl | head -20'
+alias hs='cat $HISTFILE | awk -F ";" "{CMD[\$2]++; count++;} END {for (a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -vE "^[%.0-9 ]+./" | column -c3 -s " " -t | sort -nr | nl | head -20'
 
 # Show last logins
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -119,13 +119,13 @@ alias whmupdate="cd ~/.whm_shell/ && git pull && cd -"
 
 # Vim aliases
 if NVIMRUNTIME="$(command -v nvim 2>/dev/null)"; then
-  if VIMRUNTIME=$(command -v vim); then
-    alias vi="$VIMRUNTIME"
-    # export EDITOR="$VIMRUNTIME"
-  fi
-  alias vim="nvim -u $WHMCONFIG/editor/nvim/whoami-init.lua"
-  export EDITOR="$NVIMRUNTIME -u $WHMCONFIG/editor/nvim/whoami-init.lua"
-  export ZVM_VI_EDITOR="$NVIMRUNTIME -u $WHMCONFIG/editor/nvim/whoami-init.lua" # for zsh-vi-mode
+  # if VIMRUNTIME=$(command -v vim); then
+  # alias vi="$VIMRUNTIME"
+  # export EDITOR="$VIMRUNTIME"
+  # fi
+  # alias vim="nvim"
+  export EDITOR="$NVIMRUNTIME"
+  export ZVM_VI_EDITOR="$NVIMRUNTIME" # for zsh-vi-mode
 fi
 
 # Git aliases

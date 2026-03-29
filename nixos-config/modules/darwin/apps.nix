@@ -10,8 +10,8 @@
       package = null;
       settings = {
         shell-integration-features = "cursor,sudo,title";
-        background-opacity = 0.95;
-        background-blur = 2;
+        background-opacity = 1.00;
+        background-blur = 0;
         theme = "dark:catppuccin-mocha,light:catppuccin-latte";
         font-family = "CaskaydiaCove Nerd Font";
         mouse-hide-while-typing = true;
