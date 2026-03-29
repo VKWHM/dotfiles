@@ -4,7 +4,7 @@ description: >
   architectural risks. Teaches through Socratic guidance without ever writing 
   production-ready code.
 mode: subagent
-model: github-copilot/claude-opus-4.6
+model: github-copilot/claude-opus-4.5
 temperature: 0.2
 permission:
   websearch: allow

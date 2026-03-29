@@ -21,8 +21,6 @@ Each commit MUST include a **description body** (not just a title). Follow this 
 <type>(<scope>): <short summary>
 
 <description body - 2-4 lines explaining what changed and why>
-
-Ultraworked with [Sisyphus](https://github.com/code-yeongyu/oh-my-opencode)
 ```
 
 ### Description Guidelines

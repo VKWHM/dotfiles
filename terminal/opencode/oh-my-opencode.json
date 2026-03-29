@@ -1,5 +1,20 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "metis": {
+      "model": "github-copilot/claude-opus-4.5",
+      "fallback_models": []
+    }
+  },
+  "categories": {
+    "unspecified-low": {
+      "model": "github-copilot/claude-sonnet-4.5"
+    },
+    "unspecified-high": {
+      "model": "github-copilot/claude-opus-4.5",
+      "variant": "max"
+    }
+  },
   "git_master": {
     "commit_footer": false,
     "include_co_authored_by": false
