@@ -115,8 +115,8 @@ in {
           {app = "/Applications/Obsidian.app/";}
           {app = "/Applications/Zed.app/";}
           {app = "/Applications/Firefox.app/";}
+          {app = "/Applications/Figma.app/";}
           {app = "/Applications/Burp Suite Community Edition.app/";}
-          {app = "/Applications/Caido.app/";}
         ];
         persistent-others = [
           "${config.users.users.${user}.home}/Downloads"

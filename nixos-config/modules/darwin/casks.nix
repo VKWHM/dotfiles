@@ -25,7 +25,7 @@ _: [
   #
   # # Utility Tools
   # "syncthing"
-  "betterzip" # archive manager
+  # "betterzip" # archive manager
   "zed"
   #
   # # Entertainment Tools
@@ -40,4 +40,7 @@ _: [
   # # Browsers
   # "google-chrome"
   "firefox"
+
+  # Design Tools
+  "figma"
 ]
