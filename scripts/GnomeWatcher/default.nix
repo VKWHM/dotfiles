@@ -1,11 +1,17 @@
-{ stdenv, glib, dconf, wrapGAppsHook, pkg-config, ... }:
-
+{
+  stdenv,
+  glib,
+  dconf,
+  wrapGAppsHook,
+  pkg-config,
+  ...
+}:
 stdenv.mkDerivation {
   pname = "gwatch";
   version = "1.0";
   src = ./.;
-  nativeBuildInputs = [ pkg-config wrapGAppsHook ];
-  buildInputs = [ glib dconf ];
+  nativeBuildInputs = [pkg-config wrapGAppsHook];
+  buildInputs = [glib dconf];
 
   postFixup = ''
     wrapProgram $out/bin/gwatch \

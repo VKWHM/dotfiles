@@ -206,32 +206,33 @@ in {
       ];
       extraConfig = let
         searchBindings = builtins.concatStringsSep "\n" (builtins.map (binding:
-            if binding.search.pcre || binding.fzf.enable
-            then
-              if binding.keys.once != ""
-              then ''
-                # ${binding.name} search (prefix + ${binding.keys.primary})
-                bind-key ${binding.keys.primary} run-shell "${config.home.homeDirectory}/${scriptName binding.name}"
+          if binding.search.pcre || binding.fzf.enable
+          then
+            if binding.keys.once != ""
+            then ''
+              # ${binding.name} search (prefix + ${binding.keys.primary})
+              bind-key ${binding.keys.primary} run-shell "${config.home.homeDirectory}/${scriptName binding.name}"
 
-                # ${binding.name} search (prefix + ${binding.keys.once})
-                bind-key ${binding.keys.once} run-shell "${config.home.homeDirectory}/${scriptNameOnce binding.name}"
-              ''
-              else ''
-                # ${binding.name} search (prefix + ${binding.keys.primary})
-                bind-key ${binding.keys.primary} run-shell "${config.home.homeDirectory}/${scriptName binding.name}"
-              ''
+              # ${binding.name} search (prefix + ${binding.keys.once})
+              bind-key ${binding.keys.once} run-shell "${config.home.homeDirectory}/${scriptNameOnce binding.name}"
+            ''
             else ''
               # ${binding.name} search (prefix + ${binding.keys.primary})
-              bind-key ${binding.keys.primary} run-shell "\
-                if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -qE ${escapeRegex binding.search.regex}; then \
-                  ${pkgs.tmux}/bin/tmux copy-mode && ${pkgs.tmux}/bin/tmux send-keys -X search-backward ${escapeRegex binding.search.regex}
-                else \
-                  ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
-                fi"
-            '')
-          config.programs.tmux.searchKeys);
-          windowsBindings = builtins.concatStringsSep "\n" (builtins.map (num: ''bind-key -n M-${num} select-window -t ${num}'') ["1" "2" "3" "4" "5" "6" "7" "8" "9"]);
-        in builtins.concatStringsSep "\n" [windowsBindings searchBindings];
+              bind-key ${binding.keys.primary} run-shell "${config.home.homeDirectory}/${scriptName binding.name}"
+            ''
+          else ''
+            # ${binding.name} search (prefix + ${binding.keys.primary})
+            bind-key ${binding.keys.primary} run-shell "\
+              if ${pkgs.tmux}/bin/tmux capture-pane -p  | ${pkgs.gnugrep}/bin/grep -qE ${escapeRegex binding.search.regex}; then \
+                ${pkgs.tmux}/bin/tmux copy-mode && ${pkgs.tmux}/bin/tmux send-keys -X search-backward ${escapeRegex binding.search.regex}
+              else \
+                ${pkgs.tmux}/bin/tmux display-message  'No ${lib.strings.toLower binding.name} found!'; \
+              fi"
+          '')
+        config.programs.tmux.searchKeys);
+        windowsBindings = builtins.concatStringsSep "\n" (builtins.map (num: ''bind-key -n M-${num} select-window -t ${num}'') ["1" "2" "3" "4" "5" "6" "7" "8" "9"]);
+      in
+        builtins.concatStringsSep "\n" [windowsBindings searchBindings];
     };
     home.file = builtins.listToAttrs (builtins.concatLists (builtins.map (
         binding: let
