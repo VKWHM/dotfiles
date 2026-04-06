@@ -19,6 +19,7 @@ in {
     programs/starship.nix
     programs/btop.nix
     programs/opencode.nix
+    programs/sesh.nix
   ];
   # ZSH
   programs.zsh.enable = true;
