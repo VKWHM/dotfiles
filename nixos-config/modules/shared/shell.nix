@@ -44,6 +44,7 @@ in {
         # LSPs
         nixd
         marksman
+        alejandra
         # Dependencies
         python3
         lua51Packages.lua
