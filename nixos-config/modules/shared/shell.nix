@@ -6,6 +6,8 @@
   ...
 }: let
   rootDir = ../../../.;
+  gitName = "VKWHM";
+  gitEmail = "111775089+VKWHM@users.noreply.github.com";
   ln = path: {
     source = "${rootDir}/${path}";
   };
@@ -79,15 +81,56 @@ in {
     silent = true;
   };
   programs.fd.enable = true;
-  # programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+    ignores = ["*.swp"];
+    settings = {
+      user = {
+        name = gitName;
+        email = gitEmail;
+      };
+      init.defaultBranch = "main";
+      core = {
+        editor = "nvim";
+        autocrlf = "input";
+      };
+      pull.rebase = true;
+      rebase.autoStash = true;
+      push.autoSetupRemote = true;
+    };
+  };
   programs.eza.enable = true;
   programs.zoxide.enable = true;
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper = {
+      enable = true;
+      hosts = [
+        "https://github.com"
+        "https://gist.github.com"
+      ];
+    };
+    settings = {
+      git_protocol = "ssh";
+      editor = "nvim";
+      prompt = "enabled";
+      pager = "";
+      aliases = {
+        co = "pr checkout";
+        pv = "pr view";
+        pc = "pr create --fill";
+        pco = "pr checks";
+      };
+    };
+  };
+  programs.gh-dash.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
     lazygit
     go
-    gh
     git
+    gnupg
   ];
   # Tmux search keys.primarybindings
   programs.tmux.searchKeys = [
