@@ -13,6 +13,7 @@
         background-opacity = 1.00;
         background-blur = 0;
         theme = "dark:catppuccin-mocha,light:catppuccin-latte";
+        font-size = 14;
         font-family = "CaskaydiaCove Nerd Font";
         mouse-hide-while-typing = true;
         mouse-shift-capture = true;
@@ -23,6 +24,7 @@
         auto-update = "check";
         keybind = [
           "global:cmd+backquote=toggle_quick_terminal"
+          "super++=increase_font_size:1"
         ];
       };
       themes = {
