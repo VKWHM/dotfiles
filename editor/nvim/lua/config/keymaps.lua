@@ -249,6 +249,13 @@ do
 		end)
 	end
 
+	-- Copilot inline suggestions via keymap <M-l>
+	map("i", "<M-l>", function()
+		if not vim.lsp.inline_completion.get() then
+			return "<M-l>"
+		end
+	end, { expr = true, desc = "Accept the current inline suggestion" })
+
 	local function get_visual_range()
 		-- Must exit visual mode to update the '< and '> marks
 		if vim.fn.mode():match("^[vV\22]") then

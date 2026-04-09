@@ -24,12 +24,12 @@ return {
 			adapters = {
 				"neotest-plenary",
 				["neotest-vitest"] = {
-					vitestCommand = function()
-						if get_encore_root() then
-							return "encore test"
-						end
-						return "bun run test"
-					end,
+				vitestCommand = function()
+					if get_encore_root() then
+						return "encore test"
+					end
+					return "npx vitest"
+				end,
 					cwd = function()
 						return get_encore_root()
 					end,

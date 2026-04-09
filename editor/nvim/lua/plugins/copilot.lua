@@ -26,7 +26,7 @@ return {
 	{
 		"zbirenbaum/copilot.lua",
 		opts = {
-			enabled = true,
+			enabled = false,
 			suggestion = {
 				keymap = {
 					accept = "<M-y>",
