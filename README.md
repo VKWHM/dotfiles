@@ -1,201 +1,309 @@
-# WHM Shell - Advanced Development Environment
+# WHM Shell - Advanced Nix-Powered Development Environment
 
 <!--toc:start-->
-- [WHM Shell - Advanced Development Environment](#whm-shell-advanced-development-environment)
+- [WHM Shell - Advanced Nix-Powered Development Environment](#whm-shell-advanced-nix-powered-development-environment)
   - [🌟 Key Features](#🌟-key-features)
   - [📁 Project Structure](#📁-project-structure)
-  - [🛠 Major Updates](#🛠-major-updates)
-  - [📋 Configuration Options](#📋-configuration-options)
-  - [🔧 Development Utilities](#🔧-development-utilities)
+  - [🚀 Quick Start](#🚀-quick-start)
+  - [⚙️ Configuration](#️-configuration)
+  - [🛠 Development & Customization](#-development--customization)
   - [🤝 Contributing](#🤝-contributing)
   - [📄 License](#📄-license)
   - [🙏 Acknowledgements](#🙏-acknowledgements)
 <!--toc:end-->
 
-A comprehensive, Nix-powered development environment that streamlines system configuration and enhances productivity across multiple platforms. This repository provides a unified approach to managing dotfiles, system configurations, and development tools through Nix and Home Manager.
+A comprehensive, Nix-powered development environment that streamlines system configuration and enhances productivity across macOS (Darwin) and Linux (NixOS). This repository leverages **Nix Flakes** and **Home Manager** for declarative, reproducible system management with a carefully crafted ecosystem of tools, editors, and shell configurations.
 
 ## 🌟 Key Features
 
-### **Nix-Based Configuration Management**
+### **Declarative System Management**
 
-- **NixOS/Darwin Integration**: Full system configuration management for both Linux and macOS
-- **Home Manager**: Declarative user environment configuration
-- **Flake-based Setup**: Reproducible and version-locked configurations
-- **Multi-platform Support**: Unified configurations for x86_64 and aarch64 architectures
+- **NixOS & nix-darwin**: Full system configuration for Linux and macOS
+- **Home Manager**: Declarative user environment and dotfiles management
+- **Nix Flakes**: Reproducible, version-locked configurations
+- **Multi-architecture**: Support for x86_64 and aarch64 platforms
 
-### **Advanced Editor Configuration**
+### **Advanced Editor (Neovim)**
 
-- **Neovim with LazyVim**: Modern Lua-based configuration with LSP support
-- **Nixd LSP Integration**: Advanced Nix language server support
-- **Copilot Integration**: AI-powered coding assistance with custom commit generation
-- **Custom Plugins**: Including smear-cursor, opencode.nvim, and enhanced debugging tools
+- **LazyVim-based**: Modern Lua configuration with lazy-loading plugins
+- **AI Integration**: Copilot for intelligent code completion and commit message generation
+- **LSP Support**: Nixd, yamlls, and comprehensive language server ecosystem
+- **Custom Plugins**: cowboy.nvim (development utilities), opencode.nvim (CLI integration), smear-cursor (smooth visual cursor)
+- **Completion**: Blink.cmp for advanced fuzzy completion
+- **Enhanced Debugging**: Integrated debugging tools and enhanced markdown support
 
-### **Enhanced Terminal Experience**
+### **Terminal & Shell Excellence**
 
-- **Tmux with Advanced Features**: FZF-powered search for URL, Base64, File Paths, Docker IDs, IP,... etc, improved buffer management, and regex
-- **WezTerm Configuration**: Modern terminal emulator with dynamic theming
-- **Starship Prompt**: Customizable shell prompt with Catppuccin theme variants
-- **ZSH with Oh-My-Zsh**: Enhanced shell with custom aliases and functions
+- **WezTerm**: Modern terminal emulator with dynamic theming and persistent sessions
+- **Tmux Integration**: 
+  - FZF-powered search (URLs, Base64, file paths, Docker IDs, IPs, etc.)
+  - Enhanced buffer management with PCRE regex support
+  - floax plugin for floating windows
+- **Starship Prompt**: Beautiful, modular shell prompt with Catppuccin theme variants
+- **Zsh**: Oh-My-Zsh integration with custom aliases, functions, and enhanced workflows
+- **Advanced FZF**: Customizable preview commands and search integration
 
 ### **Dynamic Theme Management**
 
-- **AppearanceWatcher**: Swift-based utility for macOS appearance detection
+- **AppearanceWatcher**: Swift-based utility for macOS system appearance changes
 - **GnomeWatcher**: C-based utility for GNOME theme monitoring
-- **Automatic Theme Switching**: Seamless light/dark mode transitions across applications
-- **Catppuccin Integration**: Consistent theming across all applications
+- **Catppuccin Integration**: Latte (light) and Mocha (dark) theme variants
+- **Real-time Syncing**: Automatic theme updates across Neovim, Zsh, and all terminal applications
+- **Signal-based**: Uses SIGUSR1/SIGUSR2 for fast, responsive theme switching
 
-### **Development Tools Integration**
+### **Development Tools & CLI Integration**
 
-- **FZF Enhanced**: Advanced fuzzy finding with custom preview commands
+- **FZF**: Advanced fuzzy finder with preview capabilities
 - **Bat**: Syntax highlighting with theme synchronization
-- **Btop**: System monitoring with dynamic theme updates
-- **Git Integration**: Enhanced aliases and workflow improvements
+- **Btop**: System resource monitoring with dynamic theming
+- **Sesh**: Session manager for shell environments
+- **Gemini CLI**: Integration for AI-powered development assistance
+- **Git**: Enhanced workflow with custom aliases and utilities
+- **OpenCode**: Terminal-integrated development environment with agents and commands
 
 ## 📁 Project Structure
 
 ```plaintext
-├── nixos-config/           # Nix configuration management
-│   ├── hosts/             # Host-specific configurations
-│   │   ├── darwin/        # macOS system configurations
-│   │   └── nixos/         # NixOS system configurations
-│   ├── modules/           # Modular configuration components
-│   │   ├── darwin/        # macOS-specific modules
-│   │   ├── nixos/         # NixOS-specific modules
-│   │   └── shared/        # Cross-platform modules
-│   └── overlays/          # Nix package overlays
-├── editor/                # Editor configurations
-│   ├── nvim/             # Neovim configuration
-│   │   ├── lua/          # Lua configuration files
-│   │   └── lsp/          # Language server configurations
-│   └── nvim-plugins/     # Custom Neovim plugins
-├── scripts/               # System utilities
-│   ├── AppearanceWatcher/ # macOS appearance monitoring
-│   └── GnomeWatcher/     # GNOME theme detection
-├── shell/                 # Shell configurations
-├── terminal/              # Terminal configurations
-└── apps/                  # Platform-specific build scripts
+whm_shell/
+├── nixos-config/                 # Core Nix configuration system
+│   ├── flake.nix                # Flake entry point with inputs and outputs
+│   ├── flake.lock               # Dependency lock file
+│   ├── hosts/                   # Host-specific configurations
+│   │   ├── darwin/              # macOS (nix-darwin) configuration
+│   │   └── nixos/               # NixOS system configuration
+│   ├── modules/                 # Reusable Nix modules
+│   │   ├── darwin/              # macOS-specific modules (apps, brews, casks, home-manager)
+│   │   ├── nixos/               # NixOS-specific modules (polybar, rofi, disk-config, packages)
+│   │   └── shared/              # Cross-platform modules
+│   │       ├── programs/        # Program configs (bat, btop, fzf, opencode, sesh, starship, tmux, zsh)
+│   │       └── utils/           # Utility modules (Catppuccin theming, theme management)
+│   ├── apps/                    # Flake apps (apply, build-switch scripts)
+│   └── overlays/                # Custom Nix package overlays
+├── editor/                      # Editor configurations
+│   ├── nvim/                   # Neovim configuration (LazyVim-based)
+│   │   ├── init.lua            # Neovim entry point
+│   │   ├── lua/
+│   │   │   ├── config/         # Core configuration (keymaps, options, utils)
+│   │   │   └── plugins/        # Plugin specifications (copilot, completion, lsp, ui, etc.)
+│   │   ├── lsp/                # Language server configurations
+│   │   └── lazyvim.json        # LazyVim preferences
+│   ├── nvim-plugins/           # Custom Neovim plugins
+│   │   └── cowboy.nvim/        # Development workflow enhancements
+│   └── vimrc                   # Vim configuration (fallback/alternative)
+├── scripts/                     # Custom utility tools
+│   ├── AppearanceWatcher/       # Swift tool for macOS appearance detection
+│   └── GnomeWatcher/            # C tool for GNOME theme monitoring
+├── shell/                       # Shell configuration files
+│   ├── aliases.sh              # Zsh aliases (keyboard layouts, config editing, ls/cd enhancements, etc.)
+│   ├── config.sh               # Core Zsh configuration
+│   ├── functions.sh            # Custom shell functions
+│   ├── p10k.zsh                # Powerlevel10k prompt configuration
+│   ├── starship_latte.toml     # Starship config (light theme)
+│   └── starship_mocha.toml     # Starship config (dark theme)
+├── terminal/                    # Terminal emulator configurations
+│   ├── tmux.conf               # Tmux configuration (vi mode, mouse, key bindings)
+│   ├── wezterm/                # WezTerm configuration (events, keymaps, plugins, themes)
+│   └── opencode/               # OpenCode configuration (agents, commands, themes)
+├── flake.nix                    # Main Nix flake configuration
+├── install.sh                   # Bootstrap installer script (non-Nix systems)
+└── AGENTS.md                    # Project guide and coding standards
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Nix**: Install Nix package manager with flakes enabled
-- **Git**: For repository management
+- **Nix**: Install with flakes support (`nix --version` and `nix flake --help`)
+- **Git**: For repository management and version control
 
 ### Installation
 
-1. **Clone the repository:**
+#### Option 1: Clone to ~/.whm_shell (Recommended)
 
 ```bash
 git clone https://github.com/vkwhm/whm_shell.git ~/.whm_shell
 cd ~/.whm_shell
 ```
 
-2. **Choose your platform and run the appropriate build script:**
+#### Option 2: Clone to Custom Location
 
-**For macOS:**
+```bash
+git clone https://github.com/vkwhm/whm_shell.git /path/to/location
+cd /path/to/location
+# Update paths in your host configuration accordingly
+```
+
+### Applying Configuration
+
+**For macOS (Darwin):**
 
 ```bash
 nix run .#build-switch
 ```
 
-**For Linux:**
-
-install [home-manager](https://nix-community.github.io/home-manager) if not exist.
+**For NixOS:**
 
 ```bash
-home-manager switch --flake .#x86_64-linux # For x86_64 only shell
-home-manager switch --flake .#aarch64-linux # For aarch64 only shell
-home-manager switch --flake .#x86_64-linux-desktop # For x86_64 with GUI tools
-home-manager switch --flake .#aarch64-linux-desktop # For aarch64 with GUI tools
-
+home-manager switch --flake .#x86_64-linux     # x86_64 headless
+home-manager switch --flake .#aarch64-linux    # ARM64 headless
+home-manager switch --flake .#x86_64-linux-desktop    # x86_64 with GUI
+home-manager switch --flake .#aarch64-linux-desktop   # ARM64 with GUI
 ```
 
-## 🛠 Major Updates
+**For Generic Linux (without Home Manager):**
 
-### **Nix Infrastructure (82 commits)**
+```bash
+./install.sh -a  # Install all tools and link configs
+```
 
-- Complete migration from traditional dotfiles to Nix/Home Manager
-- Multi-platform support for Darwin and NixOS systems
-- Flake-based configuration with reproducible builds
-- Modular architecture for easy customization
+### Verification
 
-### **Theme System Overhaul**
+```bash
+# Verify Nix configuration
+nix flake check
 
-- Dynamic appearance detection for both macOS and Linux
-- Automatic theme switching across all applications
-- Catppuccin theme integration with Latte/Mocha variants
-- Custom utilities for system appearance monitoring
+# Test Neovim configuration
+nvim --version && nvim +checkhealth
 
-### **Advanced Tmux Integration**
+# Test shell configuration
+zsh -i -c 'echo "Shell initialized successfully"'
+```
 
-- FZF-powered search and navigation
-- Enhanced buffer management and copy functionality
-- PCRE regex support for advanced pattern matching
+## ⚙️ Configuration
 
-### **Editor Enhancements**
+### Core Configuration Options
 
-- LazyVim configuration with extensive plugin ecosystem
-- Copilot integration with custom commit message generation
-- LSP support for Nix development
-- Custom plugins for improved development workflow
-
-### **Shell Improvements**
-
-- Enhanced FZF integration with customizable preview commands
-- Improved Git workflow with advanced aliases
-- Dynamic environment configuration based on system state
-- Performance optimizations for shell startup
-
-## 📋 Configuration Options
-
-### **Enabling Features**
-
-The configuration uses a modular approach. Key toggles include:
+The main configuration is managed through `nixos-config/modules/shared/whmconfig.nix` with the following options:
 
 ```nix
-# In your host configuration
-whmconfig = {
-  enable = true;
-  linkConfigs = {
-    nvim = true;
-    tmux = true;
-    starship = true;
-    wezterm = true;
+home.whmConfig = {
+  enable = true;                  # Enable WHM configuration
+  dotDir = ".whm_shell";          # Directory name (relative to home)
+  repo = "vkwhm/whm_shell";       # GitHub repository
+  link = {
+    nvim = true;                  # Link Neovim config
+    vim = true;                   # Link Vim config
+    tmux = true;                  # Link Tmux config
+    wezterm = true;               # Link WezTerm config
   };
 };
 ```
 
-### **Platform-Specific Settings**
+### Platform-Specific Customization
 
-Each platform has its own configuration module:
+**macOS (Darwin):**
+- Edit `nixos-config/hosts/darwin/default.nix` for system settings
+- Customize applications in `nixos-config/modules/darwin/apps.nix`
+- Add Homebrew packages in `nixos-config/modules/darwin/brews.nix`
 
-- `modules/darwin/` - macOS system and application settings
-- `modules/nixos/` - NixOS system configuration
-- `modules/shared/` - Cross-platform user configurations
+**NixOS:**
+- Edit `nixos-config/hosts/nixos/default.nix` for NixOS settings
+- Configure system services in `nixos-config/modules/nixos/`
+- Customize desktop environment in `nixos-config/modules/nixos/config/`
 
-## 🔧 Development Utilities
+**All Platforms:**
+- Configure programs in `nixos-config/modules/shared/programs/` (bat, fzf, tmux, starship, zsh, etc.)
+- Customize theme settings in `nixos-config/modules/shared/utils/theme.nix`
 
-### **Theme Management**
+### Enabling/Disabling Features
 
-- `AppearanceWatcher`: Monitors macOS system appearance changes
-- `GnomeWatcher`: Tracks GNOME theme modifications
-- Automatic configuration updates across all applications
+Most tools can be toggled by setting them to `false` in your host configuration:
 
-### **Build Scripts**
+```nix
+programs.fzf.enable = false;        # Disable FZF
+programs.bat.enable = false;        # Disable Bat
+programs.starship.enable = false;   # Disable Starship
+programs.tmux.enable = false;       # Disable Tmux
+```
 
-- Platform-specific build and deployment scripts
-- Automated rollback capabilities
-- Key management for secure deployments
+### Neovim Plugin Configuration
+
+Edit `editor/nvim/lua/plugins/` to enable/disable plugins:
+
+```lua
+-- In editor/nvim/lua/plugins/main.lua
+{
+  "plugin/name",
+  enabled = true,  -- Set to false to disable
+  opts = { ... },
+}
+```
+
+## 🛠 Development & Customization
+
+### Building & Testing
+
+```bash
+# Check Nix flake for errors
+nix flake check
+
+# Build derivation without applying
+nix build .#homeManagerConfigurations.x86_64-linux.activationPackage
+
+# Test Neovim plugins
+busted editor/nvim-plugins/cowboy.nvim/tests/
+
+# Build theme watchers
+cd scripts/GnomeWatcher && make build
+cd scripts/AppearanceWatcher && make build
+```
+
+### Common Workflows
+
+**Rebuild after configuration changes:**
+```bash
+# macOS
+nix run .#build-switch
+
+# Linux
+home-manager switch --flake .#x86_64-linux
+```
+
+**Update dependencies:**
+```bash
+nix flake update
+```
+
+**Rollback to previous configuration:**
+```bash
+# On macOS, configurations are kept in /nix/var/nix/profiles/per-user/$USER/home-manager*
+home-manager generations
+home-manager --switch-generation N
+```
+
+### Theme Customization
+
+**Switch themes dynamically:**
+- macOS: System Appearance settings (AppearanceWatcher handles sync)
+- Linux GNOME: Settings > Appearance (GnomeWatcher handles sync)
+
+**Modify theme colors:**
+1. Edit `nixos-config/modules/shared/utils/catppuccin.nix` for Catppuccin integration
+2. Adjust colors in shell configs: `shell/starship_*.toml`
+3. Customize Neovim theme in `editor/nvim/lua/config/options.lua`
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes and test across platforms
-4. Commit using conventional commits: `git commit -m "feat: add amazing feature"`
-5. Push and create a pull request
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/your-amazing-feature`
+3. **Test** your changes:
+   ```bash
+   nix flake check
+   # Test on your platform before committing
+   ```
+4. **Commit** using conventional commits:
+   ```bash
+   git commit -m "feat(module): add your amazing feature"
+   # Include a descriptive commit body
+   ```
+5. **Push** to your fork and create a pull request
+
+### Coding Standards
+
+- **Nix**: 2-space indentation, lowercase attribute names with hyphens
+- **Lua**: Tab indentation (4-space equivalent), snake_case naming
+- **Shell**: Double quotes for variables, single quotes for literals
+- See `AGENTS.md` for detailed conventions
 
 ## 📄 License
 
@@ -203,11 +311,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgements
 
-- **NixOS Community**: For the powerful package management system
-- **LazyVim**: For the excellent Neovim configuration framework
-- **Catppuccin**: For the beautiful and consistent color scheme
-- **Open Source Community**: For the countless tools that make this possible
+- **NixOS Community**: Powerful declarative package management and system configuration
+- **LazyVim**: Excellent Neovim configuration framework and plugin ecosystem
+- **Catppuccin**: Beautiful, accessible color scheme with thoughtful theming
+- **Home Manager**: Making dotfiles and user environment management declarative
+- **Open Source Community**: Countless tools and frameworks that make this possible
 
 ---
 
-**Note**: This configuration has evolved significantly from a simple dotfiles collection to a comprehensive, Nix-powered development environment. The 82+ commits since the main branch represent a complete architectural overhaul focused on reproducibility, modularity, and cross-platform consistency.
+**Note**: This project has evolved from a simple dotfiles collection into a comprehensive, Nix-powered development environment with reproducible configurations, modular architecture, and cross-platform consistency. The architecture prioritizes maintainability, extensibility, and seamless user experience across macOS and Linux platforms.
