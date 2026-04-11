@@ -179,11 +179,11 @@
     "homebrew-tap-opencode": {
       "flake": false,
       "locked": {
-        "lastModified": 1774973040,
-        "narHash": "sha256-7lz1qg4uga4Bjfmx7zJN0XQAJuWzPc4MUfC3JzRYFuU=",
+        "lastModified": 1775824021,
+        "narHash": "sha256-DQdNXSKO9u3c0VYJYir7N4e640avOVPA5fKlx+wvZ1o=",
         "owner": "sst",
         "repo": "homebrew-tap",
-        "rev": "157a4c4ed5f713ff8c470bdf1513358f73f57843",
+        "rev": "62ff99dba444b5a155d55120918fc2aa521a98f2",
         "type": "github"
       },
       "original": {

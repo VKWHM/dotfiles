@@ -8,9 +8,9 @@
   opencode = ../../../../terminal/opencode;
 in {
   config = {
-    home.file.".config/opencode/oh-my-opencode.json" = {
-      source = opencode + /oh-my-opencode.json;
-    };
+    # home.file.".config/opencode/oh-my-opencode.json" = {
+    #   source = opencode + /oh-my-opencode.json;
+    # };
     programs.opencode = {
       enable = true;
       package = null;
@@ -31,7 +31,7 @@ in {
         plugin = [
           "@mohak34/opencode-notifier@latest"
           "opencode-gemini-auth@latest"
-          "oh-my-opencode@latest"
+          # "oh-my-opencode@latest"
           # "${rootDir}/scripts/opencode-theme-watcher"
         ];
       };
