@@ -15,6 +15,7 @@ in {
   ## Programs
   imports = [
     programs/tmux.nix
+    programs/yazi.nix
     programs/zsh.nix
     programs/fzf.nix
     programs/bat.nix
@@ -224,7 +225,7 @@ in {
       fzf.enable = true;
       keys.primary = "C-e";
       search.pcre = true;
-      search.regex = ''(?i)\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'';
+      search.regex = ''(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b'';
       search.extraArgs = [
         "--line-regexp"
       ];
