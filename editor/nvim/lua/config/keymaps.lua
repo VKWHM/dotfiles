@@ -44,6 +44,19 @@ do
 	map("n", "<leader><s-tab>", "<cmd>tabp<cr>", { desc = "Previous Tab" })
 end
 
+-- Window Management
+do
+	unmap("n", "<C-Up>")
+	unmap("n", "<C-Down>")
+	unmap("n", "<C-Left>")
+	unmap("n", "<C-Right>")
+
+	map("n", "<C-S-Up>", "<cmd>resize +2<CR>", { desc = "Increase Window Height" })
+	map("n", "<C-S-Down>", "<cmd>resize -2<CR>", { desc = "Decrease Window Height" })
+	map("n", "<C-S-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
+	map("n", "<C-S-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
+end
+
 -- Git commit with Copilot Chat
 do
 	local system_prompt = [[
