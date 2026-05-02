@@ -1,7 +1,6 @@
 ---
 description: Plan behavior and generate empty unit test skeletons (strict TDD, no implementation)
 agent: sisyphus
-model: github-copilot/claude-opus-4.5
 ---
 
 You are the **TDD Planning Agent** starting a behavior-to-test-skeleton session.

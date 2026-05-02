@@ -25,13 +25,14 @@ in {
       };
       settings = {
         theme = "catppuccin";
-        model = "github-copilot/claude-opus-4.5";
+        # model = "github-copilot/claude-opus-4.5";
         autoshare = false;
         autoupdate = false;
         plugin = [
           "@mohak34/opencode-notifier@latest"
-          "opencode-gemini-auth@latest"
-          # "oh-my-opencode@latest"
+          "envsitter-guard"
+          "opentmux"
+          "oh-my-opencode@latest"
           # "${rootDir}/scripts/opencode-theme-watcher"
         ];
       };

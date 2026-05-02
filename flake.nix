@@ -55,6 +55,22 @@
       url = "github:wfxr/forgit";
       flake = false;
     };
+    yazi-plugin-eza-preview = {
+      url = "github:ahkohd/eza-preview.yazi";
+      flake = false;
+    };
+    yazi-plugin-hexyl = {
+      url = "github:Reledia/hexyl.yazi";
+      flake = false;
+    };
+    yazi-plugin-bypass = {
+      url = "github:Rolv-Apneseth/bypass.yazi";
+      flake = false;
+    };
+    yazi-plugin-omp = {
+      url = "github:saumyajyoti/omp.yazi";
+      flake = false;
+    };
   };
   outputs = {
     self,

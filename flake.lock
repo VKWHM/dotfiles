@@ -179,11 +179,11 @@
     "homebrew-tap-opencode": {
       "flake": false,
       "locked": {
-        "lastModified": 1775824021,
-        "narHash": "sha256-DQdNXSKO9u3c0VYJYir7N4e640avOVPA5fKlx+wvZ1o=",
+        "lastModified": 1777127791,
+        "narHash": "sha256-9qy9Kb4Pbtcu3aXx7haBUR57456GkeXXoWY3mlyX5WY=",
         "owner": "sst",
         "repo": "homebrew-tap",
-        "rev": "62ff99dba444b5a155d55120918fc2aa521a98f2",
+        "rev": "4bfdf45e63480f498b3f984bf20b1edee85b25f4",
         "type": "github"
       },
       "original": {
@@ -257,6 +257,10 @@
         "homebrew-tap-steipete": "homebrew-tap-steipete",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs",
+        "yazi-plugin-bypass": "yazi-plugin-bypass",
+        "yazi-plugin-eza-preview": "yazi-plugin-eza-preview",
+        "yazi-plugin-hexyl": "yazi-plugin-hexyl",
+        "yazi-plugin-omp": "yazi-plugin-omp",
         "zsh-alias-finder": "zsh-alias-finder",
         "zsh-autopair": "zsh-autopair"
       }
@@ -273,6 +277,70 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "yazi-plugin-bypass": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1748798783,
+        "narHash": "sha256-ZndDtTMkEwuIMXG4SGe4B95Nw4fChfFhxJHj+IY30Kc=",
+        "owner": "Rolv-Apneseth",
+        "repo": "bypass.yazi",
+        "rev": "c1e5fcf6eeed0bfceb57b9738da6db9d0fb8af56",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Rolv-Apneseth",
+        "repo": "bypass.yazi",
+        "type": "github"
+      }
+    },
+    "yazi-plugin-eza-preview": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767565098,
+        "narHash": "sha256-0CKwpNeTt221RXM4SpdUxu/TnghbX2hlIscMGxGaO34=",
+        "owner": "ahkohd",
+        "repo": "eza-preview.yazi",
+        "rev": "7a2d60f4a88a1a7735efde93e03bdb8c7166d00c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ahkohd",
+        "repo": "eza-preview.yazi",
+        "type": "github"
+      }
+    },
+    "yazi-plugin-hexyl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1744660531,
+        "narHash": "sha256-ly/cLKl2y3npoT2nX8ioGOFcRXI4UXbD9Es/5veUhOU=",
+        "owner": "Reledia",
+        "repo": "hexyl.yazi",
+        "rev": "016a09bcc249dd3ce06267d54cc039e73de9c647",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Reledia",
+        "repo": "hexyl.yazi",
+        "type": "github"
+      }
+    },
+    "yazi-plugin-omp": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771299864,
+        "narHash": "sha256-jawTDIMHIu6YYWcKy9TOuk37yiRcHZ+IhZcdNLE/2VU=",
+        "owner": "saumyajyoti",
+        "repo": "omp.yazi",
+        "rev": "32ae96c8da930641ee81c32f76b2d7452ba6c8d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saumyajyoti",
+        "repo": "omp.yazi",
         "type": "github"
       }
     },
