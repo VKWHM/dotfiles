@@ -68,6 +68,8 @@ in {
         rustup # for neovim
         # Plugin Dependencies
         ast-grep
+
+        tree-sitter
       ])
       ++ (
         if (builtins.elemAt (builtins.match ".+-(.+)" pkgs.system) 0) == "darwin"
