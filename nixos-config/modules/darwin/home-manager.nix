@@ -24,7 +24,7 @@ in {
     brews = pkgs.callPackage ./brews.nix {};
     onActivation = {
       # cleanup = "uninstall";
-      autoUpdate = true;
+      autoUpdate = false;
     };
 
     # These app IDs are from using the mas CLI app

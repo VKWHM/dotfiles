@@ -13,7 +13,7 @@ in {
     # };
     programs.opencode = {
       enable = true;
-      package = null;
+      package = pkgs.hello; # dummy package to avoid HM module evaluation error with null package
 
       commands = {
         readme = opencode + /command/readme.md;
@@ -23,8 +23,10 @@ in {
       agents = {
         code-mentor = opencode + /agents/code-mentor.md;
       };
-      settings = {
+      tui = {
         theme = "catppuccin";
+      };
+      settings = {
         # model = "github-copilot/claude-opus-4.5";
         autoshare = false;
         autoupdate = false;
