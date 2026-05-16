@@ -130,10 +130,13 @@ in {
   programs.gh-dash.enable = true;
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
-    lazygit
     go
-    git
+
     gnupg
+
+    git
+    lazygit
+    worktrunk
   ];
   # Tmux search keys.primarybindings
   programs.tmux.searchKeys = [
