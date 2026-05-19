@@ -16,6 +16,7 @@ in {
       package = pkgs.hello; # dummy package to avoid HM module evaluation error with null package
 
       commands = {
+        prompt = opencode + /command/prompt.md;
         readme = opencode + /command/readme.md;
         commit = opencode + /command/commit.md;
         tdd = opencode + /command/tdd.md;
