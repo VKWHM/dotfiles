@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "oh-my-openagent",
+    "envsitter-guard"
+  ],
+  "agent": {
+    "explore": {
+      "disable": true,
+    },
+    "general": {
+      "disable": true,
+    },
+  },
+  "lsp": true,
+}

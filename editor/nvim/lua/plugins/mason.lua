@@ -4,6 +4,8 @@ return {
 		ensure_installed = {
 			"lemminx",
 			"yamlls",
+			"vtsls",
+			"eslint",
 		},
 	},
 }

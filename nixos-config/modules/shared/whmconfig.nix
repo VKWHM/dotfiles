@@ -53,6 +53,14 @@ in {
             This will create a symlink from ${homeDir}/.config/wezterm to ${cfg.dotDir}/terminal/wezterm.
           '';
         };
+        opencode = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Link the opencode configuration to the WHM shell.
+            This will create a symlink from ${homeDir}/.config/opencode to ${cfg.dotDir}/terminal/opencode.
+          '';
+        };
       };
       repo = mkOption {
         type = types.str;
@@ -120,6 +128,15 @@ in {
               {
                 src = "${whmDotDir}/terminal/wezterm/wezterm.lua";
                 dst = "${homeDir}/.wezterm.lua";
+              }
+            ];
+          })
+          ++ (getLink {
+            name = "opencode";
+            files = [
+              {
+                src = "${whmDotDir}/terminal/opencode";
+                dst = "${homeDir}/.config/opencode";
               }
             ];
           })

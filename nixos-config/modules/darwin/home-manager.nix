@@ -81,6 +81,7 @@ in {
         link.vim = true;
         link.tmux = true;
         link.wezterm = false;
+        link.opencode = true;
       };
       utils.theme.appearance = "auto";
       # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };

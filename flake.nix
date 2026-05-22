@@ -149,6 +149,7 @@
                 link.nvim = true;
                 link.vim = true;
                 link.tmux = true;
+                link.opencode = true;
               };
               utils.theme.appearance =
                 if isDesktop
