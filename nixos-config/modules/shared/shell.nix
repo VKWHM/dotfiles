@@ -1,16 +1,6 @@
-{
-  config,
-  lib,
-  pkgs,
-  user,
-  ...
-}: let
-  rootDir = ../../../.;
+{pkgs, ...}: let
   gitName = "VKWHM";
   gitEmail = "111775089+VKWHM@users.noreply.github.com";
-  ln = path: {
-    source = "${rootDir}/${path}";
-  };
 in {
   ## Programs
   imports = [
