@@ -226,7 +226,7 @@
       ]
     },
     "unspecified-high": {
-      "model": "openai/gpt-5.3-codex-spark",
+      "model": "openai/gpt-5.4",
       "variant": "high",
       "fallback_models": [
         {
@@ -261,7 +261,7 @@
   },
   "team_mode": {
     "enabled": true,
-    "tmux_visualization": true
+    "tmux_visualization": false
   },
   "tmux": {
     "enabled": true

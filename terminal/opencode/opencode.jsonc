@@ -1,9 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "oh-my-openagent",
-    "envsitter-guard"
-  ],
+  "plugin": ["oh-my-openagent", "envsitter-guard"],
   "agent": {
     "explore": {
       "disable": true,
@@ -13,4 +10,18 @@
     },
   },
   "lsp": true,
+  "mcp": {
+    "git": {
+      "type": "local",
+      "command": ["/Users/vkwhm/.nix-profile/bin/mcp-server-git"],
+    },
+    "github": {
+      "type": "local",
+      "command": [
+        "sh",
+        "-c",
+        "GITHUB_PERSONAL_ACCESS_TOKEN=$(/Users/vkwhm/.nix-profile/bin/gh auth token) exec /Users/vkwhm/.nix-profile/bin/bunx -y @modelcontextprotocol/server-github",
+      ],
+    },
+  },
 }
