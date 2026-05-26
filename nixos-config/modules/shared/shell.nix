@@ -148,10 +148,11 @@ in {
       name = "Last-Command";
       keys.primary = "C-c";
       search.pcre = true;
-      search.regex = ''(?sm)^.*^\h*\K.+?\h*$'';
+      search.regex = ''(?m)^.*[]\h+\K.+$'';
       search.extraArgs = [
         "--multiline"
       ];
+      processing.preProcessor = "${pkgs.coreutils}/bin/tac";
     }
     # {
     #   name  = "Number";

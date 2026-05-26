@@ -231,8 +231,12 @@ in {
           '')
         config.programs.tmux.searchKeys);
         windowsBindings = builtins.concatStringsSep "\n" (builtins.map (num: ''bind-key -n M-${num} select-window -t ${num}'') ["1" "2" "3" "4" "5" "6" "7" "8" "9"]);
+        sessionBindings = ''
+          bind-key -n M-` run-shell "${config.home.homeDirectory}/.config/tmux/scripts/next-session.sh"
+          bind-key -n M-~ run-shell "${config.home.homeDirectory}/.config/tmux/scripts/prev-session.sh"
+        '';
       in
-        builtins.concatStringsSep "\n" [windowsBindings searchBindings];
+        builtins.concatStringsSep "\n" [windowsBindings sessionBindings searchBindings];
     };
     home.file = builtins.listToAttrs (builtins.concatLists (builtins.map (
         binding: let
@@ -336,7 +340,45 @@ in {
           )
       )
       (builtins.filter (binding: binding.search.pcre || binding.fzf.enable)
-        config.programs.tmux.searchKeys)));
+        config.programs.tmux.searchKeys)))
+      // {
+        ".config/tmux/scripts/next-session.sh" = {
+          enable = true;
+          executable = true;
+          text = ''
+            #!${pkgs.bash}/bin/bash
+            current=$(${pkgs.tmux}/bin/tmux display-message -p '#{session_name}')
+            mapfile -t sessions < <(${pkgs.tmux}/bin/tmux list-sessions -F '#{session_name}' | ${pkgs.gnugrep}/bin/grep -v '^scratch$')
+            [[ ''${#sessions[@]} -eq 0 ]] && exit 0
+            for i in "''${!sessions[@]}"; do
+              if [[ "''${sessions[$i]}" == "$current" ]]; then
+                next_idx=$(((i + 1) % ''${#sessions[@]}))
+                ${pkgs.tmux}/bin/tmux switch-client -t "''${sessions[$next_idx]}"
+                exit 0
+              fi
+            done
+            ${pkgs.tmux}/bin/tmux switch-client -t "''${sessions[0]}"
+          '';
+        };
+        ".config/tmux/scripts/prev-session.sh" = {
+          enable = true;
+          executable = true;
+          text = ''
+            #!${pkgs.bash}/bin/bash
+            current=$(${pkgs.tmux}/bin/tmux display-message -p '#{session_name}')
+            mapfile -t sessions < <(${pkgs.tmux}/bin/tmux list-sessions -F '#{session_name}' | ${pkgs.gnugrep}/bin/grep -v '^scratch$')
+            [[ ''${#sessions[@]} -eq 0 ]] && exit 0
+            for i in "''${!sessions[@]}"; do
+              if [[ "''${sessions[$i]}" == "$current" ]]; then
+                prev_idx=$(((i - 1 + ''${#sessions[@]}) % ''${#sessions[@]}))
+                ${pkgs.tmux}/bin/tmux switch-client -t "''${sessions[$prev_idx]}"
+                exit 0
+              fi
+            done
+            ${pkgs.tmux}/bin/tmux switch-client -t "''${sessions[0]}"
+          '';
+        };
+      };
     utils.theme.autoconfig.no-init = {
       light = ''
         if _tmux_env=$(tmux show-environment 2>/dev/null); then
