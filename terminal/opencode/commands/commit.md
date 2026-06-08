@@ -1,6 +1,6 @@
 ---
 description: Analyze staged changes and generate commit message, then commit
-model: github-copilot/claude-haiku-4.5
+model: opencode-go/deepseek-v4-flash
 load_skills:
   - git-master
 ---
@@ -23,7 +23,29 @@ Each commit MUST include a **description body** (not just a title). Follow this 
 <description body - 2-4 lines explaining what changed and why>
 ```
 
+Classify the change under one of these types:
+
+- feat — a new feature
+- fix — a bug fix
+- docs — documentation only changes
+- style — formatting, code style (no logic changes)
+- refactor — code change that neither fixes a bug nor adds a feature
+- perf — code change that improves performance
+- test — adding or correcting tests
+- build — changes affecting the build system or dependencies
+- ci — CI configuration or scripts
+- chore — other changes that don’t modify src or test files
+- revert — reverts a previous commit
+
+(Optional) If applicable, identify a single-word scope for the affected module (e.g. (auth)). Otherwise omit the scope.
+
 ### Description Guidelines
+
+Add a blank line, then a detailed description wrapped at ~72 characters per line:
+
+- Explain what changed and why in concise prose.
+- Reference any issue or ticket if mentioned in changes.
+- Do not include implementation details, code snippets, or unrelated commentary.
 
 **ALWAYS add description when:**
 
