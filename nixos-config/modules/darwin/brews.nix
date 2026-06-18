@@ -1,5 +1,4 @@
 _: [
-  "gemini-cli"
   "sst/tap/opencode"
   {
     name = "batt";
