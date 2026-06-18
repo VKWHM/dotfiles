@@ -88,7 +88,7 @@ in {
       whm1Install = ''
         _WHMCONFIG_INSTALLED=$(test -d "${whmDotDir}" && echo "true" || echo "false")
         if [[ $_WHMCONFIG_INSTALLED == "false" ]]; then
-          ${pkgs.git}/bin/git clone -b nix https://github.com/${cfg.repo}.git ${whmDotDir}
+          ${pkgs.git}/bin/git clone https://github.com/${cfg.repo}.git ${whmDotDir}
           _WHMCONFIG_INSTALLED=true;
         fi
       '';
@@ -188,6 +188,7 @@ in {
                     fi;
                   fi;
                   if [[ ! -e "${link.dst}" ]]; then
+                    mkdir -p "$(dirname "${link.dst}")"
                     echo "[*] Link ${link.src} -> ${link.dst}" >&2;
                     ln -s "${link.src}" "${link.dst}";
                     echo "[+] ${name} configuration linked." >&2;
