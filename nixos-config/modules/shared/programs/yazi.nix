@@ -100,12 +100,12 @@
       plugin = {
         prepend_fetchers = [
           {
-            id = "git";
+            group = "git";
             url = "*";
             run = "git";
           }
           {
-            id = "git";
+            group = "git";
             url = "*/";
             run = "git";
           }
@@ -116,13 +116,13 @@
             run = "eza-preview";
           }
           {
-            name = "*.md";
+            mime = "text/markdown";
             run = "glow";
           }
         ];
         append_previewers = [
           {
-            name = "*";
+            url = "*";
             run = "hexyl";
           }
         ];
