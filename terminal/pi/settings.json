@@ -1,0 +1,8 @@
+{
+  "theme": "catppuccin-latte",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:pi-nvim",
+    "npm:pi-system-theme"
+  ]
+}

@@ -13,6 +13,7 @@ in {
     programs/btop.nix
     programs/opencode.nix
     programs/sesh.nix
+    programs/pi.nix
   ];
   # ZSH
   programs.zsh.enable = true;
