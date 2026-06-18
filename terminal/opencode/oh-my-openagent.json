@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "opencode-go/kimi-k2.6",
+      "model": "opencode-go/kimi-k2.7-code",
       "fallback_models": [
         {
           "model": "opencode-go/glm-5.1"
@@ -33,12 +33,15 @@
     },
     "explore": {
       "model": "opencode-go/minimax-m3",
+      "thinking": {
+        "type": "disabled"
+      },
       "fallback_models": [
         {
-          "model": "opencode-go/minimax-m2.7"
+          "model": "opencode-go/deepseek-v4-flash"
         },
         {
-          "model": "github-copilot/gpt-5-mini"
+          "model": "opencode-go/minimax-m2.7"
         }
       ]
     },
@@ -69,16 +72,12 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "github-copilot/gemini-3.1-pro-preview",
-          "variant": "high"
-        },
-        {
           "model": "opencode-go/glm-5.1"
         }
       ]
     },
     "atlas": {
-      "model": "opencode-go/kimi-k2.6",
+      "model": "opencode-go/kimi-k2.7-code",
       "fallback_models": [
         {
           "model": "opencode-go/minimax-m3"
@@ -86,7 +85,7 @@
       ]
     },
     "sisyphus-junior": {
-      "model": "opencode-go/kimi-k2.6",
+      "model": "opencode-go/kimi-k2.7-code",
       "fallback_models": [
         {
           "model": "openai/gpt-5.5",
@@ -104,7 +103,7 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "opencode-go/kimi-k2.6"
+          "model": "opencode-go/kimi-k2.7-code"
         },
         {
           "model": "opencode-go/glm-5.1"
@@ -128,10 +127,6 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "github-copilot/gemini-3.1-pro-preview",
-          "variant": "high"
-        },
-        {
           "model": "opencode-go/deepseek-v4-pro",
           "variant": "high"
         }
@@ -139,46 +134,43 @@
     },
     "artistry": {
       "model": "github-copilot/gemini-3.1-pro-preview",
-      "variant": "high"
-    },
-    "quick": {
-      "model": "github-copilot/gpt-5.4-mini",
+      "variant": "high",
       "fallback_models": [
         {
-          "model": "github-copilot/claude-haiku-4.5"
-        },
+          "model": "opencode-go/qwen3.7-plus"
+        }
+      ]
+    },
+    "quick": {
+      "model": "openai/gpt-5.4-mini",
+      "fallback_models": [
         {
-          "model": "github-copilot/gemini-3-flash-preview"
-        },
-        {
-          "model": "opencode-go/glm-5.1"
+          "model": "opencode-go/glm-5"
         }
       ]
     },
     "unspecified-low": {
-      "model": "opencode-go/kimi-k2.6",
+      "model": "opencode-go/minimax-m3",
+      "variant": "high",
+      "thinking": {
+        "type": "enabled"
+      },
       "fallback_models": [
-        {
-          "model": "github-copilot/gemini-3-flash-preview"
-        },
         {
           "model": "opencode-go/minimax-m2.7"
         }
       ]
     },
     "unspecified-high": {
-      "model": "opencode-go/kimi-k2.6",
+      "model": "opencode-go/kimi-k2.7-code",
       "fallback_models": [
-        {
-          "model": "github-copilot/gemini-3-flash-preview"
-        },
         {
           "model": "opencode-go/minimax-m3"
         }
       ]
     },
     "writing": {
-      "model": "github-copilot/gemini-3-flash-preview",
+      "model": "opencode-go/deepseek-v4-flash",
       "fallback_models": [
         {
           "model": "opencode-go/kimi-k2.5"
@@ -188,5 +180,15 @@
         }
       ]
     }
+  },
+  "tmux": {
+    "enabled": true
+  },
+  "git_master": {
+    "commit_footer": false,
+    "include_co_authored_by": false
+  },
+  "runtime_fallback": {
+    "enabled": true
   }
 }
