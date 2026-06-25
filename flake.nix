@@ -150,7 +150,6 @@
                 link.vim = true;
                 link.tmux = true;
                 link.opencode = true;
-                link.pi = true;
               };
               utils.theme.appearance =
                 if isDesktop

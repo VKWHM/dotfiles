@@ -62,15 +62,6 @@ in {
             This will create a symlink from ${homeDir}/.config/opencode to ${cfg.dotDir}/terminal/opencode.
           '';
         };
-        pi = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Link the pi coding agent configuration to the WHM shell.
-            Symlinks theme files from ${cfg.dotDir}/terminal/pi/themes/
-            and copies settings and system-theme config if missing.
-          '';
-        };
       };
       repo = mkOption {
         type = types.str;
@@ -150,19 +141,6 @@ in {
               }
             ];
           })
-          ++ (getLink {
-            name = "pi";
-            files = [
-              {
-                src = "${whmDotDir}/terminal/pi/themes/catppuccin-latte.json";
-                dst = "${homeDir}/.pi/agent/themes/catppuccin-latte.json";
-              }
-              {
-                src = "${whmDotDir}/terminal/pi/themes/catppuccin-mocha.json";
-                dst = "${homeDir}/.pi/agent/themes/catppuccin-mocha.json";
-              }
-            ];
-          })
         );
       in (builtins.concatStringsSep "\n" [
         ''
@@ -209,25 +187,6 @@ in {
           fi;
         ''
       ]);
-      whm3PiConfig = mkIf (cfg.enable && cfg.link.pi) ''
-        if [[ $_WHMCONFIG_INSTALLED == "true" ]]; then
-          mkdir -p "${homeDir}/.pi/agent"
-
-          _pi_setting="${homeDir}/.pi/agent/settings.json"
-          if [[ ! -e "$_pi_setting" ]]; then
-            echo "[*] Initializing pi settings.json" >&2;
-            cp "${rootDir + /terminal/pi/settings.json}" "$_pi_setting"
-            echo "[+] pi settings.json initialized." >&2;
-          fi
-
-          _pi_theme_cfg="${homeDir}/.pi/agent/system-theme.json"
-          if [[ ! -e "$_pi_theme_cfg" ]]; then
-            echo "[*] Initializing pi system-theme.json" >&2;
-            cp "${rootDir + /terminal/pi/system-theme.json}" "$_pi_theme_cfg"
-            echo "[+] pi system-theme.json initialized." >&2;
-          fi
-        fi
-      '';
     };
   };
 }

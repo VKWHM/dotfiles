@@ -82,7 +82,6 @@ in {
         link.tmux = true;
         link.wezterm = false;
         link.opencode = true;
-        link.pi = true;
       };
       utils.theme.appearance = "auto";
       # programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
