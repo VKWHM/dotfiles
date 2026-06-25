@@ -32,7 +32,7 @@
       ]
     },
     "explore": {
-      "model": "opencode-go/minimax-m3",
+      "model": "opencode-go/mimo-v2.5",
       "thinking": {
         "type": "disabled"
       },
