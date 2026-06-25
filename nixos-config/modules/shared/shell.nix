@@ -80,6 +80,13 @@ in {
     lfs.enable = true;
     ignores = ["*.swp"];
     settings = {
+      include = {
+        path = "${(pkgs.fetchurl {
+          # Delta catppuccin themes
+          url = "https://raw.githubusercontent.com/catppuccin/delta/011516f5d14f66b771b3e716f29c77231e008c74/catppuccin.gitconfig";
+          hash = "sha256-8FgK2mseN2e3GLJRFqKrq+wxRHShLRp5bJF++T1jtFU=";
+        })}";
+      };
       user = {
         name = gitName;
         email = gitEmail;
@@ -120,6 +127,27 @@ in {
   };
   programs.gh-dash.enable = true;
   programs.home-manager.enable = true;
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+  };
+  programs.lazygit = let
+    themeIs = light: dark: "$([[ $WHM_APPEARANCE == 'Light'* ]] && echo ${light} || echo ${dark})";
+  in {
+    enable = true;
+    settings = {
+      git = {
+        pagers = [
+          {
+            colorArg = "always";
+            pager = "${pkgs.delta}/bin/delta -s --paging=never --features ${themeIs "catppuccin-latte" "catppuccin-mocha"}";
+          }
+        ];
+      };
+    };
+  };
+
   home.packages = with pkgs; [
     go
 
