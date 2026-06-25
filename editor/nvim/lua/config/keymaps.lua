@@ -57,17 +57,17 @@ do
 	map("n", "<C-S-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
 end
 
--- LSP
-do
-	map("i", "<M-l>", function()
-		if not vim.lsp.inline_completion.get() then
-			return "<M-l>"
-		end
-	end, {
-		expr = true,
-		desc = "Accept Copilot Suggestion",
-	})
-end
+-- -- LSP
+-- do
+-- 	map("i", "<M-l>", function()
+-- 		if not vim.lsp.inline_completion.get() then
+-- 			return "<M-l>"
+-- 		end
+-- 	end, {
+-- 		expr = true,
+-- 		desc = "Accept Copilot Suggestion",
+-- 	})
+-- end
 
 -- Git commit with Copilot Chat
 do
