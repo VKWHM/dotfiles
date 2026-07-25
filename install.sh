@@ -252,12 +252,14 @@ install_configs() {
     brew install font-jetbrains-mono-nerd-font
   fi
   mkdir -p "$HOME/.config"
+  mkdir -p "$HOME/.config/ghostty/shaders"
   # Linking configuration files
   link_config "$WHMCONFIG/editor/vimrc" "$HOME/.vimrc"
   link_config "$WHMCONFIG/editor/nvim" "$HOME/.config/nvim"
   link_config "$WHMCONFIG/terminal/tmux.conf" "$HOME/.tmux.conf"
   link_config "$WHMCONFIG/terminal/wezterm" "$HOME/.config/wezterm"
   link_config "$WHMCONFIG/terminal/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+  link_config "$WHMCONFIG/terminal/ghostty/shaders/ripple_cursor.glsl" "$HOME/.config/ghostty/shaders/ripple_cursor.glsl"
   link_config "$WHMCONFIG/shell/p10k.zsh" "$HOME/.p10k.zsh"
 }
 

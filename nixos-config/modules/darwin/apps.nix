@@ -5,6 +5,8 @@
   ...
 }: {
   config = {
+    home.file.".config/ghostty/shaders/ripple_cursor.glsl".source = ../../../terminal/ghostty/shaders/ripple_cursor.glsl;
+
     programs.ghostty = {
       enable = true;
       package = null;
@@ -22,6 +24,7 @@
         macos-icon = "xray";
         auto-update-channel = "stable";
         auto-update = "check";
+        custom-shader = "shaders/ripple_cursor.glsl";
         keybind = [
           "global:cmd+backquote=toggle_quick_terminal"
           "super++=increase_font_size:1"
