@@ -138,10 +138,10 @@ in {
     enable = true;
     settings = {
       git = {
-        pagers = [
+        diffRenderers = [
           {
             colorArg = "always";
-            pager = "${pkgs.delta}/bin/delta -s --paging=never --features ${themeIs "catppuccin-latte" "catppuccin-mocha"}";
+            command = "${pkgs.delta}/bin/delta --paging=never --features ${themeIs "catppuccin-latte" "catppuccin-mocha"}";
           }
         ];
       };
