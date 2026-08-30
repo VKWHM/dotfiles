@@ -131,3 +131,4 @@ fi
 # Git aliases
 alias gs="git status"
 alias gst="git status -sb"
+alias commit="pi -p --model opencode-go/deepseek-v4-flash '/commit staged changes'"
