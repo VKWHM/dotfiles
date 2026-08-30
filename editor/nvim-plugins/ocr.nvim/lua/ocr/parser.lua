@@ -31,6 +31,36 @@ local function normalize_line_num(val, default)
 	return math.max(1, math.floor(num))
 end
 
+---Extract valid JSON data from text that may contain banner or CLI log prefix lines
+---@param text string
+---@return table|nil
+local function extract_valid_json(text)
+	if not text or text == '' then
+		return nil
+	end
+
+	local ok, data = pcall(vim.json.decode, text)
+	if ok and data and type(data) == 'table' then
+		return data
+	end
+
+	local pos = 1
+	while pos <= #text do
+		local s = text:find('[%[%{]', pos)
+		if not s then
+			break
+		end
+		local chunk = text:sub(s)
+		local chunk_ok, chunk_data = pcall(vim.json.decode, chunk)
+		if chunk_ok and chunk_data and type(chunk_data) == 'table' then
+			return chunk_data
+		end
+		pos = s + 1
+	end
+
+	return nil
+end
+
 ---Find matching line number in file_lines for existing_code (constrained search)
 ---@param file_lines string[]
 ---@param start_line integer
@@ -94,8 +124,8 @@ function M.parse(json_text)
 		return {}
 	end
 
-	local ok, data = pcall(vim.json.decode, json_text)
-	if not ok or not data then
+	local data = extract_valid_json(json_text)
+	if not data then
 		return {}
 	end
 

@@ -81,13 +81,13 @@ function M.load_session(session_id)
 		return
 	end
 
-	if not comments_json or trim(comments_json) == '' or trim(comments_json) == '[]' then
+	local diagnostics_by_file = parser.parse(comments_json)
+	if not diagnostics_by_file or not next(diagnostics_by_file) then
 		vim.notify('No comments found for session ' .. session_id, vim.log.levels.WARN)
 		diagnostics.apply({})
 		return
 	end
 
-	local diagnostics_by_file = parser.parse(comments_json)
 	diagnostics.apply(diagnostics_by_file)
 	vim.notify('Loaded OCR session: ' .. session_id, vim.log.levels.INFO)
 end
