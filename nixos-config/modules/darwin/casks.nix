@@ -8,7 +8,7 @@ _: [
   # "visual-studio-code"
   #
   # # Cyber Security Tools
-  "imhex"
+  # "imhex"
   "wireshark" # network protocol analyzer
   "stratoshark" # syscall analyzer
   "tor-browser" # anonymous web browser
@@ -27,6 +27,8 @@ _: [
   # "syncthing"
   # "betterzip" # archive manager
   "zed"
+  "tailscale"
+  "chatgpt"
   #
   # # Entertainment Tools
   # "vlc"
