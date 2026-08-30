@@ -120,7 +120,7 @@ in {
           {app = "/Applications/Zed.app/";}
           {app = "/Applications/Firefox.app/";}
           {app = "/Applications/Figma.app/";}
-          {app = "/Applications/Burp Suite Community Edition.app/";}
+          {app = "/Applications/Burp Suite.app/";}
         ];
         persistent-others = [
           "${config.users.users.${user}.home}/Downloads"
