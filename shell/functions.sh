@@ -225,6 +225,60 @@ tp() { # tmux directory session creation
   cd -
 }
 
+# Generate shell commands from a description using pi, then prompt before executing
+pi_run() {
+  local desc="$*"
+  if [ -z "$desc" ]; then
+    echo "Usage: pi_run <description of work>"
+    return 1
+  fi
+
+  local sys="You are a precise shell command generator. Given a task description, output ONLY raw executable shell commands. No markdown code fences, no explanations, no commentary, no backticks. One command per line. Output nothing else."
+
+  echo "[*] Generating commands for: $desc"
+
+  local output
+  output=$(pi -p --no-session --thinking off --system-prompt "$sys" "$desc" 2>/dev/null) || {
+    echo "[-] pi failed to generate commands."
+    return 1
+  }
+
+  # Extract commands, stripping markdown fences if present
+  local cmds
+  cmds=$(printf '%s\n' "$output" | sed -n '/^```/,/^```/{/^```/d;p;}')
+  if [ -z "$cmds" ]; then
+    cmds=$(printf '%s\n' "$output" | sed '/^```/d')
+  fi
+  cmds=$(printf '%s\n' "$cmds" | sed '/^[[:space:]]*$/d')
+
+  if [ -z "$cmds" ]; then
+    echo "[-] No commands generated."
+    return 1
+  fi
+
+  echo "[*] Proposed commands:"
+  echo "----------------------------------------"
+  printf '%s\n' "$cmds"
+  echo "----------------------------------------"
+  printf "[?] Execute these commands? [y/N] "
+
+  local ans
+  read -r ans </dev/tty
+  if [[ "$ans" =~ ^[Yy]$ ]]; then
+    echo "[*] Executing..."
+    local tmp
+    tmp=$(mktemp)
+    printf '%s\n' "$cmds" >"$tmp"
+    bash "$tmp"
+    local rc=$?
+    rm -f "$tmp"
+    return $rc
+  fi
+
+  echo "[*] Cancelled."
+  return 0
+}
+
 # Renew IP address from DHCP server
 iprenew() {
   local iface=$1
