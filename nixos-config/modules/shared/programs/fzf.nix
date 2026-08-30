@@ -29,10 +29,14 @@ in {
         "--tmux=center,80%,90%"
       ];
       defaultCommand = defaultCmd;
-      changeDirWidgetCommand = "fd --type=d --hidden --strip-cwd-prefix --exclude .git";
-      changeDirWidgetOptions = ["--preview='eza --tree --color=always {} | head -500'"];
-      fileWidgetCommand = defaultCmd;
-      fileWidgetOptions = ["--preview='${fileOrDir}'"];
+      changeDirWidget = {
+        command = "fd --type=d --hidden --strip-cwd-prefix --exclude .git";
+        options = ["--preview='eza --tree --color=always {} | head -500'"];
+      };
+      fileWidget = {
+        command = defaultCmd;
+        options = ["--preview='${fileOrDir}'"];
+      };
       colors = mkIf (config.utils.theme.appearance != "auto") {
         "bg+" = colorPalette.surface0;
         bg = colorPalette.base;
