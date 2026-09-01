@@ -48,6 +48,7 @@ return {
 				"black", -- python formatter
 				"clang-format", -- c/c++ formatter
 				"debugpy", -- python debugger
+				"js-debug-adapter", -- node/js/ts debugger
 				"mypy", -- python linter
 				"eslint_d", -- JS linter
 			},
